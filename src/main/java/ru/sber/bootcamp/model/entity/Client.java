@@ -1,4 +1,4 @@
-package ru.sber.bootcamp.model;
+package ru.sber.bootcamp.model.entity;
 
 import java.math.BigInteger;
 import java.util.Objects;

@@ -1,5 +1,9 @@
 package ru.sber.bootcamp.service;
 
+import ru.sber.bootcamp.model.entity.Account;
+
+import java.util.List;
+
 public interface DataConnectionService {
 
 
@@ -7,7 +11,5 @@ public interface DataConnectionService {
 
     void stop();
 
-
-
-
+    List<Account> findAllAccuont();
 }

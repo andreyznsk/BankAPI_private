@@ -1,15 +1,13 @@
-create table CLIENTS
+create table Account
 (
-    ID  IDENTITY NOT NULL PRIMARY KEY,
-    CUSTOMER_NAME    VARCHAR(255) NOT NULL,
-    CUSTOMER_ACCOUNT BIGINT NOT NULL
+    id IDENTITY PRIMARY KEY,
+    account_number BIGINT NOT NULL,
+    balance smallint DEFAULT 0,
+    open_date DATE NOT NULL
 );
 
-insert into CLIENTS values ('Andrey',1111222233334444);
-insert into CLIENTS values ('Sergey',1111222233334445);
-insert into CLIENTS values ('Nikolay',1111222233334446);
-insert into CLIENTS values ('Michail',1111222233334447);
-insert into CLIENTS values ('Olga',1111222233334448);
-insert into CLIENTS values ('Evgeny',1111222233334449);
-insert into CLIENTS values ('Kristina',1111222233334410);
-insert into CLIENTS values ('Ekaterina',1111222233334411);
+INSERT INTO Account (account_number, balance, open_date) VALUES (1111,0,'2020-01-01');
+INSERT INTO Account (account_number, balance, open_date) VALUES (1112,0,'2020-01-01');
+
+
+

@@ -1,31 +1,30 @@
 package ru.sber.bootcamp.service;
 
+import ru.sber.bootcamp.model.entity.Account;
+
 import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
-public class H2ConnectionService implements DataConnectionService {
+public class H2ConnectionServiceImpl implements DataConnectionService {
 
     private final String url;
     private final String user;
     private final String password;
-    private static Connection connection;
-    private static Statement stmt;
-    private static PreparedStatement createDB;
-    private static PreparedStatement psSelect;
+    private Connection connection;
+    private Statement stmt;
+    private PreparedStatement createDB;
+    private PreparedStatement psSelect;
+    private PreparedStatement psAccountSelectAll;
 
     /**
      * Инициализвция БД
      * @param properties - параметы подключеия к БД в формте url;user;password
-     * @return - Ссылка на объкт класса возимодейсвия с БД
      */
-    public H2ConnectionService(String properties) {
-        String[] property = new String[3];
-        property = properties.split(";");
+    public H2ConnectionServiceImpl(String properties) {
+        String[] property = properties.split(";");
         this.url = (property.length > 0) ? property[0] : "";
         this.user = (property.length > 1) ? property[1] : "";
         this.password = (property.length > 2) ? property[2] : "";
@@ -81,7 +80,10 @@ public class H2ConnectionService implements DataConnectionService {
         createDB.execute();*/
         stmt.execute(stringBuilder.toString());
 
-        psSelect = connection.prepareStatement("SELECT * FROM clients");
+        //psSelect = connection.prepareStatement("SELECT * FROM clients");
+        psAccountSelectAll = connection.prepareStatement("SELECT * FROM account");
+
+
     }
 
     @Override
@@ -90,7 +92,7 @@ public class H2ConnectionService implements DataConnectionService {
         disconnect();
     }
 
-    public void faindAllById() {
+    /*public void faindAllById() {
 
         try {//Блок провеки через подготовленный запрос
             ResultSet rs = psSelect.executeQuery();
@@ -107,6 +109,27 @@ public class H2ConnectionService implements DataConnectionService {
         }
 
 
+    }*/
+
+    @Override
+    public List<Account> findAllAccuont() {
+        List<Account> accounts = new ArrayList<>();
+        try {//Блок провеки через подготовленный запрос
+            ResultSet rs = psAccountSelectAll.executeQuery();
+            while (rs.next()){
+                Account account = new Account();
+                account.setId(rs.getLong(1));
+                account.setAccountNumber(rs.getLong(2));
+                account.setBalance(3);
+                account.setOpenDate(rs.getDate(4));
+                accounts.add(account);
+            }
+
+        } catch (SQLException throwables) {
+            System.err.println(throwables.getErrorCode());
+            throwables.printStackTrace();
+        }
+        return accounts;
     }
 }
 

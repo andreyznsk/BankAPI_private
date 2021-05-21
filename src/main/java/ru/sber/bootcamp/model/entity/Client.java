@@ -1,62 +1,70 @@
 package ru.sber.bootcamp.model.entity;
 
-import java.math.BigInteger;
-import java.util.Objects;
 
 public class Client {
-private int id;
-private String name;
-private BigInteger account;
+    private Long id;
+    private Long accountId;
+    private String firstName;
+    private String lastname;
+    private Long phoneNumber;
+    //private Account account;
 
-    public Client(int id, String name, BigInteger account) {
+    public Client(){
+    }
+
+    public Client(Long id, Long accountId, String firstName, String lastname, Long phoneNumber) {
         this.id = id;
-        this.name = name;
-        this.account = account;
+        this.accountId = accountId;
+        this.firstName = firstName;
+        this.lastname = lastname;
+        this.phoneNumber = phoneNumber;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigInteger getAccount() {
+   /* public Account getAccount() {
         return account;
     }
 
-    public void setAccount(BigInteger account) {
+    public void setAccount(Account account) {
         this.account = account;
+    }*/
+
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Client)) return false;
-        Client client = (Client) o;
-        return id == client.id && Objects.equals(name, client.name) && Objects.equals(account, client.account);
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, account);
+    public Long getAccountId() {
+        return accountId;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", account=" + account +
-                '}';
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

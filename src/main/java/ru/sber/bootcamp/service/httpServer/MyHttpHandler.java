@@ -16,15 +16,24 @@ class MyHttpHandler implements HttpHandler {
         this.controller = controller;
     }
 
+    /**
+     * Обработчик входящих соединений
+     * @param t - запрос HTTP
+     * @throws IOException
+     */
     @Override
     public void handle(HttpExchange t) throws IOException {
         String response;
         System.out.println(t.getRequestMethod());
         String url = t.getRequestURI().toString();
+        System.out.println(Thread.currentThread());
         String[] path = url.split("/");
-        System.out.println(path.length);
+        System.out.println("Path length: " + path.length);
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
             case "showall": response = controller.getAllAccounts();
+                            break;
+            case "getclient": response = controller.getClientByAccountNumber(path.length>3? Long.valueOf(path[3]):null);
+                System.out.println(response);
                             break;
             default: response = "commandError!!!";
         }

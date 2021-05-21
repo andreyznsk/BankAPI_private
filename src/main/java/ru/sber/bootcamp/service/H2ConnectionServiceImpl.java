@@ -1,8 +1,8 @@
 package ru.sber.bootcamp.service;
 
 import ru.sber.bootcamp.model.entity.Account;
+import ru.sber.bootcamp.model.entity.Client;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
@@ -18,6 +18,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private PreparedStatement createDB;
     private PreparedStatement psSelect;
     private PreparedStatement psAccountSelectAll;
+    private PreparedStatement psGetClientByAccountNumber;
 
     /**
      * Инициализвция БД
@@ -30,6 +31,12 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         this.password = (property.length > 2) ? property[2] : "";
     }
 
+
+    /**
+     * Служебный метод старта соединения с БД для старта использовать
+     *  public void start()
+     * @throws Exception
+     */
     private void connect() throws Exception {
 
         connection = DriverManager.getConnection(url, user, password);
@@ -37,6 +44,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     }
 
+    /**
+     * Служебный метод остановки поключения к БД. Для вызова использовать
+     *  public void stop()
+     */
     private void disconnect() {
         try {
             stmt.close();
@@ -62,6 +73,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         }
     }
 
+    /**
+     * Подготовка всех предустановленных запросов
+     * @throws SQLException
+     */
     private void prepareAllStatements() throws SQLException {
         File databaseScript = new File("data.sql");
         StringBuilder stringBuilder = new StringBuilder();
@@ -82,6 +97,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
         //psSelect = connection.prepareStatement("SELECT * FROM clients");
         psAccountSelectAll = connection.prepareStatement("SELECT * FROM account");
+        psGetClientByAccountNumber =connection.prepareStatement("SELECT * FROM client WHERE account_id = ?");
 
 
     }
@@ -111,6 +127,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     }*/
 
+    /**
+     * Вывод всех счетов всех пользователей
+     * @return Список счетов пользователей
+     */
     @Override
     public List<Account> findAllAccuont() {
         List<Account> accounts = new ArrayList<>();
@@ -124,12 +144,34 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
                 account.setOpenDate(rs.getDate(4));
                 accounts.add(account);
             }
-
+            rs.close();
         } catch (SQLException throwables) {
             System.err.println(throwables.getErrorCode());
             throwables.printStackTrace();
         }
         return accounts;
+    }
+
+    @Override
+    public Client getClientByAccountNumber(Long id) {
+        Client client = new Client();
+
+        try {
+            psGetClientByAccountNumber.setLong(1,id);
+            ResultSet rs = psGetClientByAccountNumber.executeQuery();
+            while (rs.next()){
+                client.setId(rs.getLong(1));
+                client.setAccountId(rs.getLong(2));
+                client.setFirstName(rs.getString(3));
+                client.setLastname(rs.getString(4));
+                client.setPhoneNumber(rs.getLong(5));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return client;
+
     }
 }
 

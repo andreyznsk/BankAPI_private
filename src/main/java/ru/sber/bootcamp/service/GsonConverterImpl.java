@@ -2,6 +2,7 @@ package ru.sber.bootcamp.service;
 
 import org.json.JSONObject;
 import ru.sber.bootcamp.model.entity.Account;
+import ru.sber.bootcamp.model.entity.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,4 +19,9 @@ public class GsonConverterImpl implements GsonConverter {
         return jsonObjectList;
     }
 
+    @Override
+    public JSONObject convertObjectToJson(Object client) {
+        JSONObject jsonObject = new JSONObject(client);
+        return jsonObject;
+    }
 }

@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.controller;
 
 import org.json.JSONObject;
+import ru.sber.bootcamp.model.entity.Client;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 
@@ -18,6 +19,7 @@ public class ClientController {
 
     /**
      * Контроллер для паттерна /text/findAllAccounts
+     * Возвращает всех информацию по счетам для всех клиентов
      * @return String of List JsonObjects
      */
     public String getAllAccounts(){
@@ -27,6 +29,18 @@ public class ClientController {
             sb.append(jsObject.toString(4));
         }
         return sb.toString();
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public String getClientByAccountNumber(Long id){
+        JSONObject jsonObject;
+        Client client = dataConnectionService.getClientByAccountNumber(id);
+        jsonObject = gsonConverter.convertObjectToJson(client);
+        return (!(jsonObject == null))?jsonObject.toString(5):"Ошибка!! Введите слиент ИД";
     }
 
 }

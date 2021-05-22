@@ -19,7 +19,7 @@ create table Client(
 );
 
 INSERT INTO Client (account_id, firstName, lastName, phone_number)
-VALUES (1,'Иван','Иванов', 89008001234);
+VALUES (1,'Ivan','Ivanov', 89008001234);
 INSERT INTO Client (account_id, firstName, lastName, phone_number)
 VALUES (2,'Петр','Петров', 88009001235);
 

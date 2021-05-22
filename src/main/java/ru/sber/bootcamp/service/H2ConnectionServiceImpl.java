@@ -15,8 +15,8 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private final String password;
     private Connection connection;
     private Statement stmt;
-    private PreparedStatement createDB;
-    private PreparedStatement psSelect;
+    //private PreparedStatement createDB;
+    //private PreparedStatement psSelect;
     private PreparedStatement psAccountSelectAll;
     private PreparedStatement psGetClientByAccountNumber;
 

@@ -6,6 +6,9 @@ import ru.sber.bootcamp.controller.ClientController;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 class MyHttpHandler implements HttpHandler {
@@ -37,10 +40,13 @@ class MyHttpHandler implements HttpHandler {
                             break;
             default: response = "commandError!!!";
         }
-
-        t.sendResponseHeaders(200, response.length());
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        System.out.println("Bytes length = " + bytes.length);
+        System.out.println("response length = " + response.length());
+        t.getResponseHeaders().set("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);
+        t.sendResponseHeaders(200, bytes.length);
         OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
+        os.write(bytes);
         os.close();
     }
 }

@@ -25,6 +25,7 @@ public class StartApp {
         HttpServerStarter httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
+        System.out.println("BankAPI start successful!!");
         //Console Handler
         Scanner scanner = new Scanner(System.in);
         String command;

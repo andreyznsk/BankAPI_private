@@ -21,13 +21,8 @@ public class AccountRepoImpl implements AccountRepository {
     }
 
     @Override
-    public Client getClientByAccountNumber(Long id) {
-        return dataService.getClientByAccountNumber(id);
-    }
-
-    @Override
-    public Account getById() {
-        return null;
+    public Account getById(Long accountNumber ) {
+        return dataService.getAccountByAccountNumber( accountNumber);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.service;
 
+import org.h2.tools.Server;
 import ru.sber.bootcamp.model.entity.Account;
 import ru.sber.bootcamp.model.entity.Client;
 
@@ -10,37 +11,45 @@ import java.util.*;
 
 public class H2ConnectionServiceImpl implements DataConnectionService {
 
-    private final String url;
-    private final String user;
-    private final String password;
+    private final String URL;
+    private final String USER;
+    private final String PASSWORD;
     private Connection connection;
     private Statement stmt;
+    private Server server;
+    private boolean enableTcpServer;
     //private PreparedStatement createDB;
     //private PreparedStatement psSelect;
     private PreparedStatement psAccountSelectAll;
     private PreparedStatement psGetClientByAccountNumber;
+    private PreparedStatement psGetAccountByAccountNumber;
 
     /**
      * Инициализвция БД
      * @param properties - параметы подключеия к БД в формте url;user;password
      */
-    public H2ConnectionServiceImpl(String properties) {
+    public H2ConnectionServiceImpl(String properties, boolean enableTCP) {
         String[] property = properties.split(";");
-        this.url = (property.length > 0) ? property[0] : "";
-        this.user = (property.length > 1) ? property[1] : "";
-        this.password = (property.length > 2) ? property[2] : "";
+        this.enableTcpServer = enableTCP;
+        this.URL = (property.length > 0) ? property[0] : "";
+        this.USER = (property.length > 1) ? property[1] : "";
+        this.PASSWORD = (property.length > 2) ? property[2] : "";
+
     }
 
 
     /**
      * Служебный метод старта соединения с БД для старта использовать
      *  public void start()
-     * @throws Exception
+     * @throws SQLException может выкинуть исключение в слочае проблем подключения
      */
-    private void connect() throws Exception {
+    private void connect() throws SQLException {
 
-        connection = DriverManager.getConnection(url, user, password);
-        stmt = connection.createStatement();
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            stmt = connection.createStatement();
+        if (enableTcpServer) {
+            server = Server.createTcpServer().start();
+        }
 
     }
 
@@ -75,7 +84,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Подготовка всех предустановленных запросов
-     * @throws SQLException
+     * @throws SQLException - может выбросить исключение при недоступности БД, а так же при ошибках поделючения
      */
     private void prepareAllStatements() throws SQLException {
         File databaseScript = new File("data.sql");
@@ -97,7 +106,8 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
         //psSelect = connection.prepareStatement("SELECT * FROM clients");
         psAccountSelectAll = connection.prepareStatement("SELECT * FROM account");
-        psGetClientByAccountNumber =connection.prepareStatement("SELECT * FROM client WHERE account_id = ?");
+        psGetClientByAccountNumber =connection.prepareStatement("SELECT * FROM client WHERE account_number = ?");
+        psGetAccountByAccountNumber = connection.prepareStatement("SELECT * FROM account WHERE account_number = ?");
 
 
     }
@@ -105,6 +115,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public void stop() {
         System.out.println("Auth service has been stopped");
+        server.stop();
         disconnect();
     }
 
@@ -140,7 +151,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
                 Account account = new Account();
                 account.setId(rs.getLong(1));
                 account.setAccountNumber(rs.getLong(2));
-                account.setBalance(3);
+                account.setBalance(rs.getBigDecimal(3));
                 account.setOpenDate(rs.getDate(4));
                 accounts.add(account);
             }
@@ -152,25 +163,52 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         return accounts;
     }
 
+    /**
+     * Метод полчения клиента по номеру счета
+     * @param accountNumber - номер счета клиента
+     * @return - возвращате объект клиент со всем его картами, а так же с информацией по его счету
+     */
     @Override
-    public Client getClientByAccountNumber(Long id) {
+    public Client getClientByAccountNumber(Long accountNumber) {
         Client client = new Client();
+        Account account = new Account();
 
         try {
-            psGetClientByAccountNumber.setLong(1,id);
-            ResultSet rs = psGetClientByAccountNumber.executeQuery();
-            while (rs.next()){
-                client.setId(rs.getLong(1));
-                client.setAccountId(rs.getLong(2));
-                client.setFirstName(rs.getString(3));
-                client.setLastname(rs.getString(4));
-                client.setPhoneNumber(rs.getLong(5));
+            psGetClientByAccountNumber.setLong(1,accountNumber);
+            ResultSet rsClient = psGetClientByAccountNumber.executeQuery();
+
+            while (rsClient.next()){
+                client.setId(rsClient.getLong(1));
+                client.setAccountId(rsClient.getLong(2));
+                client.setFirstName(rsClient.getString(3));
+                client.setLastname(rsClient.getString(4));
+                client.setPhoneNumber(rsClient.getLong(5));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        account = getAccountByAccountNumber(accountNumber);
+        client.setAccount(account);
+        return client;
+    }
+
+    @Override
+    public Account getAccountByAccountNumber(Long accountNumber) {
+        Account account = new Account();
+        try {
+            psGetAccountByAccountNumber.setLong(1, accountNumber);
+            ResultSet rsAccount = psGetAccountByAccountNumber.executeQuery();
+            while(rsAccount.next()){
+                account.setId(rsAccount.getLong(1));
+                account.setAccountNumber(rsAccount.getLong(2));
+                account.setBalance(rsAccount.getBigDecimal(3));
+                account.setOpenDate(rsAccount.getDate(4));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        return client;
+        return account;
 
     }
 }

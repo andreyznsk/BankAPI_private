@@ -7,7 +7,7 @@ public class Client {
     private String firstName;
     private String lastname;
     private Long phoneNumber;
-    //private Account account;
+    private Account account;
 
     public Client(){
     }
@@ -20,13 +20,13 @@ public class Client {
         this.phoneNumber = phoneNumber;
     }
 
-   /* public Account getAccount() {
+    public Account getAccount() {
         return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
-    }*/
+    }
 
     public Long getId() {
         return id;

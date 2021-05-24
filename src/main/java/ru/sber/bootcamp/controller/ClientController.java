@@ -3,7 +3,7 @@ package ru.sber.bootcamp.controller;
 import org.json.JSONObject;
 import ru.sber.bootcamp.model.entity.Client;
 import ru.sber.bootcamp.model.repository.AccountRepository;
-import ru.sber.bootcamp.service.DataConnectionService;
+import ru.sber.bootcamp.model.repository.ClientRepository;
 import ru.sber.bootcamp.service.GsonConverter;
 
 import java.util.List;
@@ -11,10 +11,12 @@ import java.util.List;
 public class ClientController {
 
     private final AccountRepository accountRepository;
+    private final ClientRepository clientRepository;
     private final GsonConverter gsonConverter;
 
-    public ClientController(AccountRepository accountRepository, GsonConverter gsonConverter) {
+    public ClientController(AccountRepository accountRepository, ClientRepository clientRepository, GsonConverter gsonConverter) {
         this.accountRepository = accountRepository;
+        this.clientRepository = clientRepository;
         this.gsonConverter = gsonConverter;
     }
 
@@ -34,14 +36,14 @@ public class ClientController {
 
     /**
      *
-     * @param id
+     * @param accountNumber
      * @return
      */
-    public String getClientByAccountNumber(Long id){
+    public String getClientByAccountNumber(Long accountNumber){
         JSONObject jsonObject;
-        Client client = accountRepository.getClientByAccountNumber(id);
+        Client client = clientRepository.getClientByAccountNumber(accountNumber);
         jsonObject = gsonConverter.convertObjectToJson(client);
-        return (!(jsonObject == null))?jsonObject.toString(5):"Ошибка!! Введите слиент ИД";
+        return (!(jsonObject.isEmpty()))?jsonObject.toString(5):"Ошибка!! Введите клиент ИД";
     }
 
 }

@@ -9,9 +9,8 @@ import java.util.List;
 public interface AccountRepository {
 
     List<Account> findAll();
-    Account getById();
+    Account getById(Long accountNumber);
     void balanceIncrement(BigInteger amount);
     void balanceDecrement(BigInteger amount);
 
-    Client getClientByAccountNumber(Long id);
 }

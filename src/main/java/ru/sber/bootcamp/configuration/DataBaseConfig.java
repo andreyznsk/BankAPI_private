@@ -1,7 +1,7 @@
 package ru.sber.bootcamp.configuration;
 
 public class DataBaseConfig {
-    private static String url = "jdbc:h2:mem:";
+    private static String url = "jdbc:h2:mem:bankapp";
     private static String user = "";
     private static String password = "";
 

@@ -7,13 +7,13 @@ public class Account {
 
     private Long id;
     private Long accountNumber;
-    private int balance;
+    private BigDecimal balance;
     private Date openDate;
 
     public Account() {
     }
 
-    public Account(Long id, Long accountNumber, int balance, Date openDate) {
+    public Account(Long id, Long accountNumber, BigDecimal balance, Date openDate) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.balance = balance;
@@ -36,11 +36,11 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public int getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

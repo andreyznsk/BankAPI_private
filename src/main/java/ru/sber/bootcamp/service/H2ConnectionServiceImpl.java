@@ -2,7 +2,12 @@ package ru.sber.bootcamp.service;
 
 import org.h2.tools.Server;
 import ru.sber.bootcamp.model.entity.Account;
+import ru.sber.bootcamp.model.entity.Card;
 import ru.sber.bootcamp.model.entity.Client;
+import ru.sber.bootcamp.service.DataConnectionService;
+import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionAccountMethods;
+import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionCardMethods;
+import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionClientMethods;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,11 +23,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private Statement stmt;
     private Server server;
     private boolean enableTcpServer;
-    //private PreparedStatement createDB;
-    //private PreparedStatement psSelect;
-    private PreparedStatement psAccountSelectAll;
-    private PreparedStatement psGetClientByAccountNumber;
-    private PreparedStatement psGetAccountByAccountNumber;
+
+    private H2ConnectionCardMethods h2ConnectionCardMethods;
+    H2ConnectionAccountMethods h2ConnectionAccountMethods;
+    private H2ConnectionClientMethods h2ConnectionClientMethods;
 
     /**
      * Инициализвция БД
@@ -45,8 +49,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     private void connect() throws SQLException {
 
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            stmt = connection.createStatement();
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            this.stmt = connection.createStatement();
+            this.h2ConnectionCardMethods = new H2ConnectionCardMethods(connection);
+            this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods(connection);
+            this.h2ConnectionClientMethods = new H2ConnectionClientMethods(connection, h2ConnectionAccountMethods);
         if (enableTcpServer) {
             server = Server.createTcpServer().start();
         }
@@ -105,10 +112,9 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         stmt.execute(stringBuilder.toString());
 
         //psSelect = connection.prepareStatement("SELECT * FROM clients");
-        psAccountSelectAll = connection.prepareStatement("SELECT * FROM account");
-        psGetClientByAccountNumber =connection.prepareStatement("SELECT * FROM client WHERE account_number = ?");
-        psGetAccountByAccountNumber = connection.prepareStatement("SELECT * FROM account WHERE account_number = ?");
-
+        h2ConnectionCardMethods.prepareAllStatements();
+        h2ConnectionAccountMethods.prepareAllStatements();
+        h2ConnectionClientMethods.prepareAllStatements();
 
     }
 
@@ -118,25 +124,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         server.stop();
         disconnect();
     }
-
-    /*public void faindAllById() {
-
-        try {//Блок провеки через подготовленный запрос
-            ResultSet rs = psSelect.executeQuery();
-            while (rs.next()){
-                System.out.print(rs.getString(1) + " ");
-                System.out.print(rs.getString(2) + " ");
-                System.out.print(rs.getString(3) + "\n");
-
-            }
-
-        } catch (SQLException throwables) {
-            System.err.println(throwables);
-            throwables.printStackTrace();
-        }
-
-
-    }*/
+    //===================Account methods===============
 
     /**
      * Вывод всех счетов всех пользователей
@@ -144,25 +132,21 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     @Override
     public List<Account> findAllAccuont() {
-        List<Account> accounts = new ArrayList<>();
-        try {//Блок провеки через подготовленный запрос
-            ResultSet rs = psAccountSelectAll.executeQuery();
-            while (rs.next()){
-                Account account = new Account();
-                account.setId(rs.getLong(1));
-                account.setAccountNumber(rs.getLong(2));
-                account.setBalance(rs.getBigDecimal(3));
-                account.setOpenDate(rs.getDate(4));
-                accounts.add(account);
-            }
-            rs.close();
-        } catch (SQLException throwables) {
-            System.err.println(throwables.getErrorCode());
-            throwables.printStackTrace();
-        }
-        return accounts;
+        return h2ConnectionAccountMethods.findAllAccount();
     }
 
+    /**
+     * Получить объект счет по номеру счета
+     * @param accountNumber - номер счета
+     * @return - объект счет
+     */
+    @Override
+    public Account getAccountByAccountNumber(Long accountNumber) {
+      return h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber);
+
+    }
+
+    //================Client methods=========================
     /**
      * Метод полчения клиента по номеру счета
      * @param accountNumber - номер счета клиента
@@ -170,46 +154,25 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     @Override
     public Client getClientByAccountNumber(Long accountNumber) {
-        Client client = new Client();
-        Account account = new Account();
+      return h2ConnectionClientMethods.getClientByAccountNumber(accountNumber);
+    }
 
-        try {
-            psGetClientByAccountNumber.setLong(1,accountNumber);
-            ResultSet rsClient = psGetClientByAccountNumber.executeQuery();
+    //==================Card Methods==========================
 
-            while (rsClient.next()){
-                client.setId(rsClient.getLong(1));
-                client.setAccountId(rsClient.getLong(2));
-                client.setFirstName(rsClient.getString(3));
-                client.setLastname(rsClient.getString(4));
-                client.setPhoneNumber(rsClient.getLong(5));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        account = getAccountByAccountNumber(accountNumber);
-        client.setAccount(account);
-        return client;
+
+    @Override
+    public List<Card> findAllCards() {
+        return h2ConnectionCardMethods.getAllCard();
     }
 
     @Override
-    public Account getAccountByAccountNumber(Long accountNumber) {
-        Account account = new Account();
-        try {
-            psGetAccountByAccountNumber.setLong(1, accountNumber);
-            ResultSet rsAccount = psGetAccountByAccountNumber.executeQuery();
-            while(rsAccount.next()){
-                account.setId(rsAccount.getLong(1));
-                account.setAccountNumber(rsAccount.getLong(2));
-                account.setBalance(rsAccount.getBigDecimal(3));
-                account.setOpenDate(rsAccount.getDate(4));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public Card getCardByCardId(Long id) {
+        return null;
+    }
 
-        return account;
-
+    @Override
+    public Card getCardByCardNumber(Long cardNumber) {
+        return null;
     }
 }
 

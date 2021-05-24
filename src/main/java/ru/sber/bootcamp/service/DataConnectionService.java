@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.service;
 
 import ru.sber.bootcamp.model.entity.Account;
+import ru.sber.bootcamp.model.entity.Card;
 import ru.sber.bootcamp.model.entity.Client;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface DataConnectionService {
     Account getAccountByAccountNumber(Long accountNumber);
 //--------------Clients methods-------------------
     Client getClientByAccountNumber(Long id);
+
+    List<Card> findAllCards();
+
+    Card getCardByCardId(Long id);
+
+    Card getCardByCardNumber(Long cardNumber);
 }

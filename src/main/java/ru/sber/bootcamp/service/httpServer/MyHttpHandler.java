@@ -27,22 +27,24 @@ class MyHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange t) throws IOException {
         String response;
-        System.out.println(t.getRequestMethod());
         String url = t.getRequestURI().toString();
-        System.out.println(Thread.currentThread());
         String[] path = url.split("/");
         System.out.println("Path length: " + path.length);
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
             case "showall": response = controller.getAllAccounts();
                             break;
-            case "getclient": response = controller.getClientByAccountNumber(path.length>3? Long.valueOf(path[3]):null);
+            case "getclient": {
+                response = controller.getClientByAccountNumber(path.length>3? Long.valueOf(path[3]):null);
                 System.out.println(response);
-                            break;
+                break;
+            }
+            case "getallcards" : {
+                response = controller.getAllCards();
+                break;
+            }
             default: response = "commandError!!!";
         }
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-        System.out.println("Bytes length = " + bytes.length);
-        System.out.println("response length = " + response.length());
         t.getResponseHeaders().set("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);
         t.sendResponseHeaders(200, bytes.length);
         OutputStream os = t.getResponseBody();

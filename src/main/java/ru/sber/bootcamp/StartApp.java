@@ -2,10 +2,7 @@ package ru.sber.bootcamp;
 
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model.repository.AccountRepoImpl;
-import ru.sber.bootcamp.model.repository.AccountRepository;
-import ru.sber.bootcamp.model.repository.ClientRepository;
-import ru.sber.bootcamp.model.repository.ClientRepositoryImpl;
+import ru.sber.bootcamp.model.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -32,9 +29,10 @@ public class StartApp {
 
         AccountRepository accountRepository = new AccountRepoImpl(h2DataService);
         ClientRepository clientRepository = new ClientRepositoryImpl(h2DataService);
+        CardRepository cardRepository = new CardRepositoryImpl(h2DataService);
 
         //Controller start
-        ClientController controller = new ClientController(accountRepository, clientRepository, new GsonConverterImpl());
+        ClientController controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
 
 
         //HTTP server start

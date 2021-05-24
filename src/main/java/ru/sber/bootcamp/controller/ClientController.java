@@ -3,20 +3,27 @@ package ru.sber.bootcamp.controller;
 import org.json.JSONObject;
 import ru.sber.bootcamp.model.entity.Client;
 import ru.sber.bootcamp.model.repository.AccountRepository;
+import ru.sber.bootcamp.model.repository.CardRepository;
 import ru.sber.bootcamp.model.repository.ClientRepository;
 import ru.sber.bootcamp.service.GsonConverter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientController {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
+    private final CardRepository cardRepository;
     private final GsonConverter gsonConverter;
 
-    public ClientController(AccountRepository accountRepository, ClientRepository clientRepository, GsonConverter gsonConverter) {
+    public ClientController(AccountRepository accountRepository,
+                            ClientRepository clientRepository,
+                            CardRepository cardRepository,
+                            GsonConverter gsonConverter) {
         this.accountRepository = accountRepository;
         this.clientRepository = clientRepository;
+        this.cardRepository = cardRepository;
         this.gsonConverter = gsonConverter;
     }
 
@@ -27,11 +34,7 @@ public class ClientController {
      */
     public String getAllAccounts(){
         List<JSONObject> jsObjects = gsonConverter.convertListToGson(accountRepository.findAll());
-        StringBuilder sb = new StringBuilder();
-        for (JSONObject jsObject : jsObjects) {
-            sb.append(jsObject.toString(4));
-        }
-        return sb.toString();
+        return jsObjects.stream().map(t->t.toString(4)).collect(Collectors.joining(","));
     }
 
     /**
@@ -46,4 +49,10 @@ public class ClientController {
         return (!(jsonObject.isEmpty()))?jsonObject.toString(5):"Ошибка!! Введите клиент ИД";
     }
 
+    public String getAllCards() {
+        List<JSONObject> jsonObjectList = gsonConverter.convertListToGson(cardRepository.getAllCards());
+       return jsonObjectList.stream().map(t->t.toString(5))
+                .collect(Collectors.joining(","));
+
+    }
 }

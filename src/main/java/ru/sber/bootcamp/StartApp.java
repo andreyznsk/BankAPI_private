@@ -2,6 +2,8 @@ package ru.sber.bootcamp;
 
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.model.repository.AccountRepoImpl;
+import ru.sber.bootcamp.model.repository.AccountRepository;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -17,9 +19,10 @@ public class StartApp {
         //Data base connection start
         DataConnectionService h2DataService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig());
         h2DataService.start();
+        AccountRepository accountRepository = new AccountRepoImpl(h2DataService);
 
         //Controller start
-        ClientController controller = new ClientController(h2DataService,new GsonConverterImpl());
+        ClientController controller = new ClientController(accountRepository, new GsonConverterImpl());
 
         //HTTP server start
         HttpServerStarter httpServerStarter = new HttpServerStarter(controller);

@@ -2,6 +2,7 @@ package ru.sber.bootcamp.controller;
 
 import org.json.JSONObject;
 import ru.sber.bootcamp.model.entity.Client;
+import ru.sber.bootcamp.model.repository.AccountRepository;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 
@@ -9,11 +10,11 @@ import java.util.List;
 
 public class ClientController {
 
-    private final DataConnectionService dataConnectionService;
+    private final AccountRepository accountRepository;
     private final GsonConverter gsonConverter;
 
-    public ClientController(DataConnectionService dataConnectionService, GsonConverter gsonConverter) {
-        this.dataConnectionService = dataConnectionService;
+    public ClientController(AccountRepository accountRepository, GsonConverter gsonConverter) {
+        this.accountRepository = accountRepository;
         this.gsonConverter = gsonConverter;
     }
 
@@ -23,7 +24,7 @@ public class ClientController {
      * @return String of List JsonObjects
      */
     public String getAllAccounts(){
-        List<JSONObject> jsObjects = gsonConverter.convertListToGson(dataConnectionService.findAllAccuont());
+        List<JSONObject> jsObjects = gsonConverter.convertListToGson(accountRepository.findAll());
         StringBuilder sb = new StringBuilder();
         for (JSONObject jsObject : jsObjects) {
             sb.append(jsObject.toString(4));
@@ -38,7 +39,7 @@ public class ClientController {
      */
     public String getClientByAccountNumber(Long id){
         JSONObject jsonObject;
-        Client client = dataConnectionService.getClientByAccountNumber(id);
+        Client client = accountRepository.getClientByAccountNumber(id);
         jsonObject = gsonConverter.convertObjectToJson(client);
         return (!(jsonObject == null))?jsonObject.toString(5):"Ошибка!! Введите слиент ИД";
     }

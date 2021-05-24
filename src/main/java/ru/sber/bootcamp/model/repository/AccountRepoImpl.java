@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.model.repository;
 
 import ru.sber.bootcamp.model.entity.Account;
+import ru.sber.bootcamp.model.entity.Client;
 import ru.sber.bootcamp.service.DataConnectionService;
 
 import java.math.BigInteger;
@@ -17,6 +18,11 @@ public class AccountRepoImpl implements AccountRepository {
     @Override
     public List<Account> findAll() {
         return dataService.findAllAccuont();
+    }
+
+    @Override
+    public Client getClientByAccountNumber(Long id) {
+        return dataService.getClientByAccountNumber(id);
     }
 
     @Override

@@ -1,7 +1,6 @@
-package ru.sber.bootcamp.model.repository;
+package ru.sber.bootcamp.model_DAO.repository;
 
-import ru.sber.bootcamp.model.entity.Account;
-import ru.sber.bootcamp.model.entity.Client;
+import ru.sber.bootcamp.model_DAO.entity.Account;
 import ru.sber.bootcamp.service.DataConnectionService;
 
 import java.math.BigInteger;
@@ -32,6 +31,10 @@ public class AccountRepoImpl implements AccountRepository {
 
     @Override
     public void balanceDecrement(BigInteger amount) {
+    }
 
+    @Override
+    public Account getAccountByCardNumber(Long cardNumber) {
+        return dataService.getAccountByCardNumber(cardNumber) ;
     }
 }

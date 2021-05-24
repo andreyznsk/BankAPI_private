@@ -6,8 +6,8 @@ create table Account
     open_date DATE NOT NULL
 );
 
-INSERT INTO Account (account_number, balance, open_date) VALUES (1111,0.0,'2020-01-01');
-INSERT INTO Account (account_number, balance, open_date) VALUES (1112,0.0,'2020-01-01');
+INSERT INTO Account (account_number, balance, open_date) VALUES (1111,10000.0,'2020-01-01');
+INSERT INTO Account (account_number, balance, open_date) VALUES (1112,2000.0,'2020-01-01');
 
 create table Client(
   id IDENTITY PRIMARY KEY,

@@ -1,6 +1,5 @@
-package ru.sber.bootcamp.model.entity;
+package ru.sber.bootcamp.model_DAO.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class Card {

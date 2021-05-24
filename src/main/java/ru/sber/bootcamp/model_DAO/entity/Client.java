@@ -1,4 +1,4 @@
-package ru.sber.bootcamp.model.entity;
+package ru.sber.bootcamp.model_DAO.entity;
 
 
 public class Client {

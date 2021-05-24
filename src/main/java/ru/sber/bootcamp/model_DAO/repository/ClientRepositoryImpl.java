@@ -1,6 +1,6 @@
-package ru.sber.bootcamp.model.repository;
+package ru.sber.bootcamp.model_DAO.repository;
 
-import ru.sber.bootcamp.model.entity.Client;
+import ru.sber.bootcamp.model_DAO.entity.Client;
 import ru.sber.bootcamp.service.DataConnectionService;
 
 public class ClientRepositoryImpl implements ClientRepository {

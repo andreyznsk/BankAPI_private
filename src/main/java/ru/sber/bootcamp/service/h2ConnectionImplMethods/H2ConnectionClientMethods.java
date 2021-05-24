@@ -1,7 +1,6 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
-import ru.sber.bootcamp.model.entity.Client;
-import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.model_DAO.entity.Client;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,6 +24,9 @@ public class H2ConnectionClientMethods {
     }
 
     public Client getClientByAccountNumber(Long accountNumber) {
+       if (accountNumber == null) {
+           return null;
+       }
         Client client = new Client();
 
         try {

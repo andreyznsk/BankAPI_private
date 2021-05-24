@@ -1,7 +1,6 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
-import ru.sber.bootcamp.model.entity.Account;
-import ru.sber.bootcamp.model.entity.Card;
+import ru.sber.bootcamp.model_DAO.entity.Card;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +12,7 @@ import java.util.List;
 public class H2ConnectionCardMethods {
 
     private PreparedStatement psGetAllCards;
+    private PreparedStatement psGetAllCardByAccountNumber;
     Connection connection;
 
     public H2ConnectionCardMethods(Connection connection) {
@@ -21,19 +21,45 @@ public class H2ConnectionCardMethods {
 
     public void prepareAllStatements() throws SQLException {
             psGetAllCards = connection.prepareStatement("select * from CARD");
+            psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?");
+    }
+
+    public Card cardInit(ResultSet rs) throws SQLException {
+        Card card = new Card();
+        card.setId(rs.getLong(1));
+        card.setAccountNumber(rs.getLong(2));
+        card.setCardNumber(rs.getLong(3));
+        card.setDateValidThru(rs.getDate(4));
+        card.setCVC_code(rs.getInt(5));
+       return card;
     }
 
     public List<Card> getAllCard(){
         List<Card> cards = new ArrayList<>();
         try {
             ResultSet rs = psGetAllCards.executeQuery();
+            while (rs.next()) {
+                Card card = cardInit(rs);
+                cards.add(card);
+            }
+            rs.close();
+        } catch (SQLException throwables) {
+            System.err.println(throwables.getErrorCode());
+            throwables.printStackTrace();
+        }
+        return cards;
+    }
+
+    public List getAllCardByAccountNumber(Long accountNumber) {
+        if(accountNumber == null) {
+            return null;
+        }
+        List<Card> cards = new ArrayList<>();
+        try {
+            psGetAllCardByAccountNumber.setLong(1,accountNumber);
+            ResultSet rs = psGetAllCardByAccountNumber.executeQuery();
             while (rs.next()){
-                Card card = new Card();
-                card.setId(rs.getLong(1));
-                card.setAccountNumber(rs.getLong(2));
-                card.setCardNumber(rs.getLong(3));
-                card.setDateValidThru(rs.getDate(4));
-                card.setCVC_code(rs.getInt(5));
+                Card card = cardInit(rs);
                 cards.add(card);
             }
             rs.close();

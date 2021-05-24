@@ -1,8 +1,8 @@
 package ru.sber.bootcamp.service;
 
-import ru.sber.bootcamp.model.entity.Account;
-import ru.sber.bootcamp.model.entity.Card;
-import ru.sber.bootcamp.model.entity.Client;
+import ru.sber.bootcamp.model_DAO.entity.Account;
+import ru.sber.bootcamp.model_DAO.entity.Card;
+import ru.sber.bootcamp.model_DAO.entity.Client;
 
 import java.util.List;
 
@@ -22,6 +22,10 @@ public interface DataConnectionService {
     List<Card> findAllCards();
 
     Card getCardByCardId(Long id);
-
+//----------------Card Methods------------------
     Card getCardByCardNumber(Long cardNumber);
+
+    List getAllCardByAccountNumber(Long accountNumber);
+
+    Account getAccountByCardNumber(Long cardNumber);
 }

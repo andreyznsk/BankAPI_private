@@ -1,10 +1,9 @@
 package ru.sber.bootcamp.service;
 
 import org.h2.tools.Server;
-import ru.sber.bootcamp.model.entity.Account;
-import ru.sber.bootcamp.model.entity.Card;
-import ru.sber.bootcamp.model.entity.Client;
-import ru.sber.bootcamp.service.DataConnectionService;
+import ru.sber.bootcamp.model_DAO.entity.Account;
+import ru.sber.bootcamp.model_DAO.entity.Card;
+import ru.sber.bootcamp.model_DAO.entity.Client;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionAccountMethods;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionCardMethods;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionClientMethods;
@@ -56,6 +55,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
             this.h2ConnectionClientMethods = new H2ConnectionClientMethods(connection, h2ConnectionAccountMethods);
         if (enableTcpServer) {
             server = Server.createTcpServer().start();
+            System.out.println(server.getStatus());
         }
 
     }
@@ -146,6 +146,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     }
 
+    @Override
+    public Account getAccountByCardNumber(Long cardNumber) {
+        return h2ConnectionAccountMethods.getAccountByCardNumber(cardNumber);
+    }
+
     //================Client methods=========================
     /**
      * Метод полчения клиента по номеру счета
@@ -163,6 +168,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public List<Card> findAllCards() {
         return h2ConnectionCardMethods.getAllCard();
+    }
+
+    @Override
+    public List getAllCardByAccountNumber(Long accountNumber) {
+        return h2ConnectionCardMethods.getAllCardByAccountNumber(accountNumber);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package ru.sber.bootcamp.model.repository;
+package ru.sber.bootcamp.model_DAO.repository;
 
-import ru.sber.bootcamp.model.entity.Card;
+import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.service.DataConnectionService;
 
 import java.util.List;
@@ -28,4 +28,8 @@ public class CardRepositoryImpl implements CardRepository {
         return dataConnectionService.getCardByCardId(id);
     }
 
+    @Override
+    public List getAllCardsByAccountNumber(Long accountNumber) {
+        return dataConnectionService.getAllCardByAccountNumber(accountNumber);
+    }
 }

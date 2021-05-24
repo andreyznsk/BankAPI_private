@@ -2,7 +2,7 @@ package ru.sber.bootcamp;
 
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model.repository.*;
+import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -17,7 +17,7 @@ public class StartApp {
     public static void main(String[] args) {
         boolean tcpServer = false;
         if (args.length != 0) {
-            System.out.println(args[0]);
+            System.out.println("System arg is: " + args[0]);
             if (args[0].toLowerCase(Locale.ROOT).equals("tcp")) {
                 tcpServer = true;
             }

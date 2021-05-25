@@ -11,4 +11,6 @@ public interface CardRepository {
     Card getCardById(Long id);
 
     List getAllCardsByAccountNumber(Long accountNumber);
+
+    void addCardByAccountNumber(Card card);
 }

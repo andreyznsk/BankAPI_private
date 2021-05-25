@@ -92,7 +92,7 @@ public class ClientController {
         return jsonObject;
     }
 
-    public void UpdateBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
+    public void updateBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
 
         Card card = cardRepository.getCardByCardNumber(cardNumber);
         if(card==null) {
@@ -106,5 +106,13 @@ public class ClientController {
             accountRepository.updateAccount(account);
         }
 
+    }
+
+    public void addCardByAccountNumber(Long accountNumber) {
+        if(accountNumber == null) {
+            return;
+        }
+        Card card = new Card();
+        cardRepository.addCardByAccountNumber(card);
     }
 }

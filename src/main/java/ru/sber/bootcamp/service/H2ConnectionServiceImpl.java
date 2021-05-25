@@ -189,5 +189,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     public Card getCardByCardNumber(Long cardNumber) {
         return h2ConnectionCardMethods.getCardByCardNumber(cardNumber);
     }
+
+    @Override
+    public void addCardByAccountNumber(Card card) {
+        h2ConnectionCardMethods.addCardByAccountNumber(card);
+    }
 }
 

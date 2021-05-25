@@ -32,4 +32,9 @@ public class CardRepositoryImpl implements CardRepository {
     public List getAllCardsByAccountNumber(Long accountNumber) {
         return dataConnectionService.getAllCardByAccountNumber(accountNumber);
     }
+
+    @Override
+    public void addCardByAccountNumber(Card card) {
+        dataConnectionService.addCardByAccountNumber(card);
+    }
 }

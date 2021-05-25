@@ -1,11 +1,9 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
+import org.w3c.dom.ls.LSOutput;
 import ru.sber.bootcamp.model_DAO.entity.Card;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +12,7 @@ public class H2ConnectionCardMethods {
     private PreparedStatement psGetAllCards;
     private PreparedStatement psGetAllCardByAccountNumber;
     private PreparedStatement psGetCardBuCardNumber;
+    private PreparedStatement psAddCardByAccountNumber;
     Connection connection;
 
     public H2ConnectionCardMethods(Connection connection) {
@@ -24,6 +23,9 @@ public class H2ConnectionCardMethods {
             psGetAllCards = connection.prepareStatement("select * from CARD");
             psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?");
             psGetCardBuCardNumber = connection.prepareStatement("SELECT * FROM CARD WHERE CARD_NUMBER = ?");
+            psAddCardByAccountNumber = connection.prepareStatement("INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)\n" +
+                    "VALUES (?, ?, ?, ?);");
+
     }
 
     public Card cardInit(ResultSet rs) throws SQLException {
@@ -91,5 +93,26 @@ public class H2ConnectionCardMethods {
            return null;
         }
         return card;
+    }
+
+    public void addCardByAccountNumber(Card card) {
+        if (card.getId() == null) {
+            System.err.println("card is null in method addCardByAccount");
+            return;
+        }
+        try {
+            psAddCardByAccountNumber.setLong(1,card.getAccountNumber());
+            psAddCardByAccountNumber.setLong(2,card.getCardNumber());
+            psAddCardByAccountNumber.setDate(3,(Date) card.getDateValidThru());
+            psAddCardByAccountNumber.setInt(4,card.getCVC_code());
+
+            if ((psAddCardByAccountNumber.executeUpdate() == 1)) {
+                System.out.println("Card added");
+            } else {
+                System.err.println("Card not added!!!");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

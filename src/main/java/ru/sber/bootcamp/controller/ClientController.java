@@ -2,6 +2,7 @@ package ru.sber.bootcamp.controller;
 
 import org.json.JSONObject;
 import ru.sber.bootcamp.model_DAO.entity.Account;
+import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.entity.Client;
 import ru.sber.bootcamp.model_DAO.repository.AccountRepository;
 import ru.sber.bootcamp.model_DAO.repository.CardRepository;
@@ -89,5 +90,21 @@ public class ClientController {
         BalanceDTO balanceDTO = balanceDTOConverter.balanceDTO(account);
         jsonObject = gsonConverter.convertObjectToJson(balanceDTO);
         return jsonObject;
+    }
+
+    public void UpdateBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
+
+        Card card = cardRepository.getCardByCardNumber(cardNumber);
+        if(card==null) {
+            System.out.println("Карта не найдена");
+            return;
+        }
+        System.out.println(card);
+        if(card.getCVC_code()==CVC ){
+            Account account = accountRepository.getAccountByCardNumber(cardNumber);
+            account.incBalance(amount);
+            accountRepository.updateAccount(account);
+        }
+
     }
 }

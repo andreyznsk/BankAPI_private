@@ -36,65 +36,48 @@ class ClientHttpHandler implements HttpHandler {
 
     private void handlePOST(HttpExchange t) throws Exception {
         System.out.println("req method is "+t.getRequestMethod());
-        Map<String, Object> parameters = new HashMap<>();
         InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
         String query = br.readLine();
-        parseQuery(query, parameters);
-
-        sendJsonToURl(query, "http://localhost:8000/");
+        JSONObject js = parseQuery(query);
+        String response = sendJsonToURl(js, "http://localhost:8000/bank_api/balance_inc");
 
         // Вывести запрос на страницу пользователя.
-        StringBuilder response = new StringBuilder();
-        for (String key : parameters.keySet())
-            response.append(key).append(" = ").append(parameters.get(key)).append("\n");
-        byte[] bytes = response.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         t.sendResponseHeaders(200, bytes.length);
         OutputStream os = t.getResponseBody();
         os.write(bytes);
         os.close();
     }
 
-    private void sendJsonToURl(String query, String targetURL) throws Exception {
-     /*   try {
-            System.out.println("Query: " + query);
-            HttpURLConnection connection;
+    private String sendJsonToURl(JSONObject jsonObject, String targetURL){
+
+        try {
             URL url = new URL(targetURL);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);
-            byte[] bytes = query.getBytes(StandardCharsets.UTF_8);
-            connection.setRequestProperty("Content-Length",String.valueOf(-1));
-            connection.setRequestProperty("Content-Language", "ru-RU");
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(jsonObject.toString());
+            wr.flush();
 
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
+            // Get the response
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                System.out.println(line);
+            }
+            wr.close();
+            rd.close();
+            return "Send to Server OK!";
+        } catch (Exception ignored) {
+        }
+        return "some Error!!!";
 
-            //Send request
-            OutputStream os = connection.getOutputStream();
-            os.write(bytes);
-            os.close();
-            connection.disconnect();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        Socket socket = new Socket(targetURL, 8000);
-        String request = "GET / HTTP/1.0\r\n\r\n";
-        OutputStream os = socket.getOutputStream();
-        os.write(request.getBytes());
-        os.flush();
-
-        InputStream is = socket.getInputStream();
-        int ch;
-        while( (ch=is.read())!= -1)
-            System.out.print((char)ch);
-        socket.close();
     }
 
     public void handleGet(HttpExchange t) throws IOException {
         System.out.println("req method is "+t.getRequestMethod());
-        File databaseScript = new File("UserService1/src/main/resources/form.html");
+        File databaseScript = new File("UserService1/src/main/resources/balance_inc_form.html");
         StringBuilder stringBuilder = new StringBuilder();
         try {
             Scanner myReader = new Scanner(databaseScript);
@@ -119,41 +102,38 @@ class ClientHttpHandler implements HttpHandler {
 
     }
 
-    public static void parseQuery(String query, Map<String,
-            Object> parameters) throws UnsupportedEncodingException {
-
+    public static JSONObject parseQuery(String query) {
+        JSONObject jsonObject = new JSONObject();
         if (query != null) {
-            String pairs[] = query.split("[&]");
-            for (String pair : pairs) {
-                String param[] = pair.split("[=]");
-                String key = null;
-                String value = null;
-                if (param.length > 0) {
-                    key = URLDecoder.decode(param[0],
+            String[] pairs = query.split("[&]");
+            String[] card_number = pairs[0].split("[=]");
+            String[] amount = pairs[1].split("[=]");
+            String[] cvc = pairs[2].split("[=]");
+            jsonObject.put("card_number",Long.parseLong(card_number[1]));
+            jsonObject.put("amount",Double.parseDouble(amount[1]));
+            jsonObject.put("CVC",Integer.parseInt(cvc[1]));
+            return jsonObject;
+            //String[] key = new String[2];
+            //Long cardNumber;
+            /*double amount_double;
+                if (card_number.length > 0) {
+                    key[0] = URLDecoder.decode((card_number[0]),
                             System.getProperty("file.encoding"));
                 }
 
-                if (param.length > 1) {
-                    value = URLDecoder.decode(param[1],
-                            System.getProperty("file.encoding"));
+                if (card_number.length > 1) {
+                    cardNumber = Long.parseLong(card_number[1]);
                 }
-
-                if (parameters.containsKey(key)) {
-                    Object obj = parameters.get(key);
-                    if (obj instanceof List<?>) {
-                        List<String> values = (List<String>) obj;
-                        values.add(value);
-
-                    } else if (obj instanceof String) {
-                        List<String> values = new ArrayList<String>();
-                        values.add((String) obj);
-                        values.add(value);
-                        parameters.put(key, values);
-                    }
-                } else {
-                    parameters.put(key, value);
-                }
+            if (amount.length > 0) {
+                key[1] = URLDecoder.decode((amount[0]),
+                        System.getProperty("file.encoding"));
             }
+
+            if (amount.length > 1) {
+                amount_double = Double.parseDouble(amount[1]);
+            }*/
+
         }
+        return jsonObject;
     }
 }

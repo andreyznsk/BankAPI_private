@@ -27,7 +27,7 @@ public class HttpServerStarter {
 
     public void start(){
         server.start();
-
+        System.out.println("Server start on : " + server.getAddress());
     }
 
     public void stop(){

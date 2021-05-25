@@ -2,10 +2,7 @@ package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
 import ru.sber.bootcamp.model_DAO.entity.Account;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +11,8 @@ public class H2ConnectionAccountMethods {
 
     private PreparedStatement psAccountSelectAll;
     private PreparedStatement psGetAccountByAccountNumber;
-    private PreparedStatement getPsGetAccountByCardNumber;
+    private PreparedStatement psGetPsGetAccountByCardNumber;
+    private PreparedStatement psUpdateAccount;
 
     public H2ConnectionAccountMethods(Connection connection) {
         this.connection = connection;
@@ -24,11 +22,14 @@ public class H2ConnectionAccountMethods {
     public void prepareAllStatements() throws SQLException {
         psAccountSelectAll = connection.prepareStatement("SELECT * FROM account");
         psGetAccountByAccountNumber = connection.prepareStatement("SELECT * FROM account WHERE account_number = ?");
-        getPsGetAccountByCardNumber = connection.prepareStatement(
+        psGetPsGetAccountByCardNumber = connection.prepareStatement(
                 "SELECT A.* from CARD " +
                 "join ACCOUNT A on A.ACCOUNT_NUMBER = CARD.ACCOUNT_NUMBER" +
                 " WHERE CARD_NUMBER =?");
-
+        psUpdateAccount = connection.prepareStatement(
+                "UPDATE ACCOUNT SET BALANCE = ? , " +
+                "OPEN_DATE = ?  " +
+                        "WHERE ACCOUNT_NUMBER = ?");
     }
 
     /**
@@ -91,8 +92,8 @@ public class H2ConnectionAccountMethods {
     public Account getAccountByCardNumber(Long cardNumber) {
         Account account = new Account();
         try {
-            getPsGetAccountByCardNumber.setLong(1, cardNumber);
-            ResultSet rsAccount = getPsGetAccountByCardNumber.executeQuery();
+            psGetPsGetAccountByCardNumber.setLong(1, cardNumber);
+            ResultSet rsAccount = psGetPsGetAccountByCardNumber.executeQuery();
             while(rsAccount.next()){
                 account = setAccount(rsAccount);
             }
@@ -101,5 +102,17 @@ public class H2ConnectionAccountMethods {
         }
 
         return account;
+    }
+
+    public void updateAccount(Account account) {
+        try {
+            psUpdateAccount.setBigDecimal(1, account.getBalance());
+            psUpdateAccount.setDate(2, (Date) account.getOpenDate());
+            psUpdateAccount.setLong(3,account.getAccountNumber());
+            int rsAccount = psUpdateAccount.executeUpdate();
+            System.out.println(rsAccount);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

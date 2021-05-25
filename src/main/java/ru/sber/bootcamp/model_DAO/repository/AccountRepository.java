@@ -9,8 +9,8 @@ public interface AccountRepository {
 
     List<Account> findAll();
     Account getById(Long accountNumber);
-    void balanceIncrement(BigInteger amount);
-    void balanceDecrement(BigInteger amount);
 
     Account getAccountByCardNumber(Long cardNumber);
+
+    void updateAccount(Account account);
 }

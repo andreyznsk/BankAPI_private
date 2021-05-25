@@ -24,17 +24,14 @@ public class AccountRepoImpl implements AccountRepository {
         return dataService.getAccountByAccountNumber( accountNumber);
     }
 
-    @Override
-    public void balanceIncrement(BigInteger amount) {
-
-    }
-
-    @Override
-    public void balanceDecrement(BigInteger amount) {
-    }
 
     @Override
     public Account getAccountByCardNumber(Long cardNumber) {
         return dataService.getAccountByCardNumber(cardNumber) ;
+    }
+
+    @Override
+    public void updateAccount(Account account) {
+        dataService.updateAccount(account);
     }
 }

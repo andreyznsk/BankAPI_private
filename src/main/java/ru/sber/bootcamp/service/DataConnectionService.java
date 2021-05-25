@@ -28,4 +28,6 @@ public interface DataConnectionService {
     List getAllCardByAccountNumber(Long accountNumber);
 
     Account getAccountByCardNumber(Long cardNumber);
+
+    void updateAccount(Account account);
 }

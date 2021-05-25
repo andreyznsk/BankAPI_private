@@ -151,6 +151,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         return h2ConnectionAccountMethods.getAccountByCardNumber(cardNumber);
     }
 
+    @Override
+    public void updateAccount(Account account) {
+         h2ConnectionAccountMethods.updateAccount(account);
+    }
+
     //================Client methods=========================
     /**
      * Метод полчения клиента по номеру счета
@@ -182,7 +187,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     @Override
     public Card getCardByCardNumber(Long cardNumber) {
-        return null;
+        return h2ConnectionCardMethods.getCardByCardNumber(cardNumber);
     }
 }
 

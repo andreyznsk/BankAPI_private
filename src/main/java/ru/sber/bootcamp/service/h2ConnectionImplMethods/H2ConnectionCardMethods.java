@@ -13,6 +13,7 @@ public class H2ConnectionCardMethods {
 
     private PreparedStatement psGetAllCards;
     private PreparedStatement psGetAllCardByAccountNumber;
+    private PreparedStatement psGetCardBuCardNumber;
     Connection connection;
 
     public H2ConnectionCardMethods(Connection connection) {
@@ -22,6 +23,7 @@ public class H2ConnectionCardMethods {
     public void prepareAllStatements() throws SQLException {
             psGetAllCards = connection.prepareStatement("select * from CARD");
             psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?");
+            psGetCardBuCardNumber = connection.prepareStatement("SELECT * FROM CARD WHERE CARD_NUMBER = ?");
     }
 
     public Card cardInit(ResultSet rs) throws SQLException {
@@ -68,5 +70,26 @@ public class H2ConnectionCardMethods {
             throwables.printStackTrace();
         }
         return cards;
+    }
+
+    public Card getCardByCardNumber(Long cardNumber) {
+        if(cardNumber == null) {
+            return null;
+        }
+        Card card = new Card();
+        try {
+            psGetCardBuCardNumber.setLong(1,cardNumber);
+            ResultSet rsCard = psGetCardBuCardNumber.executeQuery();
+
+            while (rsCard.next()){
+             card = cardInit(rsCard);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        if (card.getId() == null) {
+           return null;
+        }
+        return card;
     }
 }

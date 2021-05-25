@@ -7,8 +7,11 @@
 <body>
 <form id="auth" action="/balance_inc" method="post">
     <p>"Пополнить баланс по номеру карты"</p>
-    <p><input name="card_number" placeholder="1111222233334441">
-        <input name="pass"></p>
+    <p><input type="number" name="card_number" placeholder="1111222233334441" minlength="16" maxlength="16">
+        <input type="number" name="amount" required="required" pattern="{1,5}"></p>
+    <input type="number" name="CVC_code" placeholder="111" minlength="3" maxlength="3" required="required" pattern="{1,5}">
+    <br>
+    <br>
     <p><input type="submit"></p>
 </form>
 </body>

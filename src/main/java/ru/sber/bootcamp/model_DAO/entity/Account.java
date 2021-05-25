@@ -51,4 +51,8 @@ public class Account {
     public void setOpenDate(Date openDate) {
         this.openDate = openDate;
     }
+
+    public void incBalance(Double amount) {
+       this.balance =  this.balance.add(BigDecimal.valueOf(amount));
+    }
 }

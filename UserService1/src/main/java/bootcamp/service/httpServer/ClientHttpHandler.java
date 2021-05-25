@@ -113,26 +113,6 @@ class ClientHttpHandler implements HttpHandler {
             jsonObject.put("amount",Double.parseDouble(amount[1]));
             jsonObject.put("CVC",Integer.parseInt(cvc[1]));
             return jsonObject;
-            //String[] key = new String[2];
-            //Long cardNumber;
-            /*double amount_double;
-                if (card_number.length > 0) {
-                    key[0] = URLDecoder.decode((card_number[0]),
-                            System.getProperty("file.encoding"));
-                }
-
-                if (card_number.length > 1) {
-                    cardNumber = Long.parseLong(card_number[1]);
-                }
-            if (amount.length > 0) {
-                key[1] = URLDecoder.decode((amount[0]),
-                        System.getProperty("file.encoding"));
-            }
-
-            if (amount.length > 1) {
-                amount_double = Double.parseDouble(amount[1]);
-            }*/
-
         }
         return jsonObject;
     }

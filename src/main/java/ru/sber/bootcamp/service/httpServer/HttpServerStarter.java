@@ -20,13 +20,14 @@ public class HttpServerStarter {
         }
 
         HttpHandler myHttpHandler = new MyHttpHandler(controller);
-        server.createContext("/bankapi", myHttpHandler);
+        server.createContext("/bank_api", myHttpHandler);
         server.setExecutor(null); // creates a default executor
 
     }
 
     public void start(){
         server.start();
+
     }
 
     public void stop(){

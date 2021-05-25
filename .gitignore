@@ -1,6 +1,7 @@
 #### Folders ####
 /.idea/
 /target/
+/UserService1/target/
 
 #### Files #####
 *.iml

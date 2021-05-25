@@ -5,13 +5,10 @@ import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class MyHttpHandler implements HttpHandler {
@@ -28,7 +25,26 @@ class MyHttpHandler implements HttpHandler {
      * @throws IOException
      */
     @Override
-    public void handle(HttpExchange t) throws IOException {
+    public void handle(HttpExchange t) {
+        System.out.println("Пришел запрос!!!");
+        if (t.getRequestMethod().equals("GET")) {
+            try {
+                handleGET(t);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                handlePOST(t);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public void handleGET(HttpExchange t) throws IOException {
         String response;
         String url = t.getRequestURI().toString();
         String[] path = url.split("/");
@@ -70,4 +86,21 @@ class MyHttpHandler implements HttpHandler {
         os.write(bytes);
         os.close();
     }
+
+    private void handlePOST(HttpExchange t) throws Exception {
+        System.out.println("req method is "+t.getRequestMethod());
+        InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+        JSONObject jsonObject = new JSONObject(query);
+        // Вывести запрос на страницу пользователя.
+        String response = jsonObject.toString(2);
+        System.out.println(response);
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        t.sendResponseHeaders(200, bytes.length);
+        OutputStream os = t.getResponseBody();
+        os.write(bytes);
+        os.close();
+    }
+
 }

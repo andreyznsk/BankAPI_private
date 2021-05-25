@@ -13,13 +13,13 @@ public class HttpServerStarter {
 
     public HttpServerStarter() {
         try {
-            server = HttpServer.create(new InetSocketAddress(8080), 0);
+            server = HttpServer.create(new InetSocketAddress(9000), 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         HttpHandler clientHttpHandler = new ClientHttpHandler();
-        server.createContext("/incbalance", clientHttpHandler);
+        server.createContext("/balance_inc", clientHttpHandler);
         server.setExecutor(null);
         System.out.println(server.getAddress());
     }

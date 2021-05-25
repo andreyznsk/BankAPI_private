@@ -6,7 +6,7 @@ import bootcamp.service.httpServer.HttpServerStarter;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class StartApp {
+public class UserServer {
 
     public static void main(String[] args) {
 

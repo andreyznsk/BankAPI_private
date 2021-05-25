@@ -18,8 +18,8 @@ public class HttpServerStarter {
             e.printStackTrace();
         }
 
-        HttpHandler clientHttpHandler = new ClientHttpHandler();
-        server.createContext("/balance_inc", clientHttpHandler);
+        HttpHandler clientHttpHandler = new Http_ROOT_Handler();
+        server.createContext("/client_api", clientHttpHandler);
         server.setExecutor(null);
         System.out.println(server.getAddress());
     }

@@ -2,6 +2,7 @@ package ru.sber.bootcamp.model_DAO.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 public class Account {
 
@@ -54,5 +55,29 @@ public class Account {
 
     public void incBalance(Double amount) {
        this.balance =  this.balance.add(BigDecimal.valueOf(amount));
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber=" + accountNumber +
+                ", balance=" + balance +
+                ", openDate=" + openDate +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) && Objects.equals(accountNumber, account.accountNumber) && balance.compareTo(account.balance)==0
+                && Objects.equals(openDate, account.openDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, accountNumber, balance, openDate);
     }
 }

@@ -124,7 +124,7 @@ public class ClientController {
             cartNumber++;
             Random random = new Random();
             int CVC = random.nextInt(999);
-            SimpleDateFormat sdf = new SimpleDateFormat("Y-M-D");
+            SimpleDateFormat sdf = new SimpleDateFormat("y-M-d");
             Date date = new Date();
             Calendar c = Calendar.getInstance();
             c.setTime(date);

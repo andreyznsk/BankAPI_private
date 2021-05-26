@@ -13,6 +13,7 @@ public class H2ConnectionAccountMethods {
     private PreparedStatement psGetAccountByAccountNumber;
     private PreparedStatement psGetPsGetAccountByCardNumber;
     private PreparedStatement psUpdateAccount;
+    private PreparedStatement psGetAccountById;
 
     public H2ConnectionAccountMethods(Connection connection) {
         this.connection = connection;
@@ -26,10 +27,12 @@ public class H2ConnectionAccountMethods {
                 "SELECT A.* from CARD " +
                 "join ACCOUNT A on A.ACCOUNT_NUMBER = CARD.ACCOUNT_NUMBER" +
                 " WHERE CARD_NUMBER =?");
+
         psUpdateAccount = connection.prepareStatement(
                 "UPDATE ACCOUNT SET BALANCE = ? , " +
                 "OPEN_DATE = ?  " +
                         "WHERE ACCOUNT_NUMBER = ?");
+        psGetAccountById = connection.prepareStatement("SELECT * FROM account WHERE id = ?");
     }
 
     /**
@@ -104,15 +107,33 @@ public class H2ConnectionAccountMethods {
         return account;
     }
 
-    public void updateAccount(Account account) {
+    public int updateAccount(Account account) {
+        int result = 0;
         try {
             psUpdateAccount.setBigDecimal(1, account.getBalance());
             psUpdateAccount.setDate(2, (Date) account.getOpenDate());
             psUpdateAccount.setLong(3,account.getAccountNumber());
-            int rsAccount = psUpdateAccount.executeUpdate();
-            System.out.println(rsAccount);
+            result = psUpdateAccount.executeUpdate();
+            if (result == 1) {
+                System.out.println("Balance update - OK!");
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return result;
+    }
+
+    public Account getAccountById(long id) {
+        Account account = new Account();
+        try {
+            psGetAccountById.setLong(1, id);
+            ResultSet rsAccount = psGetAccountById.executeQuery();
+            while(rsAccount.next()){
+                account = setAccount(rsAccount);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return account;
     }
 }

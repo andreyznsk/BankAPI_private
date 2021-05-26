@@ -8,9 +8,10 @@ import java.util.List;
 public interface AccountRepository {
 
     List<Account> findAll();
-    Account getById(Long accountNumber);
 
     Account getAccountByCardNumber(Long cardNumber);
 
-    void updateAccount(Account account);
+    int updateAccount(Account account);
+
+    Account getAccountById(long id);
 }

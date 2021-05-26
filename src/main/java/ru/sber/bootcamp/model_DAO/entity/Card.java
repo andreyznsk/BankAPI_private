@@ -13,6 +13,14 @@ public class Card {
     public Card() {
     }
 
+    public Card(Long id, Long accountNumber, Long cardNumber, Date dateValidThru, int CVC_code) {
+        this.id = id;
+        this.accountNumber = accountNumber;
+        this.cardNumber = cardNumber;
+        this.dateValidThru = dateValidThru;
+        this.CVC_code = CVC_code;
+    }
+
     public Long getId() {
         return id;
     }

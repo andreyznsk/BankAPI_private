@@ -25,13 +25,17 @@ public interface DataConnectionService {
 //----------------Card Methods------------------
     Card getCardByCardNumber(Long cardNumber);
 
-    List getAllCardByAccountNumber(Long accountNumber);
+    List<Card> getAllCardByAccountNumber(Long accountNumber);
 
     Account getAccountByCardNumber(Long cardNumber);
 
-    void updateAccount(Account account);
+    int updateAccount(Account account);
 
     void addCardByAccountNumber(Card card);
 
     Card getCardWithMaxNumber();
+
+    void setDisableAutocommit();
+
+    Account getAccountById(long id);
 }

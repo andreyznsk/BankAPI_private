@@ -22,6 +22,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private Statement stmt;
     private Server server;
     private boolean enableTcpServer;
+    private boolean enableAutoCommit;
 
     private H2ConnectionCardMethods h2ConnectionCardMethods;
     H2ConnectionAccountMethods h2ConnectionAccountMethods;
@@ -37,8 +38,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         this.URL = (property.length > 0) ? property[0] : "";
         this.USER = (property.length > 1) ? property[1] : "";
         this.PASSWORD = (property.length > 2) ? property[2] : "";
-
+        this.enableAutoCommit = true;
     }
+
+
 
 
     /**
@@ -49,10 +52,13 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private void connect() throws SQLException {
 
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            this.connection.setAutoCommit(enableAutoCommit);
+            System.out.println("Server autoCommit mode: " + connection.getAutoCommit());
             this.stmt = connection.createStatement();
             this.h2ConnectionCardMethods = new H2ConnectionCardMethods(connection);
             this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods(connection);
             this.h2ConnectionClientMethods = new H2ConnectionClientMethods(connection, h2ConnectionAccountMethods);
+        System.out.println("Server TCP/IP mode: " + enableTcpServer);
         if (enableTcpServer) {
             server = Server.createTcpServer().start();
             System.out.println(server.getStatus());
@@ -121,7 +127,9 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public void stop() {
         System.out.println("Auth service has been stopped");
-        server.stop();
+        if (server!=null) {
+            server.stop();
+        }
         disconnect();
     }
     //===================Account methods===============
@@ -152,8 +160,8 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public void updateAccount(Account account) {
-         h2ConnectionAccountMethods.updateAccount(account);
+    public int updateAccount(Account account) {
+        return h2ConnectionAccountMethods.updateAccount(account);
     }
 
     //================Client methods=========================
@@ -176,7 +184,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public List getAllCardByAccountNumber(Long accountNumber) {
+    public List<Card> getAllCardByAccountNumber(Long accountNumber) {
         return h2ConnectionCardMethods.getAllCardByAccountNumber(accountNumber);
     }
 
@@ -198,6 +206,16 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public Card getCardWithMaxNumber() {
         return h2ConnectionCardMethods.getCardWithMaxNumber();
+    }
+
+    @Override
+    public void setDisableAutocommit() {
+        this.enableAutoCommit = false;
+    }
+
+    @Override
+    public Account getAccountById(long id) {
+        return h2ConnectionAccountMethods.getAccountById(id);
     }
 }
 

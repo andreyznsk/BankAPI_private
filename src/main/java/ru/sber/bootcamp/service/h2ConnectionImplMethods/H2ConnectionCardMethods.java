@@ -57,7 +57,7 @@ public class H2ConnectionCardMethods {
         return cards;
     }
 
-    public List getAllCardByAccountNumber(Long accountNumber) {
+    public List<Card> getAllCardByAccountNumber(Long accountNumber) {
         if(accountNumber == null) {
             return null;
         }

@@ -20,18 +20,17 @@ public class AccountRepoImpl implements AccountRepository {
     }
 
     @Override
-    public Account getById(Long accountNumber ) {
-        return dataService.getAccountByAccountNumber( accountNumber);
-    }
-
-
-    @Override
     public Account getAccountByCardNumber(Long cardNumber) {
         return dataService.getAccountByCardNumber(cardNumber) ;
     }
 
     @Override
-    public void updateAccount(Account account) {
-        dataService.updateAccount(account);
+    public int updateAccount(Account account) {
+        return dataService.updateAccount(account);
+    }
+
+    @Override
+    public Account getAccountById(long id) {
+        return dataService.getAccountById(id);
     }
 }

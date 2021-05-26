@@ -27,7 +27,7 @@ public class AccountRepositoryTest {
     public static void init() {
         dataConnectionService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig(),false);
         accountRepository = new AccountRepoImpl(dataConnectionService);
-        dataConnectionService.setDisableAutocommit();
+        //dataConnectionService.setDisableAutocommit();
         dataConnectionService.start();
 
     }
@@ -43,8 +43,8 @@ public class AccountRepositoryTest {
 
     @Test
     public void getAccountByCardNumber() {
-        Account accountTest = new Account(1l,1111l,BigDecimal.valueOf(10000.00), Date.valueOf("2020-01-01"));
-        Account account = accountRepository.getAccountByCardNumber(1111222233334441L);
+        Account accountTest = new Account(2l,1112l,BigDecimal.valueOf(2000.00), Date.valueOf("2020-01-01"));
+        Account account = accountRepository.getAccountByCardNumber(1112222233334441L);
         Assert.assertEquals(account,accountTest);
     }
 

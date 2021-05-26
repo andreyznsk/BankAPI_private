@@ -16,6 +16,7 @@ public class H2ConnectionCardMethods {
     private PreparedStatement psGetCardBuCardNumber;
     private PreparedStatement psAddCardByAccountNumber;
     private PreparedStatement psGetCardWithMaxCardNumber;
+    private PreparedStatement psGetCardById;
 
     public H2ConnectionCardMethods(Connection connection) {
         this.connection = connection;
@@ -28,6 +29,7 @@ public class H2ConnectionCardMethods {
             psAddCardByAccountNumber = connection.prepareStatement("INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)\n" +
                     "VALUES (?, ?, ?, ?);");
             psGetCardWithMaxCardNumber = connection.prepareStatement("SELECT MAX(CARD_NUMBER) FROM CARD WHERE CARD_NUMBER");
+            psGetCardById = connection.prepareStatement("SELECT * FROM CARD WHERE ID = ?");
 
     }
 
@@ -135,4 +137,26 @@ public class H2ConnectionCardMethods {
         return card;
 
     }
+
+    public Card getCardByCardId(Long id) {
+        if(id == null) {
+            return null;
+        }
+        Card card = new Card();
+        try {
+            psGetCardById.setLong(1,id);
+            ResultSet rsCard = psGetCardById.executeQuery();
+
+            while (rsCard.next()){
+                card = cardInit(rsCard);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        if (card.getId() == null) {
+            return null;
+        }
+        return card;
+    }
+
 }

@@ -43,7 +43,6 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
 
 
-
     /**
      * Служебный метод старта соединения с БД для старта использовать
      *  public void start()
@@ -190,7 +189,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     @Override
     public Card getCardByCardId(Long id) {
-        return null;
+        return h2ConnectionCardMethods.getCardByCardId(id);
     }
 
     @Override
@@ -210,7 +209,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     @Override
     public void setDisableAutocommit() {
-        this.enableAutoCommit = false;
+
     }
 
     @Override

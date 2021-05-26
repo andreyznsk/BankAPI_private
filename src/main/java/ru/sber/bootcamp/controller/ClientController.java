@@ -11,7 +11,11 @@ import ru.sber.bootcamp.model_DTO.BalanceDTO;
 import ru.sber.bootcamp.model_DTO.BalanceDTOConverter;
 import ru.sber.bootcamp.service.GsonConverter;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class ClientController {
 
@@ -19,7 +23,7 @@ public class ClientController {
     private final ClientRepository clientRepository;
     private final CardRepository cardRepository;
     private final GsonConverter gsonConverter;
-    private BalanceDTOConverter balanceDTOConverter;
+    private final BalanceDTOConverter balanceDTOConverter;
 
     public ClientController(AccountRepository accountRepository,
                             ClientRepository clientRepository,
@@ -38,9 +42,8 @@ public class ClientController {
      * @return String of List JsonObjects
      */
     public List<JSONObject> getAllAccounts(){
-        List<JSONObject> jsObjects = gsonConverter.convertListToGson(accountRepository.findAll());
         //return jsObjects.stream().map(t->t.toString(4)).collect(Collectors.joining(","));
-        return jsObjects;
+        return gsonConverter.convertListToGson(accountRepository.findAll());
     }
 
     /**
@@ -104,6 +107,8 @@ public class ClientController {
             Account account = accountRepository.getAccountByCardNumber(cardNumber);
             account.incBalance(amount);
             accountRepository.updateAccount(account);
+        } else {
+            System.out.println("CVC code invalid");
         }
 
     }
@@ -112,7 +117,24 @@ public class ClientController {
         if(accountNumber == null) {
             return;
         }
-        Card card = new Card();
-        cardRepository.addCardByAccountNumber(card);
+        Client client = clientRepository.getClientByAccountNumber(accountNumber);
+        if(client.getAccount().getAccountNumber() != null) {
+            Card card = cardRepository.getCardWithMaxNumber();
+            Long cartNumber = card.getCardNumber();
+            cartNumber++;
+            Random random = new Random();
+            int CVC = random.nextInt(999);
+            SimpleDateFormat sdf = new SimpleDateFormat("Y-M-D");
+            Date date = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.YEAR,3);
+            Date updateDate = c.getTime();
+            card.setCardNumber(cartNumber);
+            card.setAccountNumber(client.getAccount().getAccountNumber());
+            card.setCVC_code(CVC);
+            card.setDateValidThru(updateDate);
+            cardRepository.addCardByAccountNumber(card);
+        }
     }
 }

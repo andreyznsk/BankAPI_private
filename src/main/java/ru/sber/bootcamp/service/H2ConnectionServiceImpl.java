@@ -194,5 +194,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     public void addCardByAccountNumber(Card card) {
         h2ConnectionCardMethods.addCardByAccountNumber(card);
     }
+
+    @Override
+    public Card getCardWithMaxNumber() {
+        return h2ConnectionCardMethods.getCardWithMaxNumber();
+    }
 }
 

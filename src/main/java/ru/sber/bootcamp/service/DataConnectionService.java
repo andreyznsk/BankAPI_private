@@ -32,4 +32,6 @@ public interface DataConnectionService {
     void updateAccount(Account account);
 
     void addCardByAccountNumber(Card card);
+
+    Card getCardWithMaxNumber();
 }

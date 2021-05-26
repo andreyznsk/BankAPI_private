@@ -13,4 +13,6 @@ public interface CardRepository {
     List getAllCardsByAccountNumber(Long accountNumber);
 
     void addCardByAccountNumber(Card card);
+
+    Card getCardWithMaxNumber();
 }

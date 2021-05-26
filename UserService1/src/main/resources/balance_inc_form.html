@@ -7,9 +7,9 @@
 <body>
 <form id="auth" action="/client_api/balance_inc" method="post">
     <p>"Пополнить баланс по номеру карты"</p>
-    <p><input type="number" name="card_number" placeholder="1111222233334441" minlength="16" maxlength="16">
-        <input type="number" name="amount" required="required" pattern="{1,5}"></p>
-    <input type="number" name="CVC_code" placeholder="111" minlength="3" maxlength="3" required="required" pattern="{1,5}">
+    <p>Номер карты: <input type="number" name="card_number" value="0000000000000000" min="1111111111111111" max="9999999999999999"><br>
+    <p>Сумма: <input type="number" name="amount" value="0" min="1" max="999999"></p>
+    <p>CVC-Code<input type="number" name="CVC_code" value="000" min="111" max="999"></p>
     <br>
     <br>
     <p><input type="submit"></p>

@@ -2,12 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Пополнить баланс по номеру карты</title>
+    <title>Выпустить новую карту по счеу</title>
 </head>
 <body>
-<form id="auth" action="/client_api/add_card" method="post">
+<form id="add_card" action="/client_api/add_card" method="post">
     <p>"Выпустить новую карту по счету"</p>
-    <p><input type="number" name="account_number" placeholder="1111" minlength="4" maxlength="4">
+    <p>Введите номер счета: <input type="number" name="account_number" value="0000"
+                                   min="1" max="9999"></p>
     <br>
     <br>
     <p><input type="submit"></p>

@@ -37,4 +37,9 @@ public class CardRepositoryImpl implements CardRepository {
     public void addCardByAccountNumber(Card card) {
         dataConnectionService.addCardByAccountNumber(card);
     }
+
+    @Override
+    public Card getCardWithMaxNumber() {
+        return dataConnectionService.getCardWithMaxNumber();
+    }
 }

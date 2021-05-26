@@ -24,12 +24,12 @@ public class StartApp {
         }
 
         //Data base connection start
-        DataConnectionService h2DataService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig(),tcpServer);
-        h2DataService.start();
+        DataConnectionService dataService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig(),tcpServer);
+        dataService.start();
 
-        AccountRepository accountRepository = new AccountRepoImpl(h2DataService);
-        ClientRepository clientRepository = new ClientRepositoryImpl(h2DataService);
-        CardRepository cardRepository = new CardRepositoryImpl(h2DataService);
+        AccountRepository accountRepository = new AccountRepoImpl(dataService);
+        ClientRepository clientRepository = new ClientRepositoryImpl(dataService);
+        CardRepository cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
         ClientController controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
@@ -49,7 +49,7 @@ public class StartApp {
 
         httpServerStarter.stop();
         scanner.close();
-        h2DataService.stop();
+        dataService.stop();
 
 
     }

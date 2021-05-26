@@ -32,9 +32,10 @@ public class Http_POST_handle {
                 response = jsonObject.toString();
                 Long cardNumber = jsonObject.getLong("card_number");
                 Double amount = jsonObject.getDouble("amount");
-                Integer CVC = jsonObject.getInt("CVC");
+                int CVC = jsonObject.getInt("CVC_code");
                 System.out.println("cardNumber: " +cardNumber );
                 System.out.println("amount: " + amount);
+                System.out.println("CVC code" + CVC);
                 controller.updateBalanceByCardNumber(cardNumber,amount, CVC);
                 break;
             }
@@ -63,8 +64,7 @@ public class Http_POST_handle {
     private String getQuery(HttpExchange t) throws IOException {
         InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
-        String query = br.readLine();
-        return query;
+        return br.readLine();
     }
 
 }

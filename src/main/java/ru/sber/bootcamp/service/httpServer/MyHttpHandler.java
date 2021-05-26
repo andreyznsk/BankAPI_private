@@ -32,7 +32,7 @@ class MyHttpHandler implements HttpHandler {
      */
     @Override
     public void handle(HttpExchange t) {
-        System.out.println("Пришел запрос!!!");
+        System.out.printf("Server get request. Type: %s, URL: %s ", t.getRequestMethod(),t.getRequestURI());
         if (t.getRequestMethod().equals("GET")) {
             try {
                http_get_hendle.handleGET(t);

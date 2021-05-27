@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-class MyHttpHandler implements HttpHandler {
+class MyHttp_ROOT_Handler implements HttpHandler {
 
    private final ClientController controller;
 
    private Http_POST_handle http_post_handle;
    private Http_GET_hendle http_get_hendle;
 
-    public MyHttpHandler(ClientController controller) {
+    public MyHttp_ROOT_Handler(ClientController controller) {
         this.controller = controller;
         http_post_handle = new Http_POST_handle(controller);
         http_get_hendle = new Http_GET_hendle(controller);

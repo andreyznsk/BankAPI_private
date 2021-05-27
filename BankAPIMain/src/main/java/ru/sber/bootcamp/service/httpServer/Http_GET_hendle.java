@@ -25,7 +25,7 @@ public class Http_GET_hendle {
         String[] path = url.split("/");
         System.out.println("Path length: " + path.length);
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
-            case "show_all": {
+            case "show_all_accounts": {
                 JSONArray allAccounts = controller.getAllAccounts();
                 response = allAccounts.toString(4);
                 break;
@@ -50,9 +50,9 @@ public class Http_GET_hendle {
                 response = jsonObject.toString();
                 break;
             }
-            default: {
+            default: {//TESTED!!!
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("server_status","Command Error!!!");
+                jsonObject.put("Error","Command Error");
                 response = jsonObject.toString();
 
             }

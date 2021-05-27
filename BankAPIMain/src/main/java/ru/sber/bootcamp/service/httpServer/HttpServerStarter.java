@@ -19,7 +19,7 @@ public class HttpServerStarter {
             e.printStackTrace();
         }
 
-        HttpHandler myHttpHandler = new MyHttpHandler(controller);
+        HttpHandler myHttpHandler = new MyHttp_ROOT_Handler(controller);
         server.createContext("/bank_api", myHttpHandler);
         server.setExecutor(null); // creates a default executor
 

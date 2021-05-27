@@ -19,7 +19,7 @@ public class Http_POST_handle {
         this.controller = controller;
     }
 
-    protected void handlePOST(HttpExchange t) throws Exception {
+    protected String handlePOST(HttpExchange t) throws Exception {
         System.out.println("req method is :"+t.getRequestMethod());
         System.out.println("req url is: " + t.getRequestURI());
         String[] path = t.getRequestURI().toString().split("/");
@@ -64,11 +64,7 @@ public class Http_POST_handle {
             default: response = "\nCommand Error!!!";
         }
         // Вывести ответ на запрос на страницу пользователя.
-        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-        t.sendResponseHeaders(200, bytes.length);
-        OutputStream os = t.getResponseBody();
-        os.write(bytes);
-        os.close();
+        return response;
     }
 
     private String getQuery(HttpExchange t) throws IOException {

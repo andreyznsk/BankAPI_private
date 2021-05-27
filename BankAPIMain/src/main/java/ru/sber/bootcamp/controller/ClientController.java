@@ -1,5 +1,7 @@
 package ru.sber.bootcamp.controller;
 
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.sber.bootcamp.model_DAO.entity.Account;
 import ru.sber.bootcamp.model_DAO.entity.Card;
@@ -14,7 +16,6 @@ import ru.sber.bootcamp.service.GsonConverter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 public class ClientController {
@@ -41,7 +42,7 @@ public class ClientController {
      * Возвращает информацию по счетам для всех клиентов
      * @return String of List JsonObjects
      */
-    public List<JSONObject> getAllAccounts(){
+    public JSONArray getAllAccounts(){
         //return jsObjects.stream().map(t->t.toString(4)).collect(Collectors.joining(","));
         return gsonConverter.convertListToGson(accountRepository.findAll());
     }
@@ -66,7 +67,7 @@ public class ClientController {
      * Получить список всех карт
      * @return список всех карт в видей строки
      */
-    public  List<JSONObject> getAllCards() {
+    public  JSONArray getAllCards() {
         return gsonConverter.convertListToGson(cardRepository.getAllCards());
 
     }
@@ -77,7 +78,12 @@ public class ClientController {
      * @param accountNumber
      * @return
      */
-    public  List<JSONObject> getAllCardsByAccount(Long accountNumber) {
+    public  JSONArray getAllCardsByAccount(Long accountNumber) throws NullPointerException {
+        if(accountNumber == null) {
+            System.out.println("null");
+            throw new NullPointerException("Input Account number");
+        }
+            //gsonConverter.convertListToGson();
         return gsonConverter.convertListToGson(cardRepository.getAllCardsByAccountNumber(accountNumber));
     }
 

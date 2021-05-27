@@ -2,9 +2,12 @@ package ru.sber.bootcamp.service.httpServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 class MyHttpHandler implements HttpHandler {
 
@@ -28,18 +31,37 @@ class MyHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange t) {
         System.out.printf("Server get request. Type: %s, URL: %s ", t.getRequestMethod(),t.getRequestURI());
+        String response = "";
         if (t.getRequestMethod().equals("GET")) {
             try {
-               http_get_hendle.handleGET(t);
+             response = http_get_hendle.handleGET(t);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (NullPointerException | NumberFormatException e){
+                //e.printStackTrace();
+                System.err.println(e);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Error",e.getMessage());
+                response = jsonObject.toString();
             }
         } else {
             try {
-               http_post_handle.handlePOST(t);
+             response = http_post_handle.handlePOST(t);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        t.getResponseHeaders().set("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);
+
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        try {
+            t.sendResponseHeaders(200, bytes.length);
+            OutputStream os = t.getResponseBody();
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

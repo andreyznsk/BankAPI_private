@@ -2,6 +2,7 @@
 /.idea/
 /target/
 /UserService1/target/
+/BankAPIMain/target
 
 #### Files #####
 *.iml

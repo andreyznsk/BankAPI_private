@@ -24,9 +24,6 @@ public class H2ConnectionClientMethods {
     }
 
     public Client getClientByAccountNumber(Long accountNumber) {
-       if (accountNumber == null) {
-           return null;
-       }
         Client client = new Client();
 
         try {
@@ -42,6 +39,9 @@ public class H2ConnectionClientMethods {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+        if(client.getId() == null)  {
+            throw new NullPointerException("Incorrect_account_number");
         }
         if (client.getId() != null) {
             client.setAccount(h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber));

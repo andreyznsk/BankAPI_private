@@ -1,7 +1,6 @@
 package ru.sber.bootcamp.service.httpServer;
 
 
-import org.json.JSONArray;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -10,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
@@ -22,12 +20,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetCardByAccountNumber {
+public class MASS_TestGetAllCards {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -58,30 +57,30 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
     String serverResponse;
-    Object accountNumber;
+    Object userUrl;
 
 
-    public MASS_TestGetCardByAccountNumber(String serverResponse, Object accountNumber) {
+    public MASS_TestGetAllCards(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
-        this.accountNumber = accountNumber;
+        this.userUrl = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-
-        List<Card> cardList =  new ArrayList<>();
-        cardList.add(new Card(1l,1111l,1111222233334441l,Date.valueOf("2023-01-01"),111));
-        cardList.add(new Card(2l,1111l,1111222233334442l, Date.valueOf("2023-01-01"),112));
-        JSONArray jsonArray = new JSONArray(cardList);
-        String response = jsonArray.toString();
+        String serverResponse = "[{\"CVC_code\":111,\"dateValidThru\":\"2023-01-01\",\"id\":1,\"accountNumber\":1111,\"cardNumber\":1111222233334441}," +
+                "{\"CVC_code\":112,\"dateValidThru\":\"2023-01-01\",\"id\":2,\"accountNumber\":1111,\"cardNumber\":1111222233334442}," +
+                "{\"CVC_code\":121,\"dateValidThru\":\"2023-01-01\",\"id\":3,\"accountNumber\":1112,\"cardNumber\":1112222233334441}," +
+                "{\"CVC_code\":122,\"dateValidThru\":\"2023-01-01\",\"id\":4,\"accountNumber\":1112,\"cardNumber\":1112222233334442}," +
+                "{\"CVC_code\":123,\"dateValidThru\":\"2023-01-01\",\"id\":5,\"accountNumber\":1112,\"cardNumber\":1112222233334443}," +
+                "{\"CVC_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"InputAccountnumber\"}" ,null},
-                {"{\"Error\":\"Incorrect_account_number\"}",1L},
-                {"{\"Error\":\"Incorrect_account_number\"}",2L},
-                {response , 1111L},
-                {"{\"Error\":\"Incorrect_account_number\"}",123123123123L},
-                {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {serverResponse ,null},
+                {serverResponse,1L},
+                {serverResponse,2L},
+                {serverResponse , 1111L},
+                {serverResponse,123123123123L},
+                {serverResponse, "Pepsi-Cola"},
         });
     }
 
@@ -90,7 +89,7 @@ public class MASS_TestGetCardByAccountNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + ((accountNumber!=null)?accountNumber:""));
+        URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -101,7 +100,7 @@ public class MASS_TestGetCardByAccountNumber {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(body,serverResponse);
+        Assert.assertEquals(serverResponse,body);
     }
 
     @AfterClass
@@ -111,3 +110,4 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
 }
+

@@ -30,11 +30,11 @@ public class ClientRepositoryTest {
 
     @Test
     public void getClientByAccountNumber() {
-        Account testAccount = new Account(1L,1111L, BigDecimal.valueOf(10000.00), Date.valueOf("2020-01-01"));
+        Account testAccount = new Account(1L,1111L, BigDecimal.valueOf(10000.10), Date.valueOf("2020-01-01"));
         Client testClient = new Client(1L,1111L,"Ivan", "Ivanov",89008001234L,testAccount);
         System.out.println(testClient);
         Client client = dataConnectionService.getClientByAccountNumber(1111L);
-        Assert.assertEquals(testClient,client);
+        Assert.assertEquals(client,testClient);
     }
 
     @AfterClass

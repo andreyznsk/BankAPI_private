@@ -25,17 +25,17 @@ public class Http_GET_hendle {
         String[] path = url.split("/");
         System.out.println("Path length: " + path.length);
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
-            case "show_all_accounts": {
+            case "show_all_accounts": {//TESTED
                 JSONArray allAccounts = controller.getAllAccounts();
                 response = allAccounts.toString(4);
                 break;
             }
-            case "get_client": {
-                JSONObject jsonObject = controller.getClientByAccountNumber(path.length>3? Long.parseLong(path[3]):-1L);
+            case "get_client_by_account_number": {
+                JSONObject jsonObject = controller.getClientByAccountNumber(path.length>3? Long.parseLong(path[3]):null);
                 response = jsonObject.toString(4);
                 break;
             }
-            case "get_all_cards" : {
+            case "get_all_cards" : {//TESTED!!!
                 JSONArray jsonObjectList = controller.getAllCards();
                 response = jsonObjectList.toString(5) ;
                 break;
@@ -45,8 +45,8 @@ public class Http_GET_hendle {
                 response= jsonObjectList.toString(5);
                 break;
             }
-            case "get_balance_by_card_number": {
-                JSONObject jsonObject = controller.getBalanceByCardNumber(path.length>3? Long.parseLong(path[3]):-1L);
+            case "get_balance_by_card_number": {//TESTED!!!
+                JSONObject jsonObject = controller.getBalanceByCardNumber(path.length>3? Long.parseLong(path[3]):null);
                 response = jsonObject.toString();
                 break;
             }

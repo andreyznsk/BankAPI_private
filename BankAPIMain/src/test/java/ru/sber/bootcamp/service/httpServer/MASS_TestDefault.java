@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.service.httpServer;
 
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -94,7 +95,11 @@ public class MASS_TestDefault {
         Assert.assertEquals(serverResponse,body);
     }
 
-
+    @AfterClass
+    public static void stop(){
+        httpServerStarter.stop();
+        dataService.stop();
+    }
 
 }
 

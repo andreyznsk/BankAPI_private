@@ -1,16 +1,19 @@
 package ru.sber.bootcamp.service.httpServer;
 
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.entity.Card;
+import ru.sber.bootcamp.model_DAO.entity.Account;
+import ru.sber.bootcamp.model_DAO.entity.Client;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
@@ -19,15 +22,18 @@ import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetCardByAccountNumber {
+public class MASS_TestGetClientByAccountNumber {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -58,28 +64,25 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
     String serverResponse;
-    Object accountNumber;
+    Object userUrl;
 
 
-    public MASS_TestGetCardByAccountNumber(String serverResponse, Object accountNumber) {
+    public MASS_TestGetClientByAccountNumber(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
-        this.accountNumber = accountNumber;
+        this.userUrl = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-
-        List<Card> cardList =  new ArrayList<>();
-        cardList.add(new Card(1l,1111l,1111222233334441l,Date.valueOf("2023-01-01"),111));
-        cardList.add(new Card(2l,1111l,1111222233334442l, Date.valueOf("2023-01-01"),112));
-        JSONArray jsonArray = new JSONArray(cardList);
-        String response = jsonArray.toString();
+        String client1 = "{\"accountId\":1111,\"firstName\":\"Ivan\",\"phoneNumber\":89008001234,\"id\":1,\"account\":{\"balance\":10000.1,\"id\":1,\"openDate\":\"2020-01-01\",\"accountNumber\":1111},\"lastname\":\"Ivanov\"}";
+        String client2 = "{\"accountId\":1112,\"firstName\":\"Петр\",\"phoneNumber\":88009001235,\"id\":2,\"account\":{\"balance\":2000.25,\"id\":2,\"openDate\":\"2020-01-01\",\"accountNumber\":1112},\"lastname\":\"Петров\"}";
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"InputAccountnumber\"}" ,null},
+                {"{\"Error\":\"Input_account_number\"}" ,null},
                 {"{\"Error\":\"Incorrect_account_number\"}",1L},
                 {"{\"Error\":\"Incorrect_account_number\"}",2L},
-                {response , 1111L},
+                {client1, 1111L},
+                {client2, 1112L},
                 {"{\"Error\":\"Incorrect_account_number\"}",123123123123L},
                 {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
         });
@@ -90,7 +93,7 @@ public class MASS_TestGetCardByAccountNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + ((accountNumber!=null)?accountNumber:""));
+        URL url = new URL("http://localhost:8000/bank_api/get_client_by_account_number/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -101,7 +104,8 @@ public class MASS_TestGetCardByAccountNumber {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(body,serverResponse);
+
+        JSONAssert.assertEquals(new JSONObject(body), new JSONObject(serverResponse), JSONCompareMode.STRICT);
     }
 
     @AfterClass
@@ -111,3 +115,4 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
 }
+

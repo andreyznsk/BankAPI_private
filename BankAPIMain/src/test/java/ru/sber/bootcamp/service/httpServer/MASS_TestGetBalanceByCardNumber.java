@@ -1,7 +1,6 @@
 package ru.sber.bootcamp.service.httpServer;
 
 
-import org.json.JSONArray;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -10,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
@@ -22,12 +20,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetCardByAccountNumber {
+public class MASS_TestGetBalanceByCardNumber {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -58,30 +57,30 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
     String serverResponse;
-    Object accountNumber;
+    Object cardNumber;
 
 
-    public MASS_TestGetCardByAccountNumber(String serverResponse, Object accountNumber) {
+    public MASS_TestGetBalanceByCardNumber(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
-        this.accountNumber = accountNumber;
+        this.cardNumber = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
-        List<Card> cardList =  new ArrayList<>();
-        cardList.add(new Card(1l,1111l,1111222233334441l,Date.valueOf("2023-01-01"),111));
-        cardList.add(new Card(2l,1111l,1111222233334442l, Date.valueOf("2023-01-01"),112));
-        JSONArray jsonArray = new JSONArray(cardList);
-        String response = jsonArray.toString();
-
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"InputAccountnumber\"}" ,null},
-                {"{\"Error\":\"Incorrect_account_number\"}",1L},
-                {"{\"Error\":\"Incorrect_account_number\"}",2L},
-                {response , 1111L},
-                {"{\"Error\":\"Incorrect_account_number\"}",123123123123L},
+                {"{\"Error\":\"Input_Card_number\"}" ,null},
+                {"{\"Error\":\"Card_Number_incorrect\"}",1L},
+                {"{\"Error\":\"Card_Number_incorrect\"}",2L},
+                {"{\"Error\":\"Card_Number_incorrect\"}" , 1111L},
+                {"{\"Error\":\"Card_Number_incorrect\"}",123123123123L},
                 {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {"{\"balance\":10000.1}",1111222233334441L},
+                {"{\"balance\":10000.1}",1111222233334442L},
+                {"{\"balance\":2000.25}",1112222233334441L},
+                {"{\"balance\":2000.25}",1112222233334442L},
+                {"{\"balance\":2000.25}",1112222233334443L},
+                {"{\"balance\":2000.25}",1112222233334444L}
         });
     }
 
@@ -90,7 +89,7 @@ public class MASS_TestGetCardByAccountNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + ((accountNumber!=null)?accountNumber:""));
+        URL url = new URL("http://localhost:8000/bank_api/get_balance_by_card_number/" + ((cardNumber !=null)? cardNumber :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -101,7 +100,7 @@ public class MASS_TestGetCardByAccountNumber {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(body,serverResponse);
+        Assert.assertEquals(serverResponse,body);
     }
 
     @AfterClass
@@ -111,3 +110,4 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
 }
+

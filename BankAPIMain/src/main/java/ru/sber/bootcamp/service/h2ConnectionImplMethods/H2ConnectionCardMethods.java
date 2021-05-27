@@ -59,9 +59,6 @@ public class H2ConnectionCardMethods {
     }
 
     public List<Card> getAllCardByAccountNumber(Long accountNumber) {
-        if(accountNumber == null) {
-            return null;
-        }
         List<Card> cards = new ArrayList<>();
         try {
             psGetAllCardByAccountNumber.setLong(1,accountNumber);
@@ -71,6 +68,9 @@ public class H2ConnectionCardMethods {
                 cards.add(card);
             }
             rs.close();
+            if(cards.size()==0){
+                throw new NullPointerException("Incorrect_account_number");
+            }
         } catch (SQLException throwables) {
             System.err.println(throwables.getErrorCode());
             throwables.printStackTrace();

@@ -54,6 +54,10 @@ public class ClientController {
      * @return информцию клиента по номеру счета
      */
     public JSONObject getClientByAccountNumber(Long accountNumber){
+        if(accountNumber == null) {
+            System.out.println("null");
+            throw new NullPointerException("Input_account_number");
+        }
         JSONObject jsonObject;
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
         jsonObject = gsonConverter.convertObjectToJson(client);
@@ -94,8 +98,16 @@ public class ClientController {
      * @return - баланс в виде строки
      */
     public JSONObject getBalanceByCardNumber(Long cardNumber) {
+        if(cardNumber == null) {
+            System.out.println("null");
+            throw new NullPointerException("Input_Card_number");
+        }
         JSONObject jsonObject;
         Account account = accountRepository.getAccountByCardNumber(cardNumber);
+        if(account.getBalance()==null) {
+            System.out.println("Card_Number_incorrect");
+            throw new NullPointerException("Card_Number_incorrect");
+        }
         BalanceDTO balanceDTO = balanceDTOConverter.balanceDTO(account);
         jsonObject = gsonConverter.convertObjectToJson(balanceDTO);
         return jsonObject;

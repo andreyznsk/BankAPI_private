@@ -16,6 +16,7 @@ public class GsonConverterImpl implements GsonConverter {
 
     @Override
     public JSONObject convertObjectToJson(Object client) {
+        System.out.println(client);
         JSONObject jsonObject = new JSONObject(client);
         return jsonObject;
     }

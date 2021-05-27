@@ -1,11 +1,16 @@
 package ru.sber.bootcamp.service.httpServer;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.model_DAO.repository.*;
@@ -66,13 +71,13 @@ public class MASS_TestShowAllAccounts {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        String excpectedJson = "[{\"balance\":10000,\"id\":1,\"accountNumber\":1111,\"openDate\":\"2020-01-01\"},{\"balance\":2000,\"id\":2,\"accountNumber\":1112,\"openDate\":\"2020-01-01\"}]";
+        String excpectedJson = "[{\"balance\":10000.1,\"id\":1,\"accountNumber\":1111,\"openDate\":\"2020-01-01\"},{\"balance\":2000.25,\"id\":2,\"accountNumber\":1112,\"openDate\":\"2020-01-01\"}]";
 
         return Arrays.asList(new Object[][]{
                 {excpectedJson ,null},
                 {excpectedJson,1L},
                 {excpectedJson,2L},
-                {excpectedJson , 1111L},
+                {excpectedJson ,1111L},
                 {excpectedJson,123123123123L},
                 {excpectedJson, "Pepsi-Cola"},
         });
@@ -94,10 +99,17 @@ public class MASS_TestShowAllAccounts {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(serverResponse,body);
+        JSONArray testArr = new JSONArray(serverResponse);
+        JSONArray serverResponseJson = new JSONArray(body);
+        JSONAssert.assertEquals(testArr, serverResponseJson, JSONCompareMode.STRICT);
+
     }
 
-
+    @AfterClass
+    public static void stop(){
+        httpServerStarter.stop();
+        dataService.stop();
+    }
 
 }
 

@@ -31,4 +31,11 @@ public class BalanceDTO {
     public int hashCode() {
         return Objects.hash(balance);
     }
+
+    @Override
+    public String toString() {
+        return "BalanceDTO{" +
+                "balance=" + balance +
+                '}';
+    }
 }

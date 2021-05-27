@@ -1,39 +1,33 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
-import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.entity.Account;
-import ru.sber.bootcamp.model_DAO.entity.Client;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetClientByAccountNumber {
+public class MASS_TestGetAllCards {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -67,24 +61,27 @@ public class MASS_TestGetClientByAccountNumber {
     Object userUrl;
 
 
-    public MASS_TestGetClientByAccountNumber(String serverResponse, Object accountNumber) {
+    public MASS_TestGetAllCards(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
         this.userUrl = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        String client1 = "{\"accountId\":1111,\"firstName\":\"Ivan\",\"phoneNumber\":89008001234,\"id\":1,\"account\":{\"balance\":10000.1,\"id\":1,\"openDate\":\"2020-01-01\",\"accountNumber\":1111},\"lastname\":\"Ivanov\"}";
-        String client2 = "{\"accountId\":1112,\"firstName\":\"Петр\",\"phoneNumber\":88009001235,\"id\":2,\"account\":{\"balance\":2000.25,\"id\":2,\"openDate\":\"2020-01-01\",\"accountNumber\":1112},\"lastname\":\"Петров\"}";
+        String serverResponse = "[{\"CVC_code\":111,\"dateValidThru\":\"2023-01-01\",\"id\":1,\"accountNumber\":1111,\"cardNumber\":1111222233334441}," +
+                "{\"CVC_code\":112,\"dateValidThru\":\"2023-01-01\",\"id\":2,\"accountNumber\":1111,\"cardNumber\":1111222233334442}," +
+                "{\"CVC_code\":121,\"dateValidThru\":\"2023-01-01\",\"id\":3,\"accountNumber\":1112,\"cardNumber\":1112222233334441}," +
+                "{\"CVC_code\":122,\"dateValidThru\":\"2023-01-01\",\"id\":4,\"accountNumber\":1112,\"cardNumber\":1112222233334442}," +
+                "{\"CVC_code\":123,\"dateValidThru\":\"2023-01-01\",\"id\":5,\"accountNumber\":1112,\"cardNumber\":1112222233334443}," +
+                "{\"CVC_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"Input_account_number\"}" ,null},
-                {"{\"Error\":\"Incorrect_account_number\"}",1L},
-                {"{\"Error\":\"Incorrect_account_number\"}",2L},
-                {client1, 1111L},
-                {client2, 1112L},
-                {"{\"Error\":\"Incorrect_account_number\"}",123123123123L},
-                {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {serverResponse ,null},
+                {serverResponse,1L},
+                {serverResponse,2L},
+                {serverResponse , 1111L},
+                {serverResponse,123123123123L},
+                {serverResponse, "Pepsi-Cola"},
         });
     }
 
@@ -93,7 +90,7 @@ public class MASS_TestGetClientByAccountNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_client_by_account_number/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -104,8 +101,7 @@ public class MASS_TestGetClientByAccountNumber {
             sb.append(sc.next());
         }
         String body = sb.toString();
-
-        JSONAssert.assertEquals(new JSONObject(body), new JSONObject(serverResponse), JSONCompareMode.STRICT);
+        Assert.assertEquals(serverResponse,body);
     }
 
     @AfterClass

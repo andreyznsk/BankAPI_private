@@ -1,6 +1,7 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
+import org.json.JSONArray;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -9,22 +10,25 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.util.*;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestDefault {
+public class MASS_TestGetCardByAccountNumber {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -55,24 +59,30 @@ public class MASS_TestDefault {
     }
 
     String serverResponse;
-    Object userUrl;
+    Object accountNumber;
 
 
-    public MASS_TestDefault(String serverResponse, Object accountNumber) {
+    public MASS_TestGetCardByAccountNumber(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
-        this.userUrl = accountNumber;
+        this.accountNumber = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
+        List<Card> cardList =  new ArrayList<>();
+        cardList.add(new Card(1l,1111l,1111222233334441l,Date.valueOf("2023-01-01"),111));
+        cardList.add(new Card(2l,1111l,1111222233334442l, Date.valueOf("2023-01-01"),112));
+        JSONArray jsonArray = new JSONArray(cardList);
+        String response = jsonArray.toString();
+
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"CommandError\"}" ,null},
-                {"{\"Error\":\"CommandError\"}",1L},
-                {"{\"Error\":\"CommandError\"}",2L},
-                {"{\"Error\":\"CommandError\"}" , 1111L},
-                {"{\"Error\":\"CommandError\"}",123123123123L},
-                {"{\"Error\":\"CommandError\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"InputAccountnumber\"}" ,null},
+                {"{\"Error!\":\"Incorrect_account_number\"}",1L},
+                {"{\"Error!\":\"Incorrect_account_number\"}",2L},
+                {response , 1111L},
+                {"{\"Error!\":\"Incorrect_account_number\"}",123123123123L},
+                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
         });
     }
 
@@ -81,7 +91,7 @@ public class MASS_TestDefault {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + ((accountNumber!=null)?accountNumber:""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -92,7 +102,7 @@ public class MASS_TestDefault {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(serverResponse,body);
+        Assert.assertEquals(body,serverResponse);
     }
 
     @AfterClass
@@ -102,4 +112,3 @@ public class MASS_TestDefault {
     }
 
 }
-

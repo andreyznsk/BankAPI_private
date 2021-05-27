@@ -1,4 +1,4 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
 import org.junit.AfterClass;
@@ -14,19 +14,18 @@ import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetAllCards {
+public class MASS_TestDefault {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -60,27 +59,21 @@ public class MASS_TestGetAllCards {
     Object userUrl;
 
 
-    public MASS_TestGetAllCards(String serverResponse, Object accountNumber) {
+    public MASS_TestDefault(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
         this.userUrl = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        String serverResponse = "[{\"CVC_code\":111,\"dateValidThru\":\"2023-01-01\",\"id\":1,\"accountNumber\":1111,\"cardNumber\":1111222233334441}," +
-                "{\"CVC_code\":112,\"dateValidThru\":\"2023-01-01\",\"id\":2,\"accountNumber\":1111,\"cardNumber\":1111222233334442}," +
-                "{\"CVC_code\":121,\"dateValidThru\":\"2023-01-01\",\"id\":3,\"accountNumber\":1112,\"cardNumber\":1112222233334441}," +
-                "{\"CVC_code\":122,\"dateValidThru\":\"2023-01-01\",\"id\":4,\"accountNumber\":1112,\"cardNumber\":1112222233334442}," +
-                "{\"CVC_code\":123,\"dateValidThru\":\"2023-01-01\",\"id\":5,\"accountNumber\":1112,\"cardNumber\":1112222233334443}," +
-                "{\"CVC_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
 
         return Arrays.asList(new Object[][]{
-                {serverResponse ,null},
-                {serverResponse,1L},
-                {serverResponse,2L},
-                {serverResponse , 1111L},
-                {serverResponse,123123123123L},
-                {serverResponse, "Pepsi-Cola"},
+                {"{\"Error\":\"CommandError\"}" ,null},
+                {"{\"Error\":\"CommandError\"}",1L},
+                {"{\"Error\":\"CommandError\"}",2L},
+                {"{\"Error\":\"CommandError\"}" , 1111L},
+                {"{\"Error\":\"CommandError\"}",123123123123L},
+                {"{\"Error\":\"CommandError\"}", "Pepsi-Cola"},
         });
     }
 
@@ -89,7 +82,7 @@ public class MASS_TestGetAllCards {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 

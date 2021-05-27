@@ -2,12 +2,16 @@ package ru.sber.bootcamp.service.httpServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONException;
 import org.json.JSONObject;
+import ru.sber.bootcamp.configuration.MyErrorMessage;
 import ru.sber.bootcamp.controller.ClientController;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+
+import static ru.sber.bootcamp.configuration.MyErrorMessage.ERROR_MESSAGE;
 
 class MyHttp_ROOT_Handler implements HttpHandler {
 
@@ -41,15 +45,24 @@ class MyHttp_ROOT_Handler implements HttpHandler {
                 //e.printStackTrace();
                 System.err.println(e);
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("Error",e.getMessage());
+                jsonObject.put(ERROR_MESSAGE.message,e.getMessage());
                 response = jsonObject.toString();
             }
         } else {
             try {
              response = http_post_handle.handlePOST(t);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException | NumberFormatException e){
+                //e.printStackTrace();
+                System.err.println(e);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(ERROR_MESSAGE.message, e.getMessage());
+                response = jsonObject.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
 
         t.getResponseHeaders().set("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);

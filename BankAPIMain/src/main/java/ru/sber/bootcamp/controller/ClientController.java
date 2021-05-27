@@ -3,6 +3,7 @@ package ru.sber.bootcamp.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ru.sber.bootcamp.configuration.MyErrorMessage;
 import ru.sber.bootcamp.model_DAO.entity.Account;
 import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.entity.Client;
@@ -17,6 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
+import static ru.sber.bootcamp.configuration.MyErrorMessage.ERROR_MESSAGE;
+import static ru.sber.bootcamp.configuration.MyErrorMessage.SERVER_OK;
 
 public class ClientController {
 
@@ -119,24 +123,33 @@ public class ClientController {
      * @param amount
      * @param CVC
      */
-    public int updateBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
-        int result;
+    public JSONObject incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
+        if(amount < 0) {
+            throw new NullPointerException("Amount_is_negative");
+        }
         Card card = cardRepository.getCardByCardNumber(cardNumber);
+        JSONObject jsonObject = new JSONObject();
         if(card==null) {
             System.out.println("Карта не найдена");
-            return -1;
+            jsonObject = new JSONObject();
+            jsonObject.put(ERROR_MESSAGE.message, "Card_not_found");
+            return jsonObject;
         }
         System.out.println(card);
         if(card.getCVC_code()==CVC ){
             Account account = accountRepository.getAccountByCardNumber(cardNumber);
             account.incBalance(amount);
-            result = accountRepository.updateAccount(account);
+           int result = accountRepository.updateAccount(account);
+           if(result == 1) {
+               jsonObject.put(SERVER_OK.message,"Balance_updated_ok");
+           }
         } else {
-            result = -2;
             System.out.println("CVC code invalid");
+            jsonObject = new JSONObject();
+            jsonObject.put("Error!","CVC_code_invalid");
         }
 
-        return result;
+        return jsonObject;
 
     }
 

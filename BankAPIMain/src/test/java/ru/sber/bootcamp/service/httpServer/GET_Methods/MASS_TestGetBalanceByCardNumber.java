@@ -1,4 +1,4 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
 import org.junit.AfterClass;
@@ -14,6 +14,7 @@ import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -69,12 +70,12 @@ public class MASS_TestGetBalanceByCardNumber {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"Input_Card_number\"}" ,null},
-                {"{\"Error\":\"Card_Number_incorrect\"}",1L},
-                {"{\"Error\":\"Card_Number_incorrect\"}",2L},
-                {"{\"Error\":\"Card_Number_incorrect\"}" , 1111L},
-                {"{\"Error\":\"Card_Number_incorrect\"}",123123123123L},
-                {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"Input_Card_number\"}" ,null},
+                {"{\"Error!\":\"Card_Number_incorrect\"}",1L},
+                {"{\"Error!\":\"Card_Number_incorrect\"}",2L},
+                {"{\"Error!\":\"Card_Number_incorrect\"}" , 1111L},
+                {"{\"Error!\":\"Card_Number_incorrect\"}",123123123123L},
+                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
                 {"{\"balance\":10000.1}",1111222233334441L},
                 {"{\"balance\":10000.1}",1111222233334442L},
                 {"{\"balance\":2000.25}",1112222233334441L},

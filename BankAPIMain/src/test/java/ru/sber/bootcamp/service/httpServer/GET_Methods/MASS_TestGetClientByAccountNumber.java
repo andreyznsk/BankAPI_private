@@ -1,10 +1,8 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +16,7 @@ import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,7 +29,7 @@ import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestShowAllAccounts {
+public class MASS_TestGetClientByAccountNumber {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -64,22 +63,24 @@ public class MASS_TestShowAllAccounts {
     Object userUrl;
 
 
-    public MASS_TestShowAllAccounts(String serverResponse, Object accountNumber) {
+    public MASS_TestGetClientByAccountNumber(String serverResponse, Object accountNumber) {
         this.serverResponse = serverResponse;
         this.userUrl = accountNumber;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        String excpectedJson = "[{\"balance\":10000.1,\"id\":1,\"accountNumber\":1111,\"openDate\":\"2020-01-01\"},{\"balance\":2000.25,\"id\":2,\"accountNumber\":1112,\"openDate\":\"2020-01-01\"}]";
+        String client1 = "{\"accountId\":1111,\"firstName\":\"Ivan\",\"phoneNumber\":89008001234,\"id\":1,\"account\":{\"balance\":10000.1,\"id\":1,\"openDate\":\"2020-01-01\",\"accountNumber\":1111},\"lastname\":\"Ivanov\"}";
+        String client2 = "{\"accountId\":1112,\"firstName\":\"Петр\",\"phoneNumber\":88009001235,\"id\":2,\"account\":{\"balance\":2000.25,\"id\":2,\"openDate\":\"2020-01-01\",\"accountNumber\":1112},\"lastname\":\"Петров\"}";
 
         return Arrays.asList(new Object[][]{
-                {excpectedJson ,null},
-                {excpectedJson,1L},
-                {excpectedJson,2L},
-                {excpectedJson ,1111L},
-                {excpectedJson,123123123123L},
-                {excpectedJson, "Pepsi-Cola"},
+                {"{\"Error!\":\"Input_account_number\"}" ,null},
+                {"{\"Error!\":\"Incorrect_account_number\"}",1L},
+                {"{\"Error!\":\"Incorrect_account_number\"}",2L},
+                {client1, 1111L},
+                {client2, 1112L},
+                {"{\"Error!\":\"Incorrect_account_number\"}",123123123123L},
+                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
         });
     }
 
@@ -88,7 +89,7 @@ public class MASS_TestShowAllAccounts {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/show_all_accounts/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/get_client_by_account_number/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
@@ -99,10 +100,8 @@ public class MASS_TestShowAllAccounts {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        JSONArray testArr = new JSONArray(serverResponse);
-        JSONArray serverResponseJson = new JSONArray(body);
-        JSONAssert.assertEquals(testArr, serverResponseJson, JSONCompareMode.STRICT);
 
+        JSONAssert.assertEquals(new JSONObject(body), new JSONObject(serverResponse), JSONCompareMode.STRICT);
     }
 
     @AfterClass

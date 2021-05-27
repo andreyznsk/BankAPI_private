@@ -1,13 +1,13 @@
 package ru.sber.bootcamp.service.httpServer;
 
 import com.sun.net.httpserver.HttpExchange;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
@@ -29,24 +29,21 @@ public class Http_POST_handle {
             case "balance_inc": {
                 String query = getQuery(t);
                 JSONObject jsonObject = new JSONObject(query);
+                JSONObject jsonObjectResponse = new JSONObject();
                 //response = jsonObject.toString();
-                Long cardNumber = jsonObject.getLong("card_number");
-                Double amount = jsonObject.getDouble("amount");
-                int CVC = jsonObject.getInt("CVC_code");
-                System.out.println("cardNumber: " +cardNumber );
-                System.out.println("amount: " + amount);
-                System.out.println("CVC code" + CVC);
-                int result = controller.updateBalanceByCardNumber(cardNumber, amount, CVC);
-                if (result == 1) {
-                    response = "Balanceupdated";
-                } else if (result == -1) {
-                    response = "Cardnotfound";
-                } else if (result == -2) {
-                    response = "InvalidCVCcode";
+                Long cardNumber = null;
+                Double amount = null;
+                int CVC = 0;
+                try {
+                    cardNumber = jsonObject.getLong("card_number");
+                    amount = jsonObject.getDouble("amount");
+                    CVC = jsonObject.getInt("CVC_code");
+                } catch (JSONException e) {
+                    String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
+                    throw new NullPointerException(message + ":Not_found");
                 }
-                else {
-                    response = "Balance not updated";
-                }
+                jsonObjectResponse = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
+                response = jsonObjectResponse.toString();
                 break;
             }
             case "add_card": {

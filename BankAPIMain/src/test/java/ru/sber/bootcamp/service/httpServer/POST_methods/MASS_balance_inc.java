@@ -1,33 +1,36 @@
-package ru.sber.bootcamp.service.httpServer;
+package ru.sber.bootcamp.service.httpServer.POST_methods;
 
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
+import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_TestGetCardByAccountNumber {
+public class MASS_balance_inc {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -58,30 +61,32 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
     String serverResponse;
-    Object accountNumber;
+    Double amount;
+    Integer CVC_code;
+    Object card_number;
 
 
-    public MASS_TestGetCardByAccountNumber(String serverResponse, Object accountNumber) {
+    public MASS_balance_inc(String serverResponse, Double amount, Integer CVC_code, Object card_number) {
         this.serverResponse = serverResponse;
-        this.accountNumber = accountNumber;
+        this.amount = amount;
+        this.CVC_code = CVC_code;
+        this.card_number = card_number;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
-        List<Card> cardList =  new ArrayList<>();
-        cardList.add(new Card(1l,1111l,1111222233334441l,Date.valueOf("2023-01-01"),111));
-        cardList.add(new Card(2l,1111l,1111222233334442l, Date.valueOf("2023-01-01"),112));
-        JSONArray jsonArray = new JSONArray(cardList);
-        String response = jsonArray.toString();
-
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"InputAccountnumber\"}" ,null},
-                {"{\"Error\":\"Incorrect_account_number\"}",1L},
-                {"{\"Error\":\"Incorrect_account_number\"}",2L},
-                {response , 1111L},
-                {"{\"Error\":\"Incorrect_account_number\"}",123123123123L},
-                {"{\"Error\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
+                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,"Black Power!"},
+                {"{\"Error!\":\"amount:Not_found\"}" ,null,111,1111122221L},
+                {"{\"Error!\":\"CVC_code:Not_found\"}"  ,111.1,null,1111122221L},
+                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,null},
+                {"{\"Error!\":\"card_number:Not_found\"}" ,null,null,null},
+                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
+                {"{\"Server_OK!\":\"Balance_updated_ok\"}" ,111.1,111,1111222233334441L},
+                {"{\"Error!\":\"CVC_code_invalid\"}" ,111.1,111,1111222233334442L},
+                {"{\"Error!\":\"Amount_is_negative\"}" ,-111.1,111,1111222233334441L},
         });
     }
 
@@ -89,10 +94,19 @@ public class MASS_TestGetCardByAccountNumber {
 
 
     @Test
-    public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + ((accountNumber!=null)?accountNumber:""));
+    public void postBalanceIncHandler() throws IOException {
+        JSONObject jsonQuery = new JSONObject();
+        jsonQuery.put("amount",amount);
+        jsonQuery.put("CVC_code",CVC_code);
+        jsonQuery.put("card_number",card_number);
+        JSONObject jsonObjectResponseTest = new JSONObject(serverResponse);
+        // Given
+        URL url = new URL("http://localhost:8000/bank_api/balance_inc");
         URLConnection conn = url.openConnection();
-        conn.setDoOutput(false);
+        conn.setDoOutput(true);
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        wr.write(jsonQuery.toString());
+        wr.flush();
 
         StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
@@ -100,8 +114,9 @@ public class MASS_TestGetCardByAccountNumber {
         while (sc.hasNextLine())  {
             sb.append(sc.next());
         }
-        String body = sb.toString();
-        Assert.assertEquals(body,serverResponse);
+        JSONObject jsonObject = new JSONObject(sb.toString());
+        JSONAssert.assertEquals( jsonObjectResponseTest,jsonObject, JSONCompareMode.STRICT);
+
     }
 
     @AfterClass
@@ -111,3 +126,4 @@ public class MASS_TestGetCardByAccountNumber {
     }
 
 }
+

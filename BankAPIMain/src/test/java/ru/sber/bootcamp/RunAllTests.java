@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import ru.sber.bootcamp.model_DAO.repository.AccountRepositoryTest;
 import ru.sber.bootcamp.model_DAO.repository.CardRepositoryTest;
 import ru.sber.bootcamp.model_DAO.repository.ClientRepositoryTest;
-import ru.sber.bootcamp.service.httpServer.*;
+import ru.sber.bootcamp.service.httpServer.GET_Methods.*;
+import ru.sber.bootcamp.service.httpServer.POST_methods.MASS_balance_inc;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -17,7 +18,8 @@ import ru.sber.bootcamp.service.httpServer.*;
         MASS_TestGetBalanceByCardNumber.class,
         MASS_TestGetClientByAccountNumber.class,
         MASS_TestShowAllAccounts.class,
-        MASS_TestGetCardByAccountNumber.class
+        MASS_TestGetCardByAccountNumber.class,
+        MASS_balance_inc.class
 })
 
 

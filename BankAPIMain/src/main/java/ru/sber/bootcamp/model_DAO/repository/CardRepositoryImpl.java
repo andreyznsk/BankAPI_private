@@ -34,12 +34,17 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public void addCardByAccountNumber(Card card) {
-        dataConnectionService.addCardByAccountNumber(card);
+    public int addCardByAccountNumber(Card card) {
+       return dataConnectionService.addCardByAccountNumber(card);
     }
 
     @Override
     public Card getCardWithMaxNumber() {
         return dataConnectionService.getCardWithMaxNumber();
+    }
+
+    @Override
+    public boolean isCardExist(Long cartNumber) {
+        return dataConnectionService.isCardExist(cartNumber);
     }
 }

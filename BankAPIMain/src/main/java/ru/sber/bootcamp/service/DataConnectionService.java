@@ -31,11 +31,13 @@ public interface DataConnectionService {
 
     int updateAccount(Account account);
 
-    void addCardByAccountNumber(Card card);
+    int addCardByAccountNumber(Card card);
 
     Card getCardWithMaxNumber();
 
     void setDisableAutocommit();
 
     Account getAccountById(long id);
+
+    boolean isCardExist(Long cartNumber);
 }

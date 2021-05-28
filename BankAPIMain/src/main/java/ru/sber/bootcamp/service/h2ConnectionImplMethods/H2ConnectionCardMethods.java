@@ -16,19 +16,21 @@ public class H2ConnectionCardMethods {
     private PreparedStatement psAddCardByAccountNumber;
     private PreparedStatement psGetCardWithMaxCardNumber;
     private PreparedStatement psGetCardById;
+    private PreparedStatement psGetCardNumberByCardNumber;
 
     public H2ConnectionCardMethods(Connection connection) {
         this.connection = connection;
     }
 
     public void prepareAllStatements() throws SQLException {
-            psGetAllCards = connection.prepareStatement("select * from CARD");
-            psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?");
-            psGetCardBuCardNumber = connection.prepareStatement("SELECT * FROM CARD WHERE CARD_NUMBER = ?");
+            psGetAllCards = connection.prepareStatement("select * from CARD;");
+            psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?;");
+            psGetCardBuCardNumber = connection.prepareStatement("SELECT * FROM CARD WHERE CARD_NUMBER = ?;");
             psAddCardByAccountNumber = connection.prepareStatement("INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)\n" +
                     "VALUES (?, ?, ?, ?);");
-            psGetCardWithMaxCardNumber = connection.prepareStatement("SELECT MAX(CARD_NUMBER) FROM CARD WHERE CARD_NUMBER");
-            psGetCardById = connection.prepareStatement("SELECT * FROM CARD WHERE ID = ?");
+            psGetCardWithMaxCardNumber = connection.prepareStatement("SELECT MAX(CARD_NUMBER) FROM CARD WHERE CARD_NUMBER;");
+            psGetCardById = connection.prepareStatement("SELECT * FROM CARD WHERE ID = ?;");
+            psGetCardNumberByCardNumber = connection.prepareStatement("SELECT CARD_NUMBER FROM CARD WHERE CARD_NUMBER = ?;");
 
     }
 
@@ -99,25 +101,20 @@ public class H2ConnectionCardMethods {
         return card;
     }
 
-    public void addCardByAccountNumber(Card card) {
-        if (card.getAccountNumber() == null) {
-            System.err.println("card is null in method addCardByAccount");
-            return;
-        }
+    public int addCardByAccountNumber(Card card) {
+        int result = 0;
         try {
             psAddCardByAccountNumber.setLong(1,card.getAccountNumber());
             psAddCardByAccountNumber.setLong(2,card.getCardNumber());
             psAddCardByAccountNumber.setDate(3, new Date(card.getDateValidThru().getTime()));
             psAddCardByAccountNumber.setInt(4,card.getCVC_code());
 
-            if ((psAddCardByAccountNumber.executeUpdate() == 1)) {
-                System.out.println("Card added");
-            } else {
-                System.err.println("Card not added!!!");
-            }
+            result = psAddCardByAccountNumber.executeUpdate();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return result;
     }
 
     public Card getCardWithMaxNumber() {
@@ -158,4 +155,14 @@ public class H2ConnectionCardMethods {
         return card;
     }
 
+    public boolean isCardExist(Long cartNumber) {
+        try {
+            psGetCardNumberByCardNumber.setLong(1, cartNumber);
+            ResultSet rsCard = psGetCardNumberByCardNumber.executeQuery();
+            return rsCard.next();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
 }

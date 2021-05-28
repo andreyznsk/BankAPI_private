@@ -19,8 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-import static ru.sber.bootcamp.configuration.MyErrorMessage.ERROR_MESSAGE;
-import static ru.sber.bootcamp.configuration.MyErrorMessage.SERVER_OK;
+import static ru.sber.bootcamp.configuration.MyErrorMessage.*;
 
 public class ClientController {
 
@@ -29,6 +28,7 @@ public class ClientController {
     private final CardRepository cardRepository;
     private final GsonConverter gsonConverter;
     private final BalanceDTOConverter balanceDTOConverter;
+    private Random random;
 
     public ClientController(AccountRepository accountRepository,
                             ClientRepository clientRepository,
@@ -39,6 +39,7 @@ public class ClientController {
         this.cardRepository = cardRepository;
         this.gsonConverter = gsonConverter;
         this.balanceDTOConverter = new BalanceDTOConverter();
+        this.random = new Random();
     }
 
     /**
@@ -157,18 +158,23 @@ public class ClientController {
      *
      * @param accountNumber
      */
-    public void addCardByAccountNumber(Long accountNumber) {
+    public JSONObject addCardByAccountNumber(Long accountNumber) {
+        JSONObject jsonObject = new JSONObject();
         if(accountNumber == null) {
-            return;
+            throw new NullPointerException("Account number is empty!");
         }
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
-        if(client.getAccount().getAccountNumber() != null) {
-            Card card = cardRepository.getCardWithMaxNumber();
-            Long cartNumber = card.getCardNumber();
-            cartNumber++;
-            Random random = new Random();
-            int CVC = random.nextInt(999);
-            SimpleDateFormat sdf = new SimpleDateFormat("y-M-d");
+
+        if(client.getAccount().getAccountNumber() == null){
+            jsonObject.put(SERVER_ERROR.message,"Account number incorrect");
+        } else {
+            Card card = new Card();
+            Long cartNumber;
+            do{
+                cartNumber = getRandomLong(0L,999999999999L);
+            } while (cardRepository.isCardExist(cartNumber));
+
+            int CVC = getRandomCVC(999);
             Date date = new Date();
             Calendar c = Calendar.getInstance();
             c.setTime(date);
@@ -178,7 +184,23 @@ public class ClientController {
             card.setAccountNumber(client.getAccount().getAccountNumber());
             card.setCVC_code(CVC);
             card.setDateValidThru(updateDate);
-            cardRepository.addCardByAccountNumber(card);
+            int result = cardRepository.addCardByAccountNumber(card);
+            if (result == 0)  {
+                jsonObject.put(SERVER_ERROR.message,"Card not added");
+            } else {
+                jsonObject.put(SERVER_OK.message,"Card_added");
+            }
         }
+        return jsonObject;
     }
+
+    private int getRandomCVC(int max) {
+        return random.nextInt(999);
+    }
+
+    private Long getRandomLong(long min, long max) {
+        return random.nextLong() % (max - min) + max;
+    }
+
+
 }

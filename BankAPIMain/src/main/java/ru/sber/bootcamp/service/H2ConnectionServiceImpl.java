@@ -199,8 +199,8 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public void addCardByAccountNumber(Card card) {
-        h2ConnectionCardMethods.addCardByAccountNumber(card);
+    public int addCardByAccountNumber(Card card) {
+        return h2ConnectionCardMethods.addCardByAccountNumber(card);
     }
 
     @Override
@@ -216,6 +216,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public Account getAccountById(long id) {
         return h2ConnectionAccountMethods.getAccountById(id);
+    }
+
+    @Override
+    public boolean isCardExist(Long cartNumber) {
+        return h2ConnectionCardMethods.isCardExist(cartNumber);
     }
 }
 

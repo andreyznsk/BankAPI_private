@@ -30,7 +30,7 @@ import java.util.Scanner;
 
 
 @RunWith(Parameterized.class)
-public class MASS_balance_inc {
+public class MASS_cart_add {
 
     static DataConnectionService dataService;
     static AccountRepository accountRepository;
@@ -61,32 +61,40 @@ public class MASS_balance_inc {
     }
 
     String serverResponse;
-    Double amount;
-    Integer CVC_code;
-    Object card_number;
+    Object accountNumber;
 
 
-    public MASS_balance_inc(String serverResponse, Double amount, Integer CVC_code, Object card_number) {
+    public MASS_cart_add(String serverResponse,Object accountNumber) {
+        this.accountNumber = accountNumber;
         this.serverResponse = serverResponse;
-        this.amount = amount;
-        this.CVC_code = CVC_code;
-        this.card_number = card_number;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,"Black Power!"},
-                {"{\"Error!\":\"amount:Not_found\"}" ,null,111,1111122221L},
-                {"{\"Error!\":\"CVC_code:Not_found\"}"  ,111.1,null,1111122221L},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,null},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,null,null,null},
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
-                {"{\"Server_OK!\":\"Balance_updated_ok\"}" ,111.1,111,1111222233334441L},
-                {"{\"Error!\":\"CVC_code_invalid\"}" ,111.1,111,1111222233334442L},
-                {"{\"Error!\":\"Amount_is_negative\"}" ,-111.1,111,1111222233334441L},
+                {"{\"Error!\":\"account_number:Not_found\"}" ,null},
+                {"{\"Error!\":\"account_number:Not_found\"}" ,"Please! give me a new card!"},
+                {"{\"Error!\":\"Incorrect_account_number\"}" ,1113l},
+                {"{\"Error!\":\"Incorrect_account_number\"}" ,111334l},
+                {"{\"Error!\":\"Incorrect_account_number\"}" ,11124l},
+                {"{\"Error!\":\"Incorrect_account_number\"}" ,1114l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+
+
+
         });
     }
 
@@ -96,12 +104,10 @@ public class MASS_balance_inc {
     @Test
     public void postBalanceIncHandler() throws IOException {
         JSONObject jsonQuery = new JSONObject();
-        jsonQuery.put("amount",amount);
-        jsonQuery.put("CVC_code",CVC_code);
-        jsonQuery.put("card_number",card_number);
+        jsonQuery.put("account_number",accountNumber);
         JSONObject jsonObjectResponseTest = new JSONObject(serverResponse);
         // Given
-        URL url = new URL("http://localhost:8000/bank_api/balance_inc");
+        URL url = new URL("http://localhost:8000/bank_api/add_card");
         URLConnection conn = url.openConnection();
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -114,8 +120,8 @@ public class MASS_balance_inc {
         while (sc.hasNextLine())  {
             sb.append(sc.next());
         }
-        System.out.println("SErver response: TEST: " + sb.toString());
         JSONObject jsonObject = new JSONObject(sb.toString());
+        System.out.println(jsonObject);
         JSONAssert.assertEquals( jsonObjectResponseTest,jsonObject, JSONCompareMode.STRICT);
 
     }

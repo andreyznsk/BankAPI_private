@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.zip.DataFormatException;
 
 public class Http_POST_handle {
 
@@ -29,8 +30,7 @@ public class Http_POST_handle {
             case "balance_inc": {
                 String query = getQuery(t);
                 JSONObject jsonObject = new JSONObject(query);
-                JSONObject jsonObjectResponse = new JSONObject();
-                //response = jsonObject.toString();
+                JSONObject jsonObjectResponse;
                 Long cardNumber = null;
                 Double amount = null;
                 int CVC = 0;
@@ -50,11 +50,17 @@ public class Http_POST_handle {
                 InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
                 BufferedReader br = new BufferedReader(isr);
                 String query = br.readLine();
-                JSONObject jsonObject = new JSONObject(query);
-                response = jsonObject.toString();
-                Long accountNumber = jsonObject.getLong("account_number");
+                JSONObject clientReques = new JSONObject(query);
+                Long accountNumber;
+                try {
+                    accountNumber = clientReques.getLong("account_number");
+                } catch (JSONException e) {
+                    String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
+                    throw new NullPointerException(message + ":Not_found");
+                }
                 System.out.println("account_number: " +accountNumber );
-                controller.addCardByAccountNumber(accountNumber);
+                JSONObject jsonObject = controller.addCardByAccountNumber(accountNumber);
+                response = jsonObject.toString();
                 break;
             }
 

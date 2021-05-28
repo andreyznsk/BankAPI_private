@@ -12,7 +12,9 @@ public interface CardRepository {
 
     List getAllCardsByAccountNumber(Long accountNumber);
 
-    void addCardByAccountNumber(Card card);
+    int addCardByAccountNumber(Card card);
 
     Card getCardWithMaxNumber();
+
+    boolean isCardExist(Long cartNumber);
 }

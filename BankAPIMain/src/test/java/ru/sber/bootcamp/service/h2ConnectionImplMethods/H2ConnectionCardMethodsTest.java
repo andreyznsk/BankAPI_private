@@ -1,31 +1,21 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
-import junit.framework.TestCase;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.repository.*;
+import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.GsonConverter;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Scanner;
-
-import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class H2ConnectionCardMethodsTest{
@@ -42,7 +32,7 @@ public class H2ConnectionCardMethodsTest{
 
         @BeforeClass
         public static void init(){
-            dataService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig(),false);
+            dataService = new H2ConnectionServiceImpl(false);
             dataService.start();
 
             accountRepository = new AccountRepoImpl(dataService);

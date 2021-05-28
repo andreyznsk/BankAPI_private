@@ -1,8 +1,8 @@
 package ru.sber.bootcamp.service;
 
-import ru.sber.bootcamp.model_DAO.entity.Account;
-import ru.sber.bootcamp.model_DAO.entity.Card;
-import ru.sber.bootcamp.model_DAO.entity.Client;
+import ru.sber.bootcamp.modelDao.entity.Account;
+import ru.sber.bootcamp.modelDao.entity.Card;
+import ru.sber.bootcamp.modelDao.entity.Client;
 
 import java.util.List;
 

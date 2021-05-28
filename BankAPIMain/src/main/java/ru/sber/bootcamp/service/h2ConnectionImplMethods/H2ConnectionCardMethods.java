@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
-import ru.sber.bootcamp.model_DAO.entity.Card;
+import ru.sber.bootcamp.modelDao.entity.Card;
+import ru.sber.bootcamp.service.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,31 +9,15 @@ import java.util.List;
 
 public class H2ConnectionCardMethods {
 
-    private final  Connection connection;
+    private static String psGetAllCardsSql = "select * from CARD;";
+    private static String psGetAllCardByAccountNumberSql = "SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?;";
+    private static String psGetCardBuCardNumberSql = "SELECT * FROM CARD WHERE CARD_NUMBER = ?;";
+    private static String psAddCardByAccountNumberSql = "INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)\n" +
+            "VALUES (?, ?, ?, ?);";
+    private static String psGetCardWithMaxCardNumberSql = "SELECT MAX(CARD_NUMBER) FROM CARD WHERE CARD_NUMBER;";
+    private static String psGetCardByIdSql = "SELECT * FROM CARD WHERE ID = ?;";
+    private static String psGetCardNumberByCardNumberSql = "SELECT CARD_NUMBER FROM CARD WHERE CARD_NUMBER = ?;";
 
-    private PreparedStatement psGetAllCards;
-    private PreparedStatement psGetAllCardByAccountNumber;
-    private PreparedStatement psGetCardBuCardNumber;
-    private PreparedStatement psAddCardByAccountNumber;
-    private PreparedStatement psGetCardWithMaxCardNumber;
-    private PreparedStatement psGetCardById;
-    private PreparedStatement psGetCardNumberByCardNumber;
-
-    public H2ConnectionCardMethods(Connection connection) {
-        this.connection = connection;
-    }
-
-    public void prepareAllStatements() throws SQLException {
-            psGetAllCards = connection.prepareStatement("select * from CARD;");
-            psGetAllCardByAccountNumber = connection.prepareStatement("SELECT * FROM CARD WHERE ACCOUNT_NUMBER =?;");
-            psGetCardBuCardNumber = connection.prepareStatement("SELECT * FROM CARD WHERE CARD_NUMBER = ?;");
-            psAddCardByAccountNumber = connection.prepareStatement("INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)\n" +
-                    "VALUES (?, ?, ?, ?);");
-            psGetCardWithMaxCardNumber = connection.prepareStatement("SELECT MAX(CARD_NUMBER) FROM CARD WHERE CARD_NUMBER;");
-            psGetCardById = connection.prepareStatement("SELECT * FROM CARD WHERE ID = ?;");
-            psGetCardNumberByCardNumber = connection.prepareStatement("SELECT CARD_NUMBER FROM CARD WHERE CARD_NUMBER = ?;");
-
-    }
 
     public Card cardInit(ResultSet rs) throws SQLException {
         Card card = new Card();
@@ -46,7 +31,8 @@ public class H2ConnectionCardMethods {
 
     public List<Card> getAllCard(){
         List<Card> cards = new ArrayList<>();
-        try {
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement psGetAllCards = connection.prepareStatement(psGetAllCardsSql) ){
             ResultSet rs = psGetAllCards.executeQuery();
             while (rs.next()) {
                 Card card = cardInit(rs);
@@ -62,7 +48,9 @@ public class H2ConnectionCardMethods {
 
     public List<Card> getAllCardByAccountNumber(Long accountNumber) {
         List<Card> cards = new ArrayList<>();
-        try {
+        try(Connection connection = DataSource.getConnection();
+           PreparedStatement psGetAllCardByAccountNumber =  connection.prepareStatement(psGetAllCardByAccountNumberSql)
+                ) {
             psGetAllCardByAccountNumber.setLong(1,accountNumber);
             ResultSet rs = psGetAllCardByAccountNumber.executeQuery();
             while (rs.next()){
@@ -85,7 +73,8 @@ public class H2ConnectionCardMethods {
             return null;
         }
         Card card = new Card();
-        try {
+        try(Connection connection = DataSource.getConnection();
+        PreparedStatement psGetCardBuCardNumber = connection.prepareStatement(psGetCardBuCardNumberSql)) {
             psGetCardBuCardNumber.setLong(1,cardNumber);
             ResultSet rsCard = psGetCardBuCardNumber.executeQuery();
 
@@ -103,7 +92,8 @@ public class H2ConnectionCardMethods {
 
     public int addCardByAccountNumber(Card card) {
         int result = 0;
-        try {
+        try(Connection connection = DataSource.getConnection();
+        PreparedStatement psAddCardByAccountNumber = connection.prepareStatement(psAddCardByAccountNumberSql) ) {
             psAddCardByAccountNumber.setLong(1,card.getAccountNumber());
             psAddCardByAccountNumber.setLong(2,card.getCardNumber());
             psAddCardByAccountNumber.setDate(3, new Date(card.getDateValidThru().getTime()));
@@ -119,7 +109,8 @@ public class H2ConnectionCardMethods {
 
     public Card getCardWithMaxNumber() {
         Card card = new Card();
-        try {
+        try(Connection connection = DataSource.getConnection();
+        PreparedStatement psGetCardWithMaxCardNumber = connection.prepareStatement(psGetCardWithMaxCardNumberSql)) {
             ResultSet rsCard = psGetCardWithMaxCardNumber.executeQuery();
             while (rsCard.next()){
                 card.setCardNumber(rsCard.getLong(1));
@@ -139,7 +130,8 @@ public class H2ConnectionCardMethods {
             return null;
         }
         Card card = new Card();
-        try {
+        try(Connection connection = DataSource.getConnection();
+        PreparedStatement psGetCardById = connection.prepareStatement(psGetCardByIdSql) ) {
             psGetCardById.setLong(1,id);
             ResultSet rsCard = psGetCardById.executeQuery();
 
@@ -156,7 +148,8 @@ public class H2ConnectionCardMethods {
     }
 
     public boolean isCardExist(Long cartNumber) {
-        try {
+        try(Connection connection = DataSource.getConnection();
+        PreparedStatement psGetCardNumberByCardNumber = connection.prepareStatement(psGetCardNumberByCardNumberSql)) {
             psGetCardNumberByCardNumber.setLong(1, cartNumber);
             ResultSet rsCard = psGetCardNumberByCardNumber.executeQuery();
             return rsCard.next();

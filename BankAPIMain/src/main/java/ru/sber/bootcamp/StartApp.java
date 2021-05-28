@@ -1,13 +1,14 @@
 package ru.sber.bootcamp;
 
-import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
-import ru.sber.bootcamp.model_DAO.repository.*;
+import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
+import ru.sber.bootcamp.service.DataSource;
 import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -23,7 +24,7 @@ public class StartApp {
         }
 
         //Data base connection start
-        DataConnectionService dataService = new H2ConnectionServiceImpl(DataBaseConfig.getConfig(),tcpServer);
+        DataConnectionService dataService = new H2ConnectionServiceImpl(tcpServer);
         dataService.start();
 
         AccountRepository accountRepository = new AccountRepoImpl(dataService);
@@ -42,13 +43,17 @@ public class StartApp {
         //Console Handler
         Scanner scanner = new Scanner(System.in);
         String command;
-        do{
+       do{
             command = scanner.next();
         } while (!command.equals("exit"));
 
         httpServerStarter.stop();
         scanner.close();
-        dataService.stop();
+        try {
+            DataSource.stopConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
 
     }

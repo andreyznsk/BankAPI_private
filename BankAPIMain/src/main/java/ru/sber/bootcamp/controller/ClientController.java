@@ -3,14 +3,14 @@ package ru.sber.bootcamp.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ru.sber.bootcamp.model_DAO.entity.Account;
-import ru.sber.bootcamp.model_DAO.entity.Card;
-import ru.sber.bootcamp.model_DAO.entity.Client;
-import ru.sber.bootcamp.model_DAO.repository.AccountRepository;
-import ru.sber.bootcamp.model_DAO.repository.CardRepository;
-import ru.sber.bootcamp.model_DAO.repository.ClientRepository;
-import ru.sber.bootcamp.model_DTO.BalanceDTO;
-import ru.sber.bootcamp.model_DTO.BalanceDTOConverter;
+import ru.sber.bootcamp.modelDao.entity.Account;
+import ru.sber.bootcamp.modelDao.entity.Card;
+import ru.sber.bootcamp.modelDao.entity.Client;
+import ru.sber.bootcamp.modelDao.repository.AccountRepository;
+import ru.sber.bootcamp.modelDao.repository.CardRepository;
+import ru.sber.bootcamp.modelDao.repository.ClientRepository;
+import ru.sber.bootcamp.modelDto.BalanceDto;
+import ru.sber.bootcamp.modelDto.BalanceDtoConverter;
 import ru.sber.bootcamp.service.GsonConverter;
 
 import java.util.Calendar;
@@ -25,7 +25,7 @@ public class ClientController {
     private final ClientRepository clientRepository;
     private final CardRepository cardRepository;
     private final GsonConverter gsonConverter;
-    private final BalanceDTOConverter balanceDTOConverter;
+    private final BalanceDtoConverter balanceDTOConverter;
     private final Random random;
 
     public ClientController(AccountRepository accountRepository,
@@ -36,7 +36,7 @@ public class ClientController {
         this.clientRepository = clientRepository;
         this.cardRepository = cardRepository;
         this.gsonConverter = gsonConverter;
-        this.balanceDTOConverter = new BalanceDTOConverter();
+        this.balanceDTOConverter = new BalanceDtoConverter();
         this.random = new Random();
     }
 
@@ -108,7 +108,7 @@ public class ClientController {
             System.out.println("Card_Number_incorrect");
             throw new NullPointerException("Card_Number_incorrect");
         }
-        BalanceDTO balanceDTO = balanceDTOConverter.balanceDTO(account);
+        BalanceDto balanceDTO = balanceDTOConverter.balanceDTO(account);
         jsonObject = gsonConverter.convertObjectToJson(balanceDTO);
         return jsonObject;
     }

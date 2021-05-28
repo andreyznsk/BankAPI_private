@@ -1,9 +1,9 @@
 package ru.sber.bootcamp.service;
 
 import org.h2.tools.Server;
-import ru.sber.bootcamp.model_DAO.entity.Account;
-import ru.sber.bootcamp.model_DAO.entity.Card;
-import ru.sber.bootcamp.model_DAO.entity.Client;
+import ru.sber.bootcamp.modelDao.entity.Account;
+import ru.sber.bootcamp.modelDao.entity.Card;
+import ru.sber.bootcamp.modelDao.entity.Client;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionAccountMethods;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionCardMethods;
 import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionClientMethods;
@@ -11,7 +11,6 @@ import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionClientMethod
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -19,13 +18,8 @@ import java.util.Scanner;
 
 public class H2ConnectionServiceImpl implements DataConnectionService {
 
-    private final String URL;
-    private final String USER;
-    private final String PASSWORD;
     private final boolean enableTcpServer;
     private final boolean enableAutoCommit;
-    private Connection connection;
-    private Statement stmt;
     private Server server;
 
     private H2ConnectionCardMethods h2ConnectionCardMethods;
@@ -34,14 +28,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Инициализвция БД
-     * @param properties - параметы подключеия к БД в формте url;user;password
+     *
      */
-    public H2ConnectionServiceImpl(String properties, boolean enableTCP) {
-        String[] property = properties.split(";");
+    public H2ConnectionServiceImpl(boolean enableTCP) {
         this.enableTcpServer = enableTCP;
-        this.URL = (property.length > 0) ? property[0] : "";
-        this.USER = (property.length > 1) ? property[1] : "";
-        this.PASSWORD = (property.length > 2) ? property[2] : "";
         this.enableAutoCommit = true;
     }
 
@@ -54,13 +44,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     private void connect() throws SQLException {
 
-            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            this.connection.setAutoCommit(enableAutoCommit);
-            System.out.println("Server autoCommit mode: " + connection.getAutoCommit());
-            this.stmt = connection.createStatement();
-            this.h2ConnectionCardMethods = new H2ConnectionCardMethods(connection);
-            this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods(connection);
-            this.h2ConnectionClientMethods = new H2ConnectionClientMethods(connection, h2ConnectionAccountMethods);
+            System.out.println("Server autoCommit mode: " + enableAutoCommit);
+            this.h2ConnectionCardMethods = new H2ConnectionCardMethods();
+            this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods();
+            this.h2ConnectionClientMethods = new H2ConnectionClientMethods(h2ConnectionAccountMethods);
         System.out.println("Server TCP/IP mode: " + enableTcpServer);
         if (enableTcpServer) {
             server = Server.createTcpServer().start();
@@ -75,13 +62,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     private void disconnect() {
         try {
-            stmt.close();
-            connection.close();
-            System.out.println("DB Close");
-        } catch (SQLException e) {
-            e.printStackTrace();
+            DataSource.stopConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-
     }
 
     /**
@@ -94,7 +78,8 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
         try {
             connect();
-            prepareAllStatements();
+            h2DbBaseInit();
+
             System.out.println("Connect to bd main is successful");
         } catch (Exception e) {
             System.err.println("Auth serv err");
@@ -106,7 +91,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * Подготовка всех предустановленных запросов
      * @throws SQLException - может выбросить исключение при недоступности БД, а так же при ошибках поделючения
      */
-    private void prepareAllStatements() throws SQLException {
+    private void h2DbBaseInit() throws SQLException {
         //Загрузка БД из файла
         File databaseScript = new File("data.sql");
         StringBuilder stringBuilder = new StringBuilder();
@@ -121,17 +106,17 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        stmt.execute(stringBuilder.toString());
-
-        h2ConnectionCardMethods.prepareAllStatements();//Инициализация всех запросов в Картах
-        h2ConnectionAccountMethods.prepareAllStatements();//В счетах
-        h2ConnectionClientMethods.prepareAllStatements();// В клиентах
+        try(Connection connection = DataSource.getConnection();
+            Statement stmt = connection.createStatement()) {
+            stmt.execute(stringBuilder.toString());
+        }
 
     }
 
     @Override
     public void stop() {
         System.out.println("Auth service has been stopped");
+
         if (server!=null) {
             server.stop();
         }

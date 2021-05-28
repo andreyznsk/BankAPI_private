@@ -155,10 +155,16 @@ public class ClientController {
     }
 
     /**
+     * Выпуст ковой карьты: Достаем клиента из базы по номеру счета если клиента нет, возвращаем отрицательный результат
+     * если клиент находится: - генерируем случайны номер карты, проверям чть такого номера нет,
+     *                         - генерируем CVC код,
+     *                         - создаем дату и добвляем три года
+     * и добавляем карту в список
+     * @param accountNumber - Номер счета по которому необходимо выпустить карту
      *
-     * @param accountNumber
+     * @return - Резултат добавления, либо исключение если номер пуст
      */
-    public JSONObject addCardByAccountNumber(Long accountNumber) {
+    public JSONObject addCardByAccountNumber(Long accountNumber) throws NullPointerException {
         JSONObject jsonObject = new JSONObject();
         if(accountNumber == null) {
             throw new NullPointerException("Account number is empty!");
@@ -171,7 +177,7 @@ public class ClientController {
             Card card = new Card();
             Long cartNumber;
             do{
-                cartNumber = getRandomLong(0L,999999999999L);
+                cartNumber = getRandomLong(1000_0000_0000_0000L,9999_9999_9999_9999L);
             } while (cardRepository.isCardExist(cartNumber));
 
             int CVC = getRandomCVC(999);
@@ -181,6 +187,7 @@ public class ClientController {
             c.add(Calendar.YEAR,3);
             Date updateDate = c.getTime();
             card.setCardNumber(cartNumber);
+            System.out.println("Generated card number: " + cartNumber);
             card.setAccountNumber(client.getAccount().getAccountNumber());
             card.setCVC_code(CVC);
             card.setDateValidThru(updateDate);

@@ -13,6 +13,7 @@ import ru.sber.bootcamp.service.httpServer.POST_methods.MASS_cart_add;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        StartAppTest.class,
         H2ConnectionCardMethodsTest.class,
         AccountRepositoryTest.class,
         CardRepositoryTest.class,

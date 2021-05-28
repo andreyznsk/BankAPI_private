@@ -1,12 +1,14 @@
 package ru.sber.bootcamp.service.httpServer.GET_Methods;
 
 
+import org.json.JSONArray;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
 import ru.sber.bootcamp.configuration.DataBaseConfig;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.model_DAO.repository.*;
@@ -101,7 +103,9 @@ public class MASS_TestGetAllCards {
             sb.append(sc.next());
         }
         String body = sb.toString();
-        Assert.assertEquals(serverResponse,body);
+        JSONArray jsonArrayActual = new JSONArray(body);
+        JSONArray jsonArrayExpected = new JSONArray(serverResponse);
+        JSONAssert.assertEquals(jsonArrayExpected, jsonArrayActual, true);
     }
 
     @AfterClass

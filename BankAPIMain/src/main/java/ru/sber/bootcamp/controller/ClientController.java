@@ -3,7 +3,6 @@ package ru.sber.bootcamp.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ru.sber.bootcamp.configuration.MyErrorMessage;
 import ru.sber.bootcamp.model_DAO.entity.Account;
 import ru.sber.bootcamp.model_DAO.entity.Card;
 import ru.sber.bootcamp.model_DAO.entity.Client;
@@ -14,7 +13,6 @@ import ru.sber.bootcamp.model_DTO.BalanceDTO;
 import ru.sber.bootcamp.model_DTO.BalanceDTOConverter;
 import ru.sber.bootcamp.service.GsonConverter;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -28,7 +26,7 @@ public class ClientController {
     private final CardRepository cardRepository;
     private final GsonConverter gsonConverter;
     private final BalanceDTOConverter balanceDTOConverter;
-    private Random random;
+    private final Random random;
 
     public ClientController(AccountRepository accountRepository,
                             ClientRepository clientRepository,
@@ -48,8 +46,7 @@ public class ClientController {
      * @return String of List JsonObjects
      */
     public JSONArray getAllAccounts(){
-        //return jsObjects.stream().map(t->t.toString(4)).collect(Collectors.joining(","));
-        return gsonConverter.convertListToGson(accountRepository.findAll());
+           return gsonConverter.convertListToGson(accountRepository.findAll());
     }
 
     /**
@@ -67,7 +64,6 @@ public class ClientController {
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
         jsonObject = gsonConverter.convertObjectToJson(client);
         return jsonObject;
-        //return (!(jsonObject.isEmpty()))?jsonObject.toString(5):"Ошибка!! Введите клиент ИД";
     }
 
 
@@ -78,14 +74,13 @@ public class ClientController {
      */
     public  JSONArray getAllCards() {
         return gsonConverter.convertListToGson(cardRepository.getAllCards());
-
     }
 
     /**
      * Контроллер для паттерна /~/get_card_by_account/{accountNumber}
-     * TODO
-     * @param accountNumber
-     * @return
+     *
+     * @param accountNumber - Номер счета
+     * @return - Массив всех карт по номеру счета
      */
     public  JSONArray getAllCardsByAccount(Long accountNumber) throws NullPointerException {
         if(accountNumber == null) {
@@ -119,10 +114,12 @@ public class ClientController {
     }
 
     /**
-     *
-     * @param cardNumber
-     * @param amount
-     * @param CVC
+     * Добавить сумму на баланс счета по карте
+     * Если сумма отрицательная вернуть сообщение - сумма отрицательная
+     * Получить карту из базы, проверить код карты если совпадает то добавить сумма
+     * @param cardNumber - номер карты
+     * @param amount - сумма
+     * @param CVC - Код карты
      */
     public JSONObject incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
         if(amount < 0) {
@@ -202,7 +199,7 @@ public class ClientController {
     }
 
     private int getRandomCVC(int max) {
-        return random.nextInt(999);
+        return random.nextInt(max);
     }
 
     private Long getRandomLong(long min, long max) {

@@ -20,9 +20,9 @@ create table Client(
 
 INSERT INTO Client (account_number, firstName, lastName, phone_number)
 VALUES (1111,'Ivan','Ivanov', 89008001234);
+
 INSERT INTO Client (account_number, firstName, lastName, phone_number)
 VALUES (1112,'Петр','Петров', 88009001235);
-
 CREATE TABLE Card(
     id IDENTITY PRIMARY KEY,
     account_number BIGINT NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE Card(
 
 INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)
 VALUES (1111, 1111222233334441, '2023-01-01', 111);
+
 INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)
 VALUES (1111, 1111222233334442, '2023-01-01', 112);
 INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)
@@ -44,6 +45,13 @@ INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)
 VALUES (1112, 1112222233334443, '2023-01-01', 123);
 INSERT INTO Card (account_number, card_number, date_valid_thru, cvc_code)
 VALUES (1112, 1112222233334444, '2023-01-01', 124);
+
+-- INDEXES
+CREATE INDEX client_account_number ON CLIENT(account_number);
+CREATE INDEX account_account_number ON ACCOUNT(account_number);
+CREATE INDEX card_card_number ON CARD(CARD_NUMBER);
+CREATE INDEX card_account_number ON CARD(ACCOUNT_NUMBER);
+CREATE INDEX account_cardNumber ON ACCOUNT(account_number);
 
 
 

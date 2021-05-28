@@ -6,6 +6,7 @@ import ru.sber.bootcamp.configuration.DataBaseConfig;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataSource {
 
@@ -35,6 +36,14 @@ public class DataSource {
     }
 
     public static void stopConnection() throws SQLException {
-      ds.close();
+        try(Connection connection = ds.getConnection();
+            Statement statement = connection.createStatement();
+                ) {
+            statement.execute("DROP TABLE CLIENT;DROP TABLE CARD; DROP TABLE ACCOUNT;");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 }

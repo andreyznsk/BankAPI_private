@@ -22,11 +22,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     private final String URL;
     private final String USER;
     private final String PASSWORD;
+    private final boolean enableTcpServer;
+    private final boolean enableAutoCommit;
     private Connection connection;
     private Statement stmt;
     private Server server;
-    private boolean enableTcpServer;
-    private boolean enableAutoCommit;
 
     private H2ConnectionCardMethods h2ConnectionCardMethods;
     H2ConnectionAccountMethods h2ConnectionAccountMethods;
@@ -84,6 +84,10 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     }
 
+    /**
+     * Пользовательский метод старта подключения к БД
+     * Получает подключение к БД и инициализирует все подготовленные запросы
+     */
     @Override
     public void start() {
         System.out.println("Auth service is running");
@@ -103,6 +107,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * @throws SQLException - может выбросить исключение при недоступности БД, а так же при ошибках поделючения
      */
     private void prepareAllStatements() throws SQLException {
+        //Загрузка БД из файла
         File databaseScript = new File("data.sql");
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -118,9 +123,9 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         }
         stmt.execute(stringBuilder.toString());
 
-        h2ConnectionCardMethods.prepareAllStatements();
-        h2ConnectionAccountMethods.prepareAllStatements();
-        h2ConnectionClientMethods.prepareAllStatements();
+        h2ConnectionCardMethods.prepareAllStatements();//Инициализация всех запросов в Картах
+        h2ConnectionAccountMethods.prepareAllStatements();//В счетах
+        h2ConnectionClientMethods.prepareAllStatements();// В клиентах
 
     }
 
@@ -154,6 +159,11 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     }
 
+    /**
+     * Получить объект счет по номеру карты. Данный зпрос выпонлняется с использованием card JOIN clients
+     * @param cardNumber
+     * @return
+     */
     @Override
     public Account getAccountByCardNumber(Long cardNumber) {
         return h2ConnectionAccountMethods.getAccountByCardNumber(cardNumber);

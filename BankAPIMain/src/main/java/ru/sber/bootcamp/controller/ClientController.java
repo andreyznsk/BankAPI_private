@@ -3,14 +3,10 @@ package ru.sber.bootcamp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ShortNode;
-import org.graalvm.compiler.replacements.nodes.ArrayEqualsNode;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.modelDao.entity.Client;
@@ -19,7 +15,6 @@ import ru.sber.bootcamp.modelDao.repository.CardRepository;
 import ru.sber.bootcamp.modelDao.repository.ClientRepository;
 import ru.sber.bootcamp.modelDto.BalanceDto;
 import ru.sber.bootcamp.modelDto.BalanceDtoConverter;
-import ru.sber.bootcamp.service.GsonConverter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,19 +30,16 @@ public class ClientController {
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
     private final CardRepository cardRepository;
-    private final GsonConverter gsonConverter;
     private final BalanceDtoConverter balanceDTOConverter;
     private final Random random;
     private final ObjectWriter objectWriter;
 
     public ClientController(AccountRepository accountRepository,
                             ClientRepository clientRepository,
-                            CardRepository cardRepository,
-                            GsonConverter gsonConverter) {
+                            CardRepository cardRepository) {
         this.accountRepository = accountRepository;
         this.clientRepository = clientRepository;
         this.cardRepository = cardRepository;
-        this.gsonConverter = gsonConverter;
         this.balanceDTOConverter = new BalanceDtoConverter();
         this.random = new Random();
 
@@ -121,7 +113,7 @@ public class ClientController {
      * @param cardNumber -  номер карты
      * @return - баланс в виде строки
      */
-    public String getBalanceByCardNumber(Long cardNumber) throws JsonProcessingException {
+    public String getBalanceByCardNumber(Long cardNumber) throws Exception {
         if(cardNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input_Card_number");
@@ -129,7 +121,7 @@ public class ClientController {
         Account account = accountRepository.getAccountByCardNumber(cardNumber);
         if(account.getBalance()==null) {
             System.out.println("Card_Number_incorrect");
-            throw new NullPointerException("Card_Number_incorrect");
+            throw new BankApiException("Card_Number_incorrect");
         }
         BalanceDto balanceDTO = balanceDTOConverter.balanceDTO(account);
         return objectWriter.writeValueAsString(balanceDTO);
@@ -143,9 +135,10 @@ public class ClientController {
      * @param amount - сумма
      * @param CVC - Код карты
      */
-    public String incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
+    public String incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC)
+            throws BankApiException {
         if(amount < 0) {
-            throw new NullPointerException("Amount_is_negative");
+            throw new BankApiException("Amount_is_negative");
         }
         Card card = cardRepository.getCardByCardNumber(cardNumber);
         ObjectNode serverResponse = new ObjectMapper().createObjectNode();
@@ -180,10 +173,10 @@ public class ClientController {
      *
      * @return - Резултат добавления, либо исключение если номер пуст
      */
-    public String addCardByAccountNumber(Long accountNumber) throws NullPointerException {
+    public String addCardByAccountNumber(Long accountNumber) throws BankApiException {
         ObjectNode serverResponse = new ObjectMapper().createObjectNode();
         if(accountNumber == null) {
-            throw new NullPointerException("Account number is empty!");
+            throw new BankApiException("Account number is empty!");
         }
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
 
@@ -202,7 +195,7 @@ public class ClientController {
             c.setTime(date);
             c.add(Calendar.YEAR,3);
             Date updateDate = c.getTime();
-            card.setCardNumber(cartNumber);
+            card.setCardNumber(cartNumber.toString());
             System.out.println("Generated card number: " + cartNumber);
             card.setAccountNumber(client.getAccount().getAccountNumber());
             card.setCVC_code(CVC);

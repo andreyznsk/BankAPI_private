@@ -147,10 +147,10 @@ public class H2ConnectionCardMethods {
         return card;
     }
 
-    public boolean isCardExist(Long cartNumber) {
+    public boolean isCardExist(String cartNumber) {
         try(Connection connection = DataSource.getConnection();
         PreparedStatement psGetCardNumberByCardNumber = connection.prepareStatement(psGetCardNumberByCardNumberSql)) {
-            psGetCardNumberByCardNumber.setLong(1, cartNumber);
+            psGetCardNumberByCardNumber.setString(1, cartNumber);
             ResultSet rsCard = psGetCardNumberByCardNumber.executeQuery();
             return rsCard.next();
         } catch (SQLException throwables) {

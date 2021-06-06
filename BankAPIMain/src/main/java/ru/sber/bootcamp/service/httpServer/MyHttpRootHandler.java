@@ -1,9 +1,11 @@
 package ru.sber.bootcamp.service.httpServer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.exception.BankApiException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,12 +18,12 @@ class MyHttpRootHandler implements HttpHandler {
    private final ClientController controller;
 
    private HttpPostHandle http_postHandle;
-   private HttpGetHandle http_get_hendle;
+   private HttpGetHandle httpGetHandle;
 
     public MyHttpRootHandler(ClientController controller) {
         this.controller = controller;
         http_postHandle = new HttpPostHandle(controller);
-        http_get_hendle = new HttpGetHandle(controller);
+        httpGetHandle = new HttpGetHandle(controller);
 
     }
 
@@ -36,25 +38,28 @@ class MyHttpRootHandler implements HttpHandler {
         String response = "";
         if (t.getRequestMethod().equals("GET")) {
             try {
-             response = http_get_hendle.handleGET(t);
+             response = httpGetHandle.handleGET(t);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (NullPointerException | NumberFormatException e){
+            } catch (BankApiException | NumberFormatException e){
                 //e.printStackTrace();
                 System.err.println(e);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ERROR_MESSAGE.message,e.getMessage());
-                response = jsonObject.toString();
+                ObjectNode serverResponse = new ObjectMapper().createObjectNode();
+                serverResponse.put(ERROR_MESSAGE.message,e.getMessage());
+                response = serverResponse.asText();
+            } catch (Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         } else {
             try {
              response = http_postHandle.handlePOST(t);
-            } catch (NullPointerException | NumberFormatException e){
+            } catch (BankApiException | NumberFormatException e){
                 //e.printStackTrace();
                 System.err.println(e);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ERROR_MESSAGE.message, e.getMessage());
-                response = jsonObject.toString();
+                ObjectNode serverResponse = new ObjectMapper().createObjectNode();
+                serverResponse.put(ERROR_MESSAGE.message, e.getMessage());
+                response = serverResponse.asText();
             } catch (Exception e) {
                 e.printStackTrace();
             }

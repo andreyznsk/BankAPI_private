@@ -3,9 +3,6 @@ package ru.sber.bootcamp.service.httpServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import ru.sber.bootcamp.configuration.MyServerMessage;
 import ru.sber.bootcamp.controller.ClientController;
 
 import java.io.IOException;
@@ -24,7 +21,7 @@ public class HttpGetHandle {
         this.controller = controller;
     }
 
-    protected String handleGET(HttpExchange t) throws IOException {
+    protected String handleGET(HttpExchange t) throws Exception {
         String response;
         String url = t.getRequestURI().toString();
         String[] path = url.split("/");

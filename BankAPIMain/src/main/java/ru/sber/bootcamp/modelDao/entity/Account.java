@@ -7,14 +7,14 @@ import java.util.Objects;
 public class Account {
 
     private Long id;
-    private Long accountNumber;
+    private String accountNumber;
     private BigDecimal balance;
     private Date openDate;
 
     public Account() {
     }
 
-    public Account(Long id, Long accountNumber, BigDecimal balance, Date openDate) {
+    public Account(Long id, String accountNumber, BigDecimal balance, Date openDate) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.balance = balance;
@@ -29,11 +29,11 @@ public class Account {
         this.id = id;
     }
 
-    public Long getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.exception.BankApiException;
 
@@ -35,26 +33,16 @@ public class HttpPostHandle {
                 Long cardNumber = null;
                 Double amount = null;
                 int CVC = 0;
-                try {
-                    cardNumber = query.get("card_number").asLong();
-                    amount = query.get("amount").asDouble();
-                    CVC = query.get("CVC_code").asInt();
-                } catch (JSONException e) {
-                    String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
-                    throw new BankApiException(message + ":Not_found");
-                }
+                cardNumber = query.get("card_number").asLong();
+                amount = query.get("amount").asDouble();
+                CVC = query.get("CVC_code").asInt();
                 response = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
                 break;
             }
             case "add_card": {
                 JsonNode query = getQuery(t);
                 Long accountNumber = null;
-                try {
-                    accountNumber = query.get("account_number").asLong();
-                } catch (JSONException e) {
-                    String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
-                    throw new BankApiException(message + ":Not_found");
-                }
+                accountNumber = query.get("account_number").asLong();
                 System.out.println("account_number: " +accountNumber );
                 response = controller.addCardByAccountNumber(accountNumber);
                 break;

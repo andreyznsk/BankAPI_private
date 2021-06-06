@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class Card {
     private Long id;
-    private Long accountNumber;
-    private Long cardNumber;
+    private String accountNumber;
+    private String cardNumber;
     private Date dateValidThru;
     private int CVC_code;
 
     public Card() {
     }
 
-    public Card(Long id, Long accountNumber, Long cardNumber, Date dateValidThru, int CVC_code) {
+    public Card(Long id, String accountNumber, String cardNumber, Date dateValidThru, int CVC_code) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.cardNumber = cardNumber;
@@ -29,19 +29,19 @@ public class Card {
         this.id = id;
     }
 
-    public Long getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    public Long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 

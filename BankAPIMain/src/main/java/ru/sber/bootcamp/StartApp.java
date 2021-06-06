@@ -4,7 +4,6 @@ import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.DataSource;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -32,7 +31,8 @@ public class StartApp {
         CardRepository cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        ClientController controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        ClientController controller = new ClientController(accountRepository,
+                clientRepository, cardRepository);
 
 
         //HTTP server start

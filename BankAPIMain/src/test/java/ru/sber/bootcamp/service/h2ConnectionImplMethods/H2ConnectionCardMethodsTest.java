@@ -9,8 +9,6 @@ import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -28,7 +26,6 @@ public class H2ConnectionCardMethodsTest{
         static CardRepository cardRepository;
         static ClientController controller;
         static HttpServerStarter httpServerStarter;
-        static GsonConverter gsonConverter;
 
         @BeforeClass
         public static void init(){
@@ -40,14 +37,12 @@ public class H2ConnectionCardMethodsTest{
             cardRepository = new CardRepositoryImpl(dataService);
 
             //Controller start
-            controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+            controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
             //HTTP server start
             httpServerStarter = new HttpServerStarter(controller);
             httpServerStarter.start();
-
-            gsonConverter = new GsonConverterImpl();
         }
 
     public boolean serverResponse;
@@ -63,16 +58,16 @@ public class H2ConnectionCardMethodsTest{
         public static Collection<Object[]> data() {
 
             return Arrays.asList(new Object[][]{
-                    {false,1L},
-                    {false,12L},
-                    {false,13L},
-                    {false,414441413232134L},
-                    {false,1123412341234L},
-                    {false,1552151234444444L},
-                    {true,1111222233334441L},
-                    {true,1111222233334442L},
-                    {true,1112222233334441L},
-                    {true,1112222233334442L},
+                    {false,"1"},
+                    {false,"12"},
+                    {false,"13"},
+                    {false,"414441413232134"},
+                    {false,"1123412341234"},
+                    {false,"1552151234444444"},
+                    {true,"1111222233334441"},
+                    {true,"1111222233334442"},
+                    {true,"1112222233334441"},
+                    {true,"1112222233334442"},
 
 
             });

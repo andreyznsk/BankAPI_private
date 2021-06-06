@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-import static ru.sber.bootcamp.configuration.MyErrorMessage.ERROR_MESSAGE;
+import static ru.sber.bootcamp.configuration.MyServerMessage.ERROR_MESSAGE;
 
 class MyHttpRootHandler implements HttpHandler {
 

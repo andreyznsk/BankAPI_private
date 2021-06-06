@@ -1,6 +1,14 @@
 package ru.sber.bootcamp.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ShortNode;
+import org.graalvm.compiler.replacements.nodes.ArrayEqualsNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.sber.bootcamp.modelDao.entity.Account;
@@ -13,11 +21,14 @@ import ru.sber.bootcamp.modelDto.BalanceDto;
 import ru.sber.bootcamp.modelDto.BalanceDtoConverter;
 import ru.sber.bootcamp.service.GsonConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
-import static ru.sber.bootcamp.configuration.MyErrorMessage.*;
+import static ru.sber.bootcamp.configuration.MyServerMessage.*;
 
 public class ClientController {
 
@@ -27,6 +38,7 @@ public class ClientController {
     private final GsonConverter gsonConverter;
     private final BalanceDtoConverter balanceDTOConverter;
     private final Random random;
+    private final ObjectWriter objectWriter;
 
     public ClientController(AccountRepository accountRepository,
                             ClientRepository clientRepository,
@@ -38,6 +50,15 @@ public class ClientController {
         this.gsonConverter = gsonConverter;
         this.balanceDTOConverter = new BalanceDtoConverter();
         this.random = new Random();
+
+        DefaultPrettyPrinter pp = new DefaultPrettyPrinter()
+                .withoutSpacesInObjectEntries()
+                .withArrayIndenter(new DefaultPrettyPrinter.NopIndenter());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        this.objectWriter = new ObjectMapper()
+                .writer()
+                .with(pp)
+                .with(df);
     }
 
     /**
@@ -45,8 +66,11 @@ public class ClientController {
      * Возвращает информацию по счетам для всех клиентов
      * @return String of List JsonObjects
      */
-    public JSONArray getAllAccounts(){
-           return gsonConverter.convertListToGson(accountRepository.findAll());
+    public String getAllAccounts() throws JsonProcessingException {
+
+        List<Account> accountsObj = accountRepository.findAll();
+        return objectWriter.writeValueAsString(accountsObj);
+
     }
 
     /**
@@ -55,15 +79,13 @@ public class ClientController {
      * @param accountNumber номер счета
      * @return информцию клиента по номеру счета
      */
-    public JSONObject getClientByAccountNumber(Long accountNumber){
+    public String getClientByAccountNumber(Long accountNumber) throws JsonProcessingException {
         if(accountNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input_account_number");
         }
-        JSONObject jsonObject;
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
-        jsonObject = gsonConverter.convertObjectToJson(client);
-        return jsonObject;
+        return objectWriter.writeValueAsString(client);
     }
 
 
@@ -72,8 +94,9 @@ public class ClientController {
      * Получить список всех карт
      * @return список всех карт в видей строки
      */
-    public  JSONArray getAllCards() {
-        return gsonConverter.convertListToGson(cardRepository.getAllCards());
+    public  String getAllCards() throws JsonProcessingException {
+        List<Card> allCards = cardRepository.getAllCards();
+        return objectWriter.writeValueAsString(allCards);
     }
 
     /**
@@ -82,13 +105,14 @@ public class ClientController {
      * @param accountNumber - Номер счета
      * @return - Массив всех карт по номеру счета
      */
-    public  JSONArray getAllCardsByAccount(Long accountNumber) throws NullPointerException {
+    public  String getAllCardsByAccount(Long accountNumber) throws NullPointerException, JsonProcessingException {
         if(accountNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input Account number");
         }
             //gsonConverter.convertListToGson();
-        return gsonConverter.convertListToGson(cardRepository.getAllCardsByAccountNumber(accountNumber));
+        List<Card> allCardsByAccountNumber = cardRepository.getAllCardsByAccountNumber(accountNumber);
+        return objectWriter.writeValueAsString(allCardsByAccountNumber);
     }
 
     /**
@@ -97,20 +121,18 @@ public class ClientController {
      * @param cardNumber -  номер карты
      * @return - баланс в виде строки
      */
-    public JSONObject getBalanceByCardNumber(Long cardNumber) {
+    public String getBalanceByCardNumber(Long cardNumber) throws JsonProcessingException {
         if(cardNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input_Card_number");
         }
-        JSONObject jsonObject;
         Account account = accountRepository.getAccountByCardNumber(cardNumber);
         if(account.getBalance()==null) {
             System.out.println("Card_Number_incorrect");
             throw new NullPointerException("Card_Number_incorrect");
         }
         BalanceDto balanceDTO = balanceDTOConverter.balanceDTO(account);
-        jsonObject = gsonConverter.convertObjectToJson(balanceDTO);
-        return jsonObject;
+        return objectWriter.writeValueAsString(balanceDTO);
     }
 
     /**
@@ -121,17 +143,16 @@ public class ClientController {
      * @param amount - сумма
      * @param CVC - Код карты
      */
-    public JSONObject incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
+    public String incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC) {
         if(amount < 0) {
             throw new NullPointerException("Amount_is_negative");
         }
         Card card = cardRepository.getCardByCardNumber(cardNumber);
-        JSONObject jsonObject = new JSONObject();
+        ObjectNode serverResponse = new ObjectMapper().createObjectNode();
         if(card==null) {
             System.out.println("Карта не найдена");
-            jsonObject = new JSONObject();
-            jsonObject.put(ERROR_MESSAGE.message, "Card_not_found");
-            return jsonObject;
+            serverResponse.put(ERROR_MESSAGE.message, "Card_not_found");
+            return serverResponse.asText();
         }
         System.out.println(card);
         if(card.getCVC_code()==CVC ){
@@ -139,15 +160,13 @@ public class ClientController {
             account.incBalance(amount);
            int result = accountRepository.updateAccount(account);
            if(result == 1) {
-               jsonObject.put(SERVER_OK.message,"Balance_updated_ok");
+               serverResponse.put(SERVER_OK.message,"Balance_updated_ok");
            }
         } else {
             System.out.println("CVC code invalid");
-            jsonObject = new JSONObject();
-            jsonObject.put("Error!","CVC_code_invalid");
+            serverResponse.put(ERROR_MESSAGE.message,"CVC_code_invalid");
         }
-
-        return jsonObject;
+        return serverResponse.asText();
 
     }
 
@@ -161,15 +180,15 @@ public class ClientController {
      *
      * @return - Резултат добавления, либо исключение если номер пуст
      */
-    public JSONObject addCardByAccountNumber(Long accountNumber) throws NullPointerException {
-        JSONObject jsonObject = new JSONObject();
+    public String addCardByAccountNumber(Long accountNumber) throws NullPointerException {
+        ObjectNode serverResponse = new ObjectMapper().createObjectNode();
         if(accountNumber == null) {
             throw new NullPointerException("Account number is empty!");
         }
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
 
         if(client.getAccount().getAccountNumber() == null){
-            jsonObject.put(SERVER_ERROR.message,"Account number incorrect");
+            serverResponse.put(SERVER_ERROR.message,"Account number incorrect");
         } else {
             Card card = new Card();
             Long cartNumber;
@@ -190,12 +209,12 @@ public class ClientController {
             card.setDateValidThru(updateDate);
             int result = cardRepository.addCardByAccountNumber(card);
             if (result == 0)  {
-                jsonObject.put(SERVER_ERROR.message,"Card not added");
+                serverResponse.put(SERVER_ERROR.message,"Card not added");
             } else {
-                jsonObject.put(SERVER_OK.message,"Card_added");
+                serverResponse.put(SERVER_OK.message,"Card_added");
             }
         }
-        return jsonObject;
+        return serverResponse.asText();
     }
 
     private int getRandomCVC(int max) {

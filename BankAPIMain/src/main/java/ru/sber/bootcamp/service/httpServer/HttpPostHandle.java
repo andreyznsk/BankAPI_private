@@ -1,16 +1,19 @@
 package ru.sber.bootcamp.service.httpServer;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.exception.BankApiException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.zip.DataFormatException;
 
 public class HttpPostHandle {
 
@@ -28,39 +31,32 @@ public class HttpPostHandle {
         String response;
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
             case "balance_inc": {
-                String query = getQuery(t);
-                JSONObject jsonObject = new JSONObject(query);
-                JSONObject jsonObjectResponse;
+                JsonNode query = getQuery(t);
                 Long cardNumber = null;
                 Double amount = null;
                 int CVC = 0;
                 try {
-                    cardNumber = jsonObject.getLong("card_number");
-                    amount = jsonObject.getDouble("amount");
-                    CVC = jsonObject.getInt("CVC_code");
+                    cardNumber = query.get("card_number").asLong();
+                    amount = query.get("amount").asDouble();
+                    CVC = query.get("CVC_code").asInt();
                 } catch (JSONException e) {
                     String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
-                    throw new NullPointerException(message + ":Not_found");
+                    throw new BankApiException(message + ":Not_found");
                 }
-                jsonObjectResponse = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
-                response = jsonObjectResponse.toString();
+                response = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
                 break;
             }
             case "add_card": {
-                InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(isr);
-                String query = br.readLine();
-                JSONObject clientReques = new JSONObject(query);
-                Long accountNumber;
+                JsonNode query = getQuery(t);
+                Long accountNumber = null;
                 try {
-                    accountNumber = clientReques.getLong("account_number");
+                    accountNumber = query.get("account_number").asLong();
                 } catch (JSONException e) {
                     String message = StringUtils.substringBetween(e.getMessage(),"\"","\"");
-                    throw new NullPointerException(message + ":Not_found");
+                    throw new BankApiException(message + ":Not_found");
                 }
                 System.out.println("account_number: " +accountNumber );
-                JSONObject jsonObject = controller.addCardByAccountNumber(accountNumber);
-                response = jsonObject.toString();
+                response = controller.addCardByAccountNumber(accountNumber);
                 break;
             }
 
@@ -70,10 +66,10 @@ public class HttpPostHandle {
         return response;
     }
 
-    private String getQuery(HttpExchange t) throws IOException {
+    private JsonNode getQuery(HttpExchange t) throws IOException {
         InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
-        BufferedReader br = new BufferedReader(isr);
-        return br.readLine();
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(isr);
     }
 
 }

@@ -1,8 +1,11 @@
 package ru.sber.bootcamp.service.httpServer.getMethods;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,17 +92,11 @@ public class MassTestShowAllAccounts {
         URL url = new URL("http://localhost:8000/bank_api/show_all_accounts/" + ((userUrl !=null)? userUrl :""));
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
-
-        StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-        Scanner sc = new Scanner(isr);
-        while (sc.hasNextLine())  {
-            sb.append(sc.next());
-        }
-        String body = sb.toString();
-        JSONArray testArr = new JSONArray(serverResponse);
-        JSONArray serverResponseJson = new JSONArray(body);
-        JSONAssert.assertEquals(testArr, serverResponseJson, JSONCompareMode.STRICT);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonServerResponseActual = objectMapper.readTree(isr);
+        JsonNode jsonServerResponseExpected = objectMapper.readTree(serverResponse);
+        Assert.assertEquals(jsonServerResponseExpected,jsonServerResponseActual);
 
     }
 

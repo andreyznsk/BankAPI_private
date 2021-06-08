@@ -10,8 +10,6 @@ import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -34,7 +32,6 @@ public class MassTestGetBalanceByCardNumber {
     static CardRepository cardRepository;
     static ClientController controller;
     static HttpServerStarter httpServerStarter;
-    static GsonConverter gsonConverter;
 
     @BeforeClass
     public static void init(){
@@ -46,23 +43,22 @@ public class MassTestGetBalanceByCardNumber {
         cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
         //HTTP server start
         httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
-        gsonConverter = new GsonConverterImpl();
     }
 
     String serverResponse;
-    Object cardNumber;
+    String cardNumber;
 
 
-    public MassTestGetBalanceByCardNumber(String serverResponse, Object accountNumber) {
+    public MassTestGetBalanceByCardNumber(String serverResponse, String cardNumber) {
         this.serverResponse = serverResponse;
-        this.cardNumber = accountNumber;
+        this.cardNumber = cardNumber;
     }
 
     @Parameterized.Parameters

@@ -1,18 +1,17 @@
 package ru.sber.bootcamp.service.httpServer.getMethods;
 
 
-import org.json.JSONArray;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -35,7 +34,6 @@ public class MassTestGetAllCards {
     static CardRepository cardRepository;
     static ClientController controller;
     static HttpServerStarter httpServerStarter;
-    static GsonConverter gsonConverter;
 
     @BeforeClass
     public static void init(){
@@ -47,23 +45,22 @@ public class MassTestGetAllCards {
         cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
         //HTTP server start
         httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
-        gsonConverter = new GsonConverterImpl();
     }
 
     String serverResponse;
-    Object userUrl;
+    Object accountNumber;
 
 
-    public MassTestGetAllCards(String serverResponse, Object accountNumber) {
+    public MassTestGetAllCards(String serverResponse, String accountNumber) {
         this.serverResponse = serverResponse;
-        this.userUrl = accountNumber;
+        this.accountNumber = accountNumber;
     }
 
     @Parameterized.Parameters
@@ -76,11 +73,11 @@ public class MassTestGetAllCards {
                 "{\"CVC_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
 
         return Arrays.asList(new Object[][]{
-                {serverResponse ,null},
-                {serverResponse,1L},
-                {serverResponse,2L},
-                {serverResponse , 1111L},
-                {serverResponse,123123123123L},
+                {serverResponse ,""},
+                {serverResponse,"1"},
+                {serverResponse,"2"},
+                {serverResponse , "1111"},
+                {serverResponse,"123123123123"},
                 {serverResponse, "Pepsi-Cola"},
         });
     }
@@ -90,20 +87,13 @@ public class MassTestGetAllCards {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + ((userUrl !=null)? userUrl :""));
+        JsonNode jsonNodeExpected = new ObjectMapper().readTree(serverResponse);
+        URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + accountNumber);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
-
-        StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-        Scanner sc = new Scanner(isr);
-        while (sc.hasNextLine())  {
-            sb.append(sc.next());
-        }
-        String body = sb.toString();
-        JSONArray jsonArrayActual = new JSONArray(body);
-        JSONArray jsonArrayExpected = new JSONArray(serverResponse);
-        JSONAssert.assertEquals(jsonArrayExpected, jsonArrayActual, true);
+        JsonNode jsonNodeActual = new ObjectMapper().readTree(isr);
+        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
     }
 
     @AfterClass

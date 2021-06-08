@@ -10,11 +10,11 @@ public interface CardRepository {
     Card getCardByCardNumber(Long cardNumber);
     Card getCardById(Long id);
 
-    List getAllCardsByAccountNumber(Long accountNumber);
+    List<Card> getAllCardsByAccountNumber(Long accountNumber);
 
     int addCardByAccountNumber(Card card);
 
     Card getCardWithMaxNumber();
 
-    boolean isCardExist(Long cartNumber);
+    boolean isCardExist(String cartNumber);
 }

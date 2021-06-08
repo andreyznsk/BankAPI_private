@@ -1,19 +1,18 @@
 package ru.sber.bootcamp.service.httpServer.postmethods;
 
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -37,9 +36,10 @@ public class MassBalance_inc {
     static CardRepository cardRepository;
     static ClientController controller;
     static HttpServerStarter httpServerStarter;
-    static GsonConverter gsonConverter;
+
 
     @BeforeClass
+
     public static void init(){
         dataService = new H2ConnectionServiceImpl(false);
         dataService.start();
@@ -49,24 +49,23 @@ public class MassBalance_inc {
         cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
         //HTTP server start
         httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
-        gsonConverter = new GsonConverterImpl();
     }
 
-    String serverResponse;
+    String serverResponseEcpected;
     Double amount;
     Integer CVC_code;
-    Object card_number;
+    String card_number;
 
 
-    public MassBalance_inc(String serverResponse, Double amount, Integer CVC_code, Object card_number) {
-        this.serverResponse = serverResponse;
+    public MassBalance_inc(String serverResponse, Double amount, Integer CVC_code, String card_number) {
+        this.serverResponseEcpected = serverResponse;
         this.amount = amount;
         this.CVC_code = CVC_code;
         this.card_number = card_number;
@@ -76,16 +75,16 @@ public class MassBalance_inc {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
+                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,"1111122221"},
                 {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,"Black Power!"},
-                {"{\"Error!\":\"amount:Not_found\"}" ,null,111,1111122221L},
-                {"{\"Error!\":\"CVC_code:Not_found\"}"  ,111.1,null,1111122221L},
+                {"{\"Error!\":\"amount:Not_found\"}" ,null,111,"1111122221"},
+                {"{\"Error!\":\"CVC_code:Not_found\"}"  ,111.1,null,"1111122221"},
                 {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,null},
                 {"{\"Error!\":\"card_number:Not_found\"}" ,null,null,null},
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,1111122221L},
-                {"{\"Server_OK!\":\"Balance_updated_ok\"}" ,111.1,111,1111222233334441L},
-                {"{\"Error!\":\"CVC_code_invalid\"}" ,111.1,111,1111222233334442L},
-                {"{\"Error!\":\"Amount_is_negative\"}" ,-111.1,111,1111222233334441L},
+                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,"1111122221"},
+                {"{\"Server_OK!\":\"Balance_updated_ok\"}" ,111.1,111,"1111222233334441"},
+                {"{\"Error!\":\"CVC_code_invalid\"}" ,111.1,111,"1111222233334442"},
+                {"{\"Error!\":\"Amount_is_negative\"}" ,-111.1,111,"1111222233334441"},
         });
     }
 
@@ -93,30 +92,26 @@ public class MassBalance_inc {
 
 
     @Test
-    public void postBalanceIncHandler() throws IOException {
-        JSONObject jsonQuery = new JSONObject();
+    public void postBalanceIncHandler() throws Exception {
+        ObjectNode jsonQuery = new ObjectMapper().createObjectNode();
         jsonQuery.put("amount",amount);
         jsonQuery.put("CVC_code",CVC_code);
         jsonQuery.put("card_number",card_number);
-        JSONObject jsonObjectResponseTest = new JSONObject(serverResponse);
+        JsonNode jsonObjectResponseExpected = new ObjectMapper().readTree(serverResponseEcpected);
         // Given
         URL url = new URL("http://localhost:8000/bank_api/balance_inc");
         URLConnection conn = url.openConnection();
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        wr.write(jsonQuery.toString());
+        wr.write(jsonQuery.asText());
         wr.flush();
 
         StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-        Scanner sc = new Scanner(isr);
-        while (sc.hasNextLine())  {
-            sb.append(sc.next());
-        }
-        System.out.println("SErver response: TEST: " + sb.toString());
-        JSONObject jsonObject = new JSONObject(sb.toString());
-        JSONAssert.assertEquals( jsonObjectResponseTest,jsonObject, JSONCompareMode.STRICT);
+        JsonNode jsonNodeActual = new ObjectMapper().readTree(isr);
 
+        System.out.println("SErver response: TEST: " + sb.toString());
+        Assert.assertEquals(jsonObjectResponseExpected, jsonNodeActual);
     }
 
     @AfterClass

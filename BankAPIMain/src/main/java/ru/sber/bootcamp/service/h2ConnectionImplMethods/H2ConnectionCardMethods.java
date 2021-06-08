@@ -22,8 +22,8 @@ public class H2ConnectionCardMethods {
     public Card cardInit(ResultSet rs) throws SQLException {
         Card card = new Card();
         card.setId(rs.getLong(1));
-        card.setAccountNumber(rs.getLong(2));
-        card.setCardNumber(rs.getLong(3));
+        card.setAccountNumber(rs.getString(2));
+        card.setCardNumber(rs.getString(3));
         card.setDateValidThru(rs.getDate(4));
         card.setCVC_code(rs.getInt(5));
        return card;
@@ -94,8 +94,8 @@ public class H2ConnectionCardMethods {
         int result = 0;
         try(Connection connection = DataSource.getConnection();
         PreparedStatement psAddCardByAccountNumber = connection.prepareStatement(psAddCardByAccountNumberSql) ) {
-            psAddCardByAccountNumber.setLong(1,card.getAccountNumber());
-            psAddCardByAccountNumber.setLong(2,card.getCardNumber());
+            psAddCardByAccountNumber.setString(1,card.getAccountNumber());
+            psAddCardByAccountNumber.setString(2,card.getCardNumber());
             psAddCardByAccountNumber.setDate(3, new Date(card.getDateValidThru().getTime()));
             psAddCardByAccountNumber.setInt(4,card.getCVC_code());
 
@@ -113,13 +113,13 @@ public class H2ConnectionCardMethods {
         PreparedStatement psGetCardWithMaxCardNumber = connection.prepareStatement(psGetCardWithMaxCardNumberSql)) {
             ResultSet rsCard = psGetCardWithMaxCardNumber.executeQuery();
             while (rsCard.next()){
-                card.setCardNumber(rsCard.getLong(1));
+                card.setCardNumber(rsCard.getString(1));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         if (card.getCardNumber() == null) {
-            card.setCardNumber(1L); ;
+            card.setCardNumber("1"); ;
         }
         return card;
 

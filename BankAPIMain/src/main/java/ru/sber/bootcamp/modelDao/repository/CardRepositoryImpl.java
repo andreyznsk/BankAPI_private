@@ -44,7 +44,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public boolean isCardExist(Long cartNumber) {
+    public boolean isCardExist(String cartNumber) {
         return dataConnectionService.isCardExist(cartNumber);
     }
 }

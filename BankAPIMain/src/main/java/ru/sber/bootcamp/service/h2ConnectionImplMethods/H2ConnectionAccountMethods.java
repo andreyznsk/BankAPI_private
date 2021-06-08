@@ -32,7 +32,7 @@ public class H2ConnectionAccountMethods {
             while (rs.next()){
                 Account account = new Account();
                 account.setId(rs.getLong(1));
-                account.setAccountNumber(rs.getLong(2));
+                account.setAccountNumber(rs.getString(2));
                 account.setBalance(rs.getBigDecimal(3));
                 account.setOpenDate(rs.getDate(4));
                 accounts.add(account);
@@ -50,7 +50,7 @@ public class H2ConnectionAccountMethods {
     public Account setAccount(ResultSet resultSet) throws SQLException {
         Account account = new Account();
         account.setId(resultSet.getLong(1));
-        account.setAccountNumber(resultSet.getLong(2));
+        account.setAccountNumber(resultSet.getString(2));
         account.setBalance(resultSet.getBigDecimal(3));
         account.setOpenDate(resultSet.getDate(4));
         return account;
@@ -100,7 +100,7 @@ public class H2ConnectionAccountMethods {
         PreparedStatement psUpdateAccount = connection.prepareStatement(psUpdateAccountSql)) {
             psUpdateAccount.setBigDecimal(1, account.getBalance());
             psUpdateAccount.setDate(2, (Date) account.getOpenDate());
-            psUpdateAccount.setLong(3,account.getAccountNumber());
+            psUpdateAccount.setString(3,account.getAccountNumber());
             result = psUpdateAccount.executeUpdate();
             if (result == 1) {
                 System.out.println("Balance update - OK!");

@@ -214,7 +214,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public boolean isCardExist(Long cartNumber) {
+    public boolean isCardExist(String cartNumber) {
         return h2ConnectionCardMethods.isCardExist(cartNumber);
     }
 }

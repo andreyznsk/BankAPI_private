@@ -39,5 +39,5 @@ public interface DataConnectionService {
 
     Account getAccountById(long id);
 
-    boolean isCardExist(Long cartNumber);
+    boolean isCardExist(String cartNumber);
 }

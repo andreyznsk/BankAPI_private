@@ -184,10 +184,10 @@ public class ClientController {
             serverResponse.put(SERVER_ERROR.message,"Account number incorrect");
         } else {
             Card card = new Card();
-            Long cartNumber;
+            Long cartNumber = null;
             do{
                 cartNumber = getRandomLong(1000_0000_0000_0000L,9999_9999_9999_9999L);
-            } while (cardRepository.isCardExist(cartNumber));
+            } while (cardRepository.isCardExist(cartNumber.toString()));
 
             int CVC = getRandomCVC(999);
             Date date = new Date();

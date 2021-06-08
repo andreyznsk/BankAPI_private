@@ -46,9 +46,9 @@ public class H2ConnectionCardMethodsTest{
         }
 
     public boolean serverResponse;
-    public Long cardNumber;
+    public String cardNumber;
 
-    public H2ConnectionCardMethodsTest(boolean serverResponse, Long cardNumber) {
+    public H2ConnectionCardMethodsTest(boolean serverResponse, String cardNumber) {
         this.serverResponse = serverResponse;
         this.cardNumber = cardNumber;
     }

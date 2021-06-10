@@ -3,20 +3,15 @@ package ru.sber.bootcamp.service.httpServer.getMethods;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONArray;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -39,7 +34,7 @@ public class MassTestShowAllAccounts {
     static CardRepository cardRepository;
     static ClientController controller;
     static HttpServerStarter httpServerStarter;
-    static GsonConverter gsonConverter;
+
 
     @BeforeClass
     public static void init(){
@@ -51,21 +46,20 @@ public class MassTestShowAllAccounts {
         cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
         //HTTP server start
         httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
-        gsonConverter = new GsonConverterImpl();
     }
 
     String serverResponse;
-    Object userUrl;
+    String userUrl;
 
 
-    public MassTestShowAllAccounts(String serverResponse, Object accountNumber) {
+    public MassTestShowAllAccounts(String serverResponse, String accountNumber) {
         this.serverResponse = serverResponse;
         this.userUrl = accountNumber;
     }
@@ -76,10 +70,10 @@ public class MassTestShowAllAccounts {
 
         return Arrays.asList(new Object[][]{
                 {excpectedJson ,null},
-                {excpectedJson,1L},
-                {excpectedJson,2L},
-                {excpectedJson ,1111L},
-                {excpectedJson,123123123123L},
+                {excpectedJson,"1"},
+                {excpectedJson,"2"},
+                {excpectedJson ,"1111"},
+                {excpectedJson,"123123123123"},
                 {excpectedJson, "Pepsi-Cola"},
         });
     }
@@ -89,7 +83,7 @@ public class MassTestShowAllAccounts {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/show_all_accounts/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/show_all_accounts/" + userUrl);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);

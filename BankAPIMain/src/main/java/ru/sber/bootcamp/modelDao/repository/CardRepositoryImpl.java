@@ -19,7 +19,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Card getCardByCardNumber(Long cardNumber) {
+    public Card getCardByCardNumber(String cardNumber) {
         return dataConnectionService.getCardByCardNumber(cardNumber);
     }
 
@@ -29,7 +29,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public List getAllCardsByAccountNumber(Long accountNumber) {
+    public List getAllCardsByAccountNumber(String accountNumber) {
         return dataConnectionService.getAllCardByAccountNumber(accountNumber);
     }
 

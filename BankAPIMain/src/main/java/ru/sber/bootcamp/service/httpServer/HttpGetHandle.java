@@ -32,7 +32,7 @@ public class HttpGetHandle {
                 break;
             }
             case "get_client_by_account_number": {
-                response =  controller.getClientByAccountNumber(path.length>3? Long.parseLong(path[3]):null);
+                response =  controller.getClientByAccountNumber(path.length>3? path[3] :null);
                 break;
             }
             case "get_all_cards" : {//TESTED!!!
@@ -40,11 +40,11 @@ public class HttpGetHandle {
                 break;
             }
             case "get_card_by_account" : {//TESTED!!!!
-                response = controller.getAllCardsByAccount(path.length>3? Long.parseLong(path[3]):null);
+                response = controller.getAllCardsByAccount(path.length>3? path[3]:null);
                 break;
             }
             case "get_balance_by_card_number": {//TESTED!!!
-                response = controller.getBalanceByCardNumber(path.length>3? Long.parseLong(path[3]):null);
+                response = controller.getBalanceByCardNumber(path.length>3? path[3]:null);
                 break;
             }
             default: {//TESTED!!!

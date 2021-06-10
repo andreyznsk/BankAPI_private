@@ -139,7 +139,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * @return - объект счет
      */
     @Override
-    public Account getAccountByAccountNumber(Long accountNumber) {
+    public Account getAccountByAccountNumber(String accountNumber) {
       return h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber);
 
     }
@@ -150,7 +150,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * @return
      */
     @Override
-    public Account getAccountByCardNumber(Long cardNumber) {
+    public Account getAccountByCardNumber(String cardNumber) {
         return h2ConnectionAccountMethods.getAccountByCardNumber(cardNumber);
     }
 
@@ -166,7 +166,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * @return - возвращате объект клиент со всем его картами, а так же с информацией по его счету
      */
     @Override
-    public Client getClientByAccountNumber(Long accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) {
       return h2ConnectionClientMethods.getClientByAccountNumber(accountNumber);
     }
 
@@ -179,7 +179,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public List<Card> getAllCardByAccountNumber(Long accountNumber) {
+    public List<Card> getAllCardByAccountNumber(String accountNumber) {
         return h2ConnectionCardMethods.getAllCardByAccountNumber(accountNumber);
     }
 
@@ -189,7 +189,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public Card getCardByCardNumber(Long cardNumber) {
+    public Card getCardByCardNumber(String cardNumber) {
         return h2ConnectionCardMethods.getCardByCardNumber(cardNumber);
     }
 

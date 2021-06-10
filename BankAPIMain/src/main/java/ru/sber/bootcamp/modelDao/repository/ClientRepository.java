@@ -4,5 +4,5 @@ import ru.sber.bootcamp.modelDao.entity.Client;
 
 public interface ClientRepository {
 
-    Client getClientByAccountNumber(Long accountNumber);
+    Client getClientByAccountNumber(String accountNumber);
 }

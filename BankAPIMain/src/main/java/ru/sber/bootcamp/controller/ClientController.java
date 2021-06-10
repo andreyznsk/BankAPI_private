@@ -71,7 +71,7 @@ public class ClientController {
      * @param accountNumber номер счета
      * @return информцию клиента по номеру счета
      */
-    public String getClientByAccountNumber(Long accountNumber) throws JsonProcessingException {
+    public String getClientByAccountNumber(String accountNumber) throws JsonProcessingException {
         if(accountNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input_account_number");
@@ -97,7 +97,7 @@ public class ClientController {
      * @param accountNumber - Номер счета
      * @return - Массив всех карт по номеру счета
      */
-    public  String getAllCardsByAccount(Long accountNumber) throws NullPointerException, JsonProcessingException {
+    public  String getAllCardsByAccount(String accountNumber) throws NullPointerException, JsonProcessingException {
         if(accountNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input Account number");
@@ -113,7 +113,7 @@ public class ClientController {
      * @param cardNumber -  номер карты
      * @return - баланс в виде строки
      */
-    public String getBalanceByCardNumber(Long cardNumber) throws Exception {
+    public String getBalanceByCardNumber(String cardNumber) throws Exception {
         if(cardNumber == null) {
             System.out.println("null");
             throw new NullPointerException("Input_Card_number");
@@ -135,7 +135,7 @@ public class ClientController {
      * @param amount - сумма
      * @param CVC - Код карты
      */
-    public String incrementBalanceByCardNumber(Long cardNumber, Double amount, int CVC)
+    public String incrementBalanceByCardNumber(String cardNumber, Double amount, int CVC)
             throws BankApiException {
         if(amount < 0) {
             throw new BankApiException("Amount_is_negative");
@@ -173,7 +173,7 @@ public class ClientController {
      *
      * @return - Резултат добавления, либо исключение если номер пуст
      */
-    public String addCardByAccountNumber(Long accountNumber) throws BankApiException {
+    public String addCardByAccountNumber(String accountNumber) throws BankApiException {
         ObjectNode serverResponse = new ObjectMapper().createObjectNode();
         if(accountNumber == null) {
             throw new BankApiException("Account number is empty!");

@@ -27,10 +27,10 @@ public class ClientRepositoryTest {
 
     @Test
     public void getClientByAccountNumber() {
-        Account testAccount = new Account(1L,1111L, BigDecimal.valueOf(10000.10), Date.valueOf("2020-01-01"));
-        Client testClient = new Client(1L,1111L,"Ivan", "Ivanov",89008001234L,testAccount);
+        Account testAccount = new Account(1L,"1111", BigDecimal.valueOf(10000.10), Date.valueOf("2020-01-01"));
+        Client testClient = new Client(1L,"1111","Ivan", "Ivanov",89008001234L,testAccount);
         System.out.println(testClient);
-        Client client = dataConnectionService.getClientByAccountNumber(1111L);
+        Client client = dataConnectionService.getClientByAccountNumber("1111");
         Assert.assertEquals(client,testClient);
     }
 

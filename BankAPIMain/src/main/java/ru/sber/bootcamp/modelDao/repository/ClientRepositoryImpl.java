@@ -12,7 +12,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 
     @Override
-    public Client getClientByAccountNumber(Long accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) {
         return dataConnectionService.getClientByAccountNumber(accountNumber);
     }
 }

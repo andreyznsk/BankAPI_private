@@ -1,19 +1,17 @@
 package ru.sber.bootcamp.service.httpServer.getMethods;
 
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
-import ru.sber.bootcamp.service.GsonConverter;
-import ru.sber.bootcamp.service.GsonConverterImpl;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
 import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 
@@ -36,7 +34,6 @@ public class MassTestGetClientByAccountNumber {
     static CardRepository cardRepository;
     static ClientController controller;
     static HttpServerStarter httpServerStarter;
-    static GsonConverter gsonConverter;
 
     @BeforeClass
     public static void init(){
@@ -48,21 +45,20 @@ public class MassTestGetClientByAccountNumber {
         cardRepository = new CardRepositoryImpl(dataService);
 
         //Controller start
-        controller = new ClientController(accountRepository, clientRepository, cardRepository, new GsonConverterImpl());
+        controller = new ClientController(accountRepository, clientRepository, cardRepository);
 
 
         //HTTP server start
         httpServerStarter = new HttpServerStarter(controller);
         httpServerStarter.start();
 
-        gsonConverter = new GsonConverterImpl();
     }
 
     String serverResponse;
-    Object userUrl;
+    String userUrl;
 
 
-    public MassTestGetClientByAccountNumber(String serverResponse, Object accountNumber) {
+    public MassTestGetClientByAccountNumber(String serverResponse, String accountNumber) {
         this.serverResponse = serverResponse;
         this.userUrl = accountNumber;
     }
@@ -74,11 +70,11 @@ public class MassTestGetClientByAccountNumber {
 
         return Arrays.asList(new Object[][]{
                 {"{\"Error!\":\"Input_account_number\"}" ,null},
-                {"{\"Error!\":\"Incorrect_account_number\"}",1L},
-                {"{\"Error!\":\"Incorrect_account_number\"}",2L},
-                {client1, 1111L},
-                {client2, 1112L},
-                {"{\"Error!\":\"Incorrect_account_number\"}",123123123123L},
+                {"{\"Error!\":\"Incorrect_account_number\"}","1"},
+                {"{\"Error!\":\"Incorrect_account_number\"}","2"},
+                {client1, "1111"},
+                {client2, "1112"},
+                {"{\"Error!\":\"Incorrect_account_number\"}","123123123123"},
                 {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
         });
     }
@@ -88,19 +84,15 @@ public class MassTestGetClientByAccountNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_client_by_account_number/" + ((userUrl !=null)? userUrl :""));
+        URL url = new URL("http://localhost:8000/bank_api/get_client_by_account_number/" + userUrl);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 
-        StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-        Scanner sc = new Scanner(isr);
-        while (sc.hasNextLine())  {
-            sb.append(sc.next());
-        }
-        String body = sb.toString();
-
-        JSONAssert.assertEquals(new JSONObject(body), new JSONObject(serverResponse), JSONCompareMode.STRICT);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNodeActual = objectMapper.readTree(isr);
+        JsonNode jsonNodeExpected = objectMapper.readTree(serverResponse);
+        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
     }
 
     @AfterClass

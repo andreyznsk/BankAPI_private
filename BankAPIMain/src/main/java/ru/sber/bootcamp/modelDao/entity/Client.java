@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Client {
     private Long id;
-    private Long accountId;
+    private String accountId;
     private String firstName;
     private String lastname;
     private Long phoneNumber;
@@ -14,7 +14,7 @@ public class Client {
     public Client(){
     }
 
-    public Client(Long id, Long accountId, String firstName, String lastname, Long phoneNumber, Account account) {
+    public Client(Long id, String accountId, String firstName, String lastname, Long phoneNumber, Account account) {
         this.id = id;
         this.accountId = accountId;
         this.firstName = firstName;
@@ -39,11 +39,11 @@ public class Client {
         this.id = id;
     }
 
-    public Long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 

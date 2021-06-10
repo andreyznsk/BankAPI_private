@@ -8,7 +8,7 @@ public interface AccountRepository {
 
     List<Account> findAll();
 
-    Account getAccountByCardNumber(Long cardNumber);
+    Account getAccountByCardNumber(String cardNumber);
 
     int updateAccount(Account account);
 

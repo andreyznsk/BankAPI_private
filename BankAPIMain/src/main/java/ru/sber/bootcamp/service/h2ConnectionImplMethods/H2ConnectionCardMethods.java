@@ -46,12 +46,12 @@ public class H2ConnectionCardMethods {
         return cards;
     }
 
-    public List<Card> getAllCardByAccountNumber(Long accountNumber) {
+    public List<Card> getAllCardByAccountNumber(String accountNumber) {
         List<Card> cards = new ArrayList<>();
         try(Connection connection = DataSource.getConnection();
            PreparedStatement psGetAllCardByAccountNumber =  connection.prepareStatement(psGetAllCardByAccountNumberSql)
                 ) {
-            psGetAllCardByAccountNumber.setLong(1,accountNumber);
+            psGetAllCardByAccountNumber.setString(1,accountNumber);
             ResultSet rs = psGetAllCardByAccountNumber.executeQuery();
             while (rs.next()){
                 Card card = cardInit(rs);
@@ -68,14 +68,14 @@ public class H2ConnectionCardMethods {
         return cards;
     }
 
-    public Card getCardByCardNumber(Long cardNumber) {
+    public Card getCardByCardNumber(String cardNumber) {
         if(cardNumber == null) {
             return null;
         }
         Card card = new Card();
         try(Connection connection = DataSource.getConnection();
         PreparedStatement psGetCardBuCardNumber = connection.prepareStatement(psGetCardBuCardNumberSql)) {
-            psGetCardBuCardNumber.setLong(1,cardNumber);
+            psGetCardBuCardNumber.setString(1,cardNumber);
             ResultSet rsCard = psGetCardBuCardNumber.executeQuery();
 
             while (rsCard.next()){

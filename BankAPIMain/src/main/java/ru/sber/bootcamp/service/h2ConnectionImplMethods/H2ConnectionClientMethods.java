@@ -20,7 +20,7 @@ public class H2ConnectionClientMethods {
     private static String prepareStatementSql = "SELECT * FROM client WHERE account_number = ?";
 
 
-    public Client getClientByAccountNumber(Long accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) {
         Client client = new Client();
 
         try (
@@ -28,11 +28,11 @@ public class H2ConnectionClientMethods {
             PreparedStatement psGetClientByAccountNumber = connection.prepareStatement(prepareStatementSql);
         )
         {
-            psGetClientByAccountNumber.setLong(1,accountNumber);
+            psGetClientByAccountNumber.setString(1,accountNumber);
             ResultSet rsClient = psGetClientByAccountNumber.executeQuery();
             while (rsClient.next()){
                 client.setId(rsClient.getLong(1));
-                client.setAccountId(rsClient.getLong(2));
+                client.setAccountId(rsClient.getString(2));
                 client.setFirstName(rsClient.getString(3));
                 client.setLastname(rsClient.getString(4));
                 client.setPhoneNumber(rsClient.getLong(5));

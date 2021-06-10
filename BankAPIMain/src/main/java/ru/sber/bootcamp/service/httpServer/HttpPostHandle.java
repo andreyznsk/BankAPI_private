@@ -30,10 +30,10 @@ public class HttpPostHandle {
         switch (path.length>2 ? path[2].toLowerCase(Locale.ROOT) : ""){
             case "balance_inc": {
                 JsonNode query = getQuery(t);
-                Long cardNumber = null;
+                String cardNumber = null;
                 Double amount = null;
                 int CVC = 0;
-                cardNumber = query.get("card_number").asLong();
+                cardNumber = query.get("card_number").asText();
                 amount = query.get("amount").asDouble();
                 CVC = query.get("CVC_code").asInt();
                 response = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
@@ -41,8 +41,8 @@ public class HttpPostHandle {
             }
             case "add_card": {
                 JsonNode query = getQuery(t);
-                Long accountNumber = null;
-                accountNumber = query.get("account_number").asLong();
+                String accountNumber = null;
+                accountNumber = query.get("account_number").asText();
                 System.out.println("account_number: " +accountNumber );
                 response = controller.addCardByAccountNumber(accountNumber);
                 break;

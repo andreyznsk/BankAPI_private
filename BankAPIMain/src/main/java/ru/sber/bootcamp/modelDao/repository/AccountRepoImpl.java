@@ -19,7 +19,7 @@ public class AccountRepoImpl implements AccountRepository {
     }
 
     @Override
-    public Account getAccountByCardNumber(Long cardNumber) {
+    public Account getAccountByCardNumber(String cardNumber) {
         return dataService.getAccountByCardNumber(cardNumber) ;
     }
 

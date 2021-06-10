@@ -62,11 +62,11 @@ public class H2ConnectionAccountMethods {
      * @param accountNumber - номкр счета
      * @return - счет
      */
-    public Account getAccountByAccountNumber(Long accountNumber) {
+    public Account getAccountByAccountNumber(String accountNumber) {
         Account account = new Account();
         try(Connection connection = DataSource.getConnection();
         PreparedStatement psGetAccountByAccountNumber = connection.prepareStatement(psGetAccountByAccountNumberSql)) {
-            psGetAccountByAccountNumber.setLong(1, accountNumber);
+            psGetAccountByAccountNumber.setString(1, accountNumber);
             ResultSet rsAccount = psGetAccountByAccountNumber.executeQuery();
             while(rsAccount.next()){
                 account = setAccount(rsAccount);
@@ -78,11 +78,11 @@ public class H2ConnectionAccountMethods {
         return account;
     }
 
-    public Account getAccountByCardNumber(Long cardNumber) {
+    public Account getAccountByCardNumber(String cardNumber) {
         Account account = new Account();
         try(Connection connection = DataSource.getConnection();
         PreparedStatement psGetPsGetAccountByCardNumber = connection.prepareStatement(psGetPsGetAccountByCardNumberSql) ) {
-            psGetPsGetAccountByCardNumber.setLong(1, cardNumber);
+            psGetPsGetAccountByCardNumber.setString(1, cardNumber);
             ResultSet rsAccount = psGetPsGetAccountByCardNumber.executeQuery();
             while(rsAccount.next()){
                 account = setAccount(rsAccount);

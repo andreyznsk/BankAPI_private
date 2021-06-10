@@ -7,10 +7,10 @@ import java.util.List;
 public interface CardRepository {
 
     List<Card> getAllCards();
-    Card getCardByCardNumber(Long cardNumber);
+    Card getCardByCardNumber(String cardNumber);
     Card getCardById(Long id);
 
-    List<Card> getAllCardsByAccountNumber(Long accountNumber);
+    List<Card> getAllCardsByAccountNumber(String accountNumber);
 
     int addCardByAccountNumber(Card card);
 

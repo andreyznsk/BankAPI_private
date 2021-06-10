@@ -66,17 +66,17 @@ public class MassTestGetBalanceByCardNumber {
 
         return Arrays.asList(new Object[][]{
                 {"{\"Error!\":\"Input_Card_number\"}" ,null},
-                {"{\"Error!\":\"Card_Number_incorrect\"}",1L},
-                {"{\"Error!\":\"Card_Number_incorrect\"}",2L},
-                {"{\"Error!\":\"Card_Number_incorrect\"}" , 1111L},
-                {"{\"Error!\":\"Card_Number_incorrect\"}",123123123123L},
+                {"{\"Error!\":\"Card_Number_incorrect\"}","1"},
+                {"{\"Error!\":\"Card_Number_incorrect\"}","2"},
+                {"{\"Error!\":\"Card_Number_incorrect\"}" , "1111"},
+                {"{\"Error!\":\"Card_Number_incorrect\"}","123123123123"},
                 {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
-                {"{\"balance\":10000.1}",1111222233334441L},
-                {"{\"balance\":10000.1}",1111222233334442L},
-                {"{\"balance\":2000.25}",1112222233334441L},
-                {"{\"balance\":2000.25}",1112222233334442L},
-                {"{\"balance\":2000.25}",1112222233334443L},
-                {"{\"balance\":2000.25}",1112222233334444L}
+                {"{\"balance\":10000.1}","1111222233334441"},
+                {"{\"balance\":10000.1}","1111222233334442"},
+                {"{\"balance\":2000.25}","1112222233334441"},
+                {"{\"balance\":2000.25}","1112222233334442"},
+                {"{\"balance\":2000.25}","1112222233334443"},
+                {"{\"balance\":2000.25}","1112222233334444"}
         });
     }
 
@@ -85,7 +85,7 @@ public class MassTestGetBalanceByCardNumber {
 
     @Test
     public void test() throws IOException {
-        URL url = new URL("http://localhost:8000/bank_api/get_balance_by_card_number/" + ((cardNumber !=null)? cardNumber :""));
+        URL url = new URL("http://localhost:8000/bank_api/get_balance_by_card_number/" + cardNumber);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
 

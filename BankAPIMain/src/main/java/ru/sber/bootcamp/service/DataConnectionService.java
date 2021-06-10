@@ -15,19 +15,19 @@ public interface DataConnectionService {
 //-------------Accounts methods--------------------
     List<Account> findAllAccuont();
 
-    Account getAccountByAccountNumber(Long accountNumber);
+    Account getAccountByAccountNumber(String accountNumber);
 //--------------Clients methods-------------------
-    Client getClientByAccountNumber(Long id);
+    Client getClientByAccountNumber(String accountNumber);
 
     List<Card> findAllCards();
 
     Card getCardByCardId(Long id);
 //----------------Card Methods------------------
-    Card getCardByCardNumber(Long cardNumber);
+    Card getCardByCardNumber(String cardNumber);
 
-    List<Card> getAllCardByAccountNumber(Long accountNumber);
+    List<Card> getAllCardByAccountNumber(String accountNumber);
 
-    Account getAccountByCardNumber(Long cardNumber);
+    Account getAccountByCardNumber(String cardNumber);
 
     int updateAccount(Account account);
 

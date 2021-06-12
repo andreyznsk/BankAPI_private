@@ -50,7 +50,7 @@ public class HttpGetHandle {
             default: {//TESTED!!!
                 ObjectNode serverResponse = new ObjectMapper().createObjectNode();
                 serverResponse.put(ERROR_MESSAGE.message,"Command Error");
-                response = serverResponse.asText();
+                response = serverResponse.toString();
 
             }
         }

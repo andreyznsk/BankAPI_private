@@ -65,14 +65,14 @@ public class MassTestGetBalanceByCardNumber {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"Input_Card_number\"}" ,null},
-                {"{\"Error!\":\"Card_Number_incorrect\"}","1"},
-                {"{\"Error!\":\"Card_Number_incorrect\"}","2"},
-                {"{\"Error!\":\"Card_Number_incorrect\"}" , "1111"},
-                {"{\"Error!\":\"Card_Number_incorrect\"}","123123123123"},
-                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
-                {"{\"balance\":10000.1}","1111222233334441"},
-                {"{\"balance\":10000.1}","1111222233334442"},
+                {"{\"Error!\":\"InputCardNumber\"}" ,""},
+                {"{\"Error!\":\"CardNumberIncorrect\"}","1"},
+                {"{\"Error!\":\"CardNumberIncorrect\"}","2"},
+                {"{\"Error!\":\"CardNumberIncorrect\"}" , "1111"},
+                {"{\"Error!\":\"CardNumberIncorrect\"}","123123123123"},
+                {"{\"Error!\":\"CardNumberIncorrect\"}", "Pepsi-Cola"},
+                {"{\"balance\":10000.10}","1111222233334441"},
+                {"{\"balance\":10000.10}","1111222233334442"},
                 {"{\"balance\":2000.25}","1112222233334441"},
                 {"{\"balance\":2000.25}","1112222233334442"},
                 {"{\"balance\":2000.25}","1112222233334443"},

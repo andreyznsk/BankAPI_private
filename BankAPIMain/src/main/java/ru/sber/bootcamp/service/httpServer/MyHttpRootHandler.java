@@ -41,12 +41,12 @@ class MyHttpRootHandler implements HttpHandler {
              response = httpGetHandle.handleGET(t);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (BankApiException | NumberFormatException e){
+            } catch (BankApiException e){
                 //e.printStackTrace();
                 System.err.println(e);
                 ObjectNode serverResponse = new ObjectMapper().createObjectNode();
                 serverResponse.put(ERROR_MESSAGE.message,e.getMessage());
-                response = serverResponse.asText();
+                response = serverResponse.toString();
             } catch (Exception e){
                 e.printStackTrace();
                 System.out.println(e.getMessage());
@@ -54,12 +54,12 @@ class MyHttpRootHandler implements HttpHandler {
         } else {
             try {
              response = http_postHandle.handlePOST(t);
-            } catch (BankApiException | NumberFormatException e){
+            } catch (BankApiException e){
                 //e.printStackTrace();
                 System.err.println(e);
                 ObjectNode serverResponse = new ObjectMapper().createObjectNode();
                 serverResponse.put(ERROR_MESSAGE.message, e.getMessage());
-                response = serverResponse.asText();
+                response = serverResponse.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }

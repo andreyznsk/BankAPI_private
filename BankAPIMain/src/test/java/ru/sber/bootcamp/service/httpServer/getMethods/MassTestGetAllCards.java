@@ -3,6 +3,7 @@ package ru.sber.bootcamp.service.httpServer.getMethods;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -22,6 +24,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -65,12 +68,12 @@ public class MassTestGetAllCards {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        String serverResponse = "[{\"CVC_code\":111,\"dateValidThru\":\"2023-01-01\",\"id\":1,\"accountNumber\":1111,\"cardNumber\":1111222233334441}," +
-                "{\"CVC_code\":112,\"dateValidThru\":\"2023-01-01\",\"id\":2,\"accountNumber\":1111,\"cardNumber\":1111222233334442}," +
-                "{\"CVC_code\":121,\"dateValidThru\":\"2023-01-01\",\"id\":3,\"accountNumber\":1112,\"cardNumber\":1112222233334441}," +
-                "{\"CVC_code\":122,\"dateValidThru\":\"2023-01-01\",\"id\":4,\"accountNumber\":1112,\"cardNumber\":1112222233334442}," +
-                "{\"CVC_code\":123,\"dateValidThru\":\"2023-01-01\",\"id\":5,\"accountNumber\":1112,\"cardNumber\":1112222233334443}," +
-                "{\"CVC_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
+        String serverResponse = "[{\"cvc_code\":111,\"dateValidThru\":\"2023-01-01\",\"id\":1,\"accountNumber\":1111,\"cardNumber\":1111222233334441}," +
+                "{\"cvc_code\":112,\"dateValidThru\":\"2023-01-01\",\"id\":2,\"accountNumber\":1111,\"cardNumber\":1111222233334442}," +
+                "{\"cvc_code\":121,\"dateValidThru\":\"2023-01-01\",\"id\":3,\"accountNumber\":1112,\"cardNumber\":1112222233334441}," +
+                "{\"cvc_code\":122,\"dateValidThru\":\"2023-01-01\",\"id\":4,\"accountNumber\":1112,\"cardNumber\":1112222233334442}," +
+                "{\"cvc_code\":123,\"dateValidThru\":\"2023-01-01\",\"id\":5,\"accountNumber\":1112,\"cardNumber\":1112222233334443}," +
+                "{\"cvc_code\":124,\"dateValidThru\":\"2023-01-01\",\"id\":6,\"accountNumber\":1112,\"cardNumber\":1112222233334444}]";
 
         return Arrays.asList(new Object[][]{
                 {serverResponse ,""},
@@ -87,13 +90,14 @@ public class MassTestGetAllCards {
 
     @Test
     public void test() throws IOException {
-        JsonNode jsonNodeExpected = new ObjectMapper().readTree(serverResponse);
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Card> cardsExpected = Arrays.asList(objectMapper.readValue(serverResponse,Card[].class));
         URL url = new URL("http://localhost:8000/bank_api/get_all_cards/" + accountNumber);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-        JsonNode jsonNodeActual = new ObjectMapper().readTree(isr);
-        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
+        List<Card> cardsActual = Arrays.asList(objectMapper.readValue(isr,Card[].class));
+        Assert.assertEquals(cardsExpected,cardsActual);
     }
 
     @AfterClass

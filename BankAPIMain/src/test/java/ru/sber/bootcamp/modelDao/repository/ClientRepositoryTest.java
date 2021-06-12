@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.entity.Client;
 import ru.sber.bootcamp.service.DataConnectionService;
@@ -26,7 +27,7 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    public void getClientByAccountNumber() {
+    public void getClientByAccountNumber() throws BankApiException {
         Account testAccount = new Account(1L,"1111", BigDecimal.valueOf(10000.10), Date.valueOf("2020-01-01"));
         Client testClient = new Client(1L,"1111","Ivan", "Ivanov",89008001234L,testAccount);
         System.out.println(testClient);

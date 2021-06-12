@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.modelDao.repository;
 
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.service.DataConnectionService;
 
@@ -29,7 +30,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public List getAllCardsByAccountNumber(String accountNumber) {
+    public List getAllCardsByAccountNumber(String accountNumber) throws BankApiException {
         return dataConnectionService.getAllCardByAccountNumber(accountNumber);
     }
 

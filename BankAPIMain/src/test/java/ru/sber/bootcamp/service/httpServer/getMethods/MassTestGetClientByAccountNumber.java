@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -69,13 +70,13 @@ public class MassTestGetClientByAccountNumber {
         String client2 = "{\"accountId\":1112,\"firstName\":\"Петр\",\"phoneNumber\":88009001235,\"id\":2,\"account\":{\"balance\":2000.25,\"id\":2,\"openDate\":\"2020-01-01\",\"accountNumber\":1112},\"lastname\":\"Петров\"}";
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"Input_account_number\"}" ,null},
-                {"{\"Error!\":\"Incorrect_account_number\"}","1"},
-                {"{\"Error!\":\"Incorrect_account_number\"}","2"},
+                {"{\"Error!\":\"InputAccountNumber\"}" ,""},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","1"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","2"},
                 {client1, "1111"},
                 {client2, "1112"},
-                {"{\"Error!\":\"Incorrect_account_number\"}","123123123123"},
-                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","123123123123"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}", "Pepsi-Cola"},
         });
     }
 
@@ -92,7 +93,11 @@ public class MassTestGetClientByAccountNumber {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNodeActual = objectMapper.readTree(isr);
         JsonNode jsonNodeExpected = objectMapper.readTree(serverResponse);
-        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
+        if(jsonNodeExpected.has("Error!") & jsonNodeActual.has("Error!")){
+            Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
+        } else {
+            Account accountExpected = jsonNodeExpected.tree
+        }
     }
 
     @AfterClass

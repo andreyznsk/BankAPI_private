@@ -71,10 +71,10 @@ public class ClientController {
      * @param accountNumber номер счета
      * @return информцию клиента по номеру счета
      */
-    public String getClientByAccountNumber(String accountNumber) throws JsonProcessingException {
+    public String getClientByAccountNumber(String accountNumber) throws JsonProcessingException, BankApiException {
         if(accountNumber == null) {
             System.out.println("null");
-            throw new NullPointerException("Input_account_number");
+            throw new BankApiException("InputAccountNumber");
         }
         Client client = clientRepository.getClientByAccountNumber(accountNumber);
         return objectWriter.writeValueAsString(client);
@@ -97,10 +97,10 @@ public class ClientController {
      * @param accountNumber - Номер счета
      * @return - Массив всех карт по номеру счета
      */
-    public  String getAllCardsByAccount(String accountNumber) throws NullPointerException, JsonProcessingException {
+    public  String getAllCardsByAccount(String accountNumber) throws BankApiException, JsonProcessingException {
         if(accountNumber == null) {
             System.out.println("null");
-            throw new NullPointerException("Input Account number");
+            throw new BankApiException("InputAccountNumber");
         }
             //gsonConverter.convertListToGson();
         List<Card> allCardsByAccountNumber = cardRepository.getAllCardsByAccountNumber(accountNumber);
@@ -116,12 +116,12 @@ public class ClientController {
     public String getBalanceByCardNumber(String cardNumber) throws Exception {
         if(cardNumber == null) {
             System.out.println("null");
-            throw new NullPointerException("Input_Card_number");
+            throw new BankApiException("InputCardNumber");
         }
         Account account = accountRepository.getAccountByCardNumber(cardNumber);
         if(account.getBalance()==null) {
             System.out.println("Card_Number_incorrect");
-            throw new BankApiException("Card_Number_incorrect");
+            throw new BankApiException("CardNumberIncorrect");
         }
         BalanceDto balanceDTO = balanceDTOConverter.balanceDTO(account);
         return objectWriter.writeValueAsString(balanceDTO);

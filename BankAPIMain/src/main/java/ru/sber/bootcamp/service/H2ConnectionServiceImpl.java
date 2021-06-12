@@ -1,6 +1,7 @@
 package ru.sber.bootcamp.service;
 
 import org.h2.tools.Server;
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.modelDao.entity.Client;
@@ -166,7 +167,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      * @return - возвращате объект клиент со всем его картами, а так же с информацией по его счету
      */
     @Override
-    public Client getClientByAccountNumber(String accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) throws BankApiException {
       return h2ConnectionClientMethods.getClientByAccountNumber(accountNumber);
     }
 
@@ -179,7 +180,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     @Override
-    public List<Card> getAllCardByAccountNumber(String accountNumber) {
+    public List<Card> getAllCardByAccountNumber(String accountNumber) throws BankApiException {
         return h2ConnectionCardMethods.getAllCardByAccountNumber(accountNumber);
     }
 

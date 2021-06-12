@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.service.DataSource;
 
@@ -46,11 +47,10 @@ public class H2ConnectionCardMethods {
         return cards;
     }
 
-    public List<Card> getAllCardByAccountNumber(String accountNumber) {
+    public List<Card> getAllCardByAccountNumber(String accountNumber) throws BankApiException {
         List<Card> cards = new ArrayList<>();
         try(Connection connection = DataSource.getConnection();
-           PreparedStatement psGetAllCardByAccountNumber =  connection.prepareStatement(psGetAllCardByAccountNumberSql)
-                ) {
+           PreparedStatement psGetAllCardByAccountNumber =  connection.prepareStatement(psGetAllCardByAccountNumberSql)) {
             psGetAllCardByAccountNumber.setString(1,accountNumber);
             ResultSet rs = psGetAllCardByAccountNumber.executeQuery();
             while (rs.next()){
@@ -59,7 +59,7 @@ public class H2ConnectionCardMethods {
             }
             rs.close();
             if(cards.size()==0){
-                throw new NullPointerException("Incorrect_account_number");
+                throw new BankApiException("IncorrectAccountNumber");
             }
         } catch (SQLException throwables) {
             System.err.println(throwables.getErrorCode());

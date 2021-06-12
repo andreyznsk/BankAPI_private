@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -46,7 +47,7 @@ public class CardRepositoryTest {
     }
 
     @Test
-    public void getAllCardsByAccountNumber() {
+    public void getAllCardsByAccountNumber() throws BankApiException {
         Card card = new Card(1l,"1111","1111222233334441", Date.valueOf("2023-01-01"),111);
         List<Card> allCardByAccountNumber = dataConnectionService.getAllCardByAccountNumber("1111");
         Assert.assertEquals(allCardByAccountNumber.get(0),card);
@@ -54,7 +55,7 @@ public class CardRepositoryTest {
     }
 
     @Test
-    public void addCardByAccountNumber() {
+    public void addCardByAccountNumber() throws BankApiException {
         Card card = new Card();
         card.setAccountNumber("1111");
         card.setCardNumber("1111111");

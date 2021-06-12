@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.service;
 
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.entity.Card;
 import ru.sber.bootcamp.modelDao.entity.Client;
@@ -17,7 +18,7 @@ public interface DataConnectionService {
 
     Account getAccountByAccountNumber(String accountNumber);
 //--------------Clients methods-------------------
-    Client getClientByAccountNumber(String accountNumber);
+    Client getClientByAccountNumber(String accountNumber) throws BankApiException;
 
     List<Card> findAllCards();
 
@@ -25,7 +26,7 @@ public interface DataConnectionService {
 //----------------Card Methods------------------
     Card getCardByCardNumber(String cardNumber);
 
-    List<Card> getAllCardByAccountNumber(String accountNumber);
+    List<Card> getAllCardByAccountNumber(String accountNumber) throws BankApiException;
 
     Account getAccountByCardNumber(String cardNumber);
 

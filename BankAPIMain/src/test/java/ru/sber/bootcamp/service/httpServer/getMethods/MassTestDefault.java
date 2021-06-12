@@ -64,12 +64,12 @@ public class MassTestDefault {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error\":\"CommandError\"}" ,null},
-                {"{\"Error\":\"CommandError\"}",1L},
-                {"{\"Error\":\"CommandError\"}",2L},
-                {"{\"Error\":\"CommandError\"}" , 1111L},
-                {"{\"Error\":\"CommandError\"}",123123123123L},
-                {"{\"Error\":\"CommandError\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"CommandError\"}" ,null},
+                {"{\"Error!\":\"CommandError\"}",1L},
+                {"{\"Error!\":\"CommandError\"}",2L},
+                {"{\"Error!\":\"CommandError\"}" , 1111L},
+                {"{\"Error!\":\"CommandError\"}",123123123123L},
+                {"{\"Error!\":\"CommandError\"}", "Pepsi-Cola"},
         });
     }
 

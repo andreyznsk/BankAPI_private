@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.service.h2ConnectionImplMethods;
 
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Client;
 import ru.sber.bootcamp.service.DataSource;
 
@@ -20,7 +21,7 @@ public class H2ConnectionClientMethods {
     private static String prepareStatementSql = "SELECT * FROM client WHERE account_number = ?";
 
 
-    public Client getClientByAccountNumber(String accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) throws BankApiException {
         Client client = new Client();
 
         try (
@@ -41,7 +42,7 @@ public class H2ConnectionClientMethods {
             throwables.printStackTrace();
         }
         if(client.getId() == null)  {
-            throw new NullPointerException("Incorrect_account_number");
+            throw new BankApiException("IncorrectAccountNumber");
         }
         if (client.getId() != null) {
             client.setAccount(h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber));

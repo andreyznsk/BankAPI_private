@@ -43,13 +43,6 @@ public class MassTestGetCardByAccountNumber {
 
     @BeforeClass
     public static void init(){
-        DefaultPrettyPrinter pp = new DefaultPrettyPrinter()
-                .withoutSpacesInObjectEntries()
-                .withArrayIndenter(new DefaultPrettyPrinter.NopIndenter());
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        objectWriter = new ObjectMapper().writer()
-                            .with(pp)
-                            .with(df);
         dataService = new H2ConnectionServiceImpl(false);
         dataService.start();
 
@@ -77,17 +70,23 @@ public class MassTestGetCardByAccountNumber {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws JsonProcessingException {
-
+        DefaultPrettyPrinter pp = new DefaultPrettyPrinter()
+                .withoutSpacesInObjectEntries()
+                .withArrayIndenter(new DefaultPrettyPrinter.NopIndenter());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        objectWriter = new ObjectMapper().writer()
+                .with(pp)
+                .with(df);
         List<Card> cardList =  new ArrayList<>();
         cardList.add(new Card(1l,"1111","1111222233334441",Date.valueOf("2023-01-01"),111));
         cardList.add(new Card(2l,"1111","1111222233334442", Date.valueOf("2023-01-01"),112));
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"InputAccountnumber\"}" ,null},
-                {"{\"Error!\":\"Incorrect_account_number\"}","1"},
-                {"{\"Error!\":\"Incorrect_account_number\"}","2"},
+                {"{\"Error!\":\"InputAccountNumber\"}" ,""},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","1"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","2"},
                 {objectWriter.writeValueAsString(cardList), "1111"},
-                {"{\"Error!\":\"Incorrect_account_number\"}","123123123123"},
-                {"{\"Error!\":\"Forinputstring:\\\"Pepsi-Cola\\\"\"}", "Pepsi-Cola"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}","123123123123"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}", "Pepsi-Cola"},
         });
     }
 
@@ -97,12 +96,13 @@ public class MassTestGetCardByAccountNumber {
     @Test
     public void test() throws IOException {
         URL url = new URL("http://localhost:8000/bank_api/get_card_by_account/" + accountNumber);
+        System.out.println("url: " + url);
         URLConnection conn = url.openConnection();
         conn.setDoOutput(false);
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
         JsonNode jsonNodeActual = new ObjectMapper().readTree(isr);
         JsonNode jsonNodeExpected = new ObjectMapper().readTree(serverResponseExpected);
-        Assert.assertEquals(jsonNodeActual, jsonNodeExpected);
+        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
     }
 
     @AfterClass

@@ -1,5 +1,6 @@
 package ru.sber.bootcamp.modelDao.repository;
 
+import ru.sber.bootcamp.exception.BankApiException;
 import ru.sber.bootcamp.modelDao.entity.Client;
 import ru.sber.bootcamp.service.DataConnectionService;
 
@@ -12,7 +13,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 
     @Override
-    public Client getClientByAccountNumber(String accountNumber) {
+    public Client getClientByAccountNumber(String accountNumber) throws BankApiException {
         return dataConnectionService.getClientByAccountNumber(accountNumber);
     }
 }

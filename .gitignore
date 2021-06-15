@@ -3,6 +3,7 @@
 /target/
 /UserService1/target/
 /BankAPIMain/target/
+/.sberstack/
 
 #### Files #####
 *.iml

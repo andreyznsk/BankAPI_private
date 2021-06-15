@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static ru.sber.bootcamp.configuration.MyServerMessage.*;
 
@@ -138,14 +139,14 @@ public class ClientController {
     public String incrementBalanceByCardNumber(String cardNumber, Double amount, int CVC)
             throws BankApiException {
         if(amount < 0) {
-            throw new BankApiException("Amount_is_negative");
+            throw new BankApiException("AmountIsNegative");
         }
         Card card = cardRepository.getCardByCardNumber(cardNumber);
         ObjectNode serverResponse = new ObjectMapper().createObjectNode();
         if(card==null) {
             System.out.println("Карта не найдена");
-            serverResponse.put(ERROR_MESSAGE.message, "Card_not_found");
-            return serverResponse.asText();
+            serverResponse.put(ERROR_MESSAGE.message, "CardNotFound");
+            return serverResponse.toString();
         }
         System.out.println(card);
         if(card.getCVC_code()==CVC ){
@@ -157,9 +158,9 @@ public class ClientController {
            }
         } else {
             System.out.println("CVC code invalid");
-            serverResponse.put(ERROR_MESSAGE.message,"CVC_code_invalid");
+            serverResponse.put(ERROR_MESSAGE.message,"CVCCodeInvalid");
         }
-        return serverResponse.asText();
+        return serverResponse.toString();
 
     }
 
@@ -186,7 +187,8 @@ public class ClientController {
             Card card = new Card();
             Long cartNumber = null;
             do{
-                cartNumber = getRandomLong(1000_0000_0000_0000L,9999_9999_9999_9999L);
+                cartNumber = getRandomLong(0000000000000000L,9999999999999999L);
+                System.out.println(cartNumber);
             } while (cardRepository.isCardExist(cartNumber.toString()));
 
             int CVC = getRandomCVC(999);
@@ -202,12 +204,12 @@ public class ClientController {
             card.setDateValidThru(updateDate);
             int result = cardRepository.addCardByAccountNumber(card);
             if (result == 0)  {
-                serverResponse.put(SERVER_ERROR.message,"Card not added");
+                serverResponse.put(SERVER_ERROR.message,"CardNotAdded");
             } else {
-                serverResponse.put(SERVER_OK.message,"Card_added");
+                serverResponse.put(SERVER_OK.message,"CardAdded");
             }
         }
-        return serverResponse.asText();
+        return serverResponse.toString();
     }
 
     private int getRandomCVC(int max) {
@@ -215,7 +217,8 @@ public class ClientController {
     }
 
     private Long getRandomLong(long min, long max) {
-        return random.nextLong() % (max - min) + max;
+        //return random.nextLong() % (max - min) + min;
+        return ThreadLocalRandom.current().nextLong(min,max);
     }
 
 

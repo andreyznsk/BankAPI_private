@@ -75,16 +75,16 @@ public class MassBalance_inc {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,"1111122221"},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,"Black Power!"},
-                {"{\"Error!\":\"amount:Not_found\"}" ,null,111,"1111122221"},
-                {"{\"Error!\":\"CVC_code:Not_found\"}"  ,111.1,null,"1111122221"},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,111.1,111,null},
-                {"{\"Error!\":\"card_number:Not_found\"}" ,null,null,null},
-                {"{\"Error!\":\"Card_not_found\"}" ,111.1,111,"1111122221"},
+                {"{\"Error!\":\"CardNotFound\"}" ,111.1,111,"1111122221"},
+                {"{\"Error!\":\"CardNotFound\"}" ,111.1,111,"Black Power!"},
+                {"{\"Error!\":\"CardNotFound\"}" ,null,111,"1111122221"},
+                {"{\"Error!\":\"CardNotFound\"}"  ,111.1,null,"1111122221"},
+                {"{\"Error!\":\"CardNotFound\"}" ,111.1,111,null},
+                {"{\"Error!\":\"CardNotFound\"}" ,null,null,null},
+                {"{\"Error!\":\"CardNotFound\"}" ,111.1,111,"1111122221"},
                 {"{\"Server_OK!\":\"Balance_updated_ok\"}" ,111.1,111,"1111222233334441"},
-                {"{\"Error!\":\"CVC_code_invalid\"}" ,111.1,111,"1111222233334442"},
-                {"{\"Error!\":\"Amount_is_negative\"}" ,-111.1,111,"1111222233334441"},
+                {"{\"Error!\":\"CVCCodeInvalid\"}" ,111.1,111,"1111222233334442"},
+                {"{\"Error!\":\"AmountIsNegative\"}" ,-111.1,111,"1111222233334441"},
         });
     }
 
@@ -103,14 +103,10 @@ public class MassBalance_inc {
         URLConnection conn = url.openConnection();
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        wr.write(jsonQuery.asText());
+        wr.write(jsonQuery.toString());
         wr.flush();
-
-        StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
         JsonNode jsonNodeActual = new ObjectMapper().readTree(isr);
-
-        System.out.println("SErver response: TEST: " + sb.toString());
         Assert.assertEquals(jsonObjectResponseExpected, jsonNodeActual);
     }
 

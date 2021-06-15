@@ -1,9 +1,11 @@
 package ru.sber.bootcamp.service.httpServer.postmethods;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,25 +67,25 @@ public class MassCart_add {
     public static Collection<Object[]> data() {
 
         return Arrays.asList(new Object[][]{
-                {"{\"Error!\":\"account_number:Not_found\"}" ,null},
-                {"{\"Error!\":\"account_number:Not_found\"}" ,"Please! give me a new card!"},
-                {"{\"Error!\":\"Incorrect_account_number\"}" ,1113l},
-                {"{\"Error!\":\"Incorrect_account_number\"}" ,111334l},
-                {"{\"Error!\":\"Incorrect_account_number\"}" ,11124l},
-                {"{\"Error!\":\"Incorrect_account_number\"}" ,1114l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
-                {"{\"Server_OK!\":\"Card_added\"}" ,1111l},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,null},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,"Please! give me a new card!"},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,1113l},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,111334l},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,11124l},
+                {"{\"Error!\":\"IncorrectAccountNumber\"}" ,1114l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
+                {"{\"Server_OK!\":\"CardAdded\"}" ,1111l},
 
 
 
@@ -95,7 +97,8 @@ public class MassCart_add {
 
     @Test
     public void postBalanceIncHandler() throws Exception {
-        ObjectNode jsonQuery = new ObjectMapper().createObjectNode();
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonQuery = objectMapper.createObjectNode();
         jsonQuery.put("account_number", String.valueOf(accountNumber));
 
         URL url = new URL("http://localhost:8000/bank_api/add_card");
@@ -104,10 +107,10 @@ public class MassCart_add {
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
         wr.write(jsonQuery.toString());
         wr.flush();
-
-        StringBuilder sb = new StringBuilder();
+        JsonNode jsonNodeExpected = objectMapper.readTree(serverResponse);
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-
+        JsonNode jsonNodeActual = objectMapper.readTree(isr);
+        Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
     }
 
     @AfterClass

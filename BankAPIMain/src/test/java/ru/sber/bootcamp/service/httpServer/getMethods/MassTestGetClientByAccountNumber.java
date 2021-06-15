@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
 import ru.sber.bootcamp.modelDao.entity.Account;
+import ru.sber.bootcamp.modelDao.entity.Client;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -96,7 +97,9 @@ public class MassTestGetClientByAccountNumber {
         if(jsonNodeExpected.has("Error!") & jsonNodeActual.has("Error!")){
             Assert.assertEquals(jsonNodeExpected,jsonNodeActual);
         } else {
-            Account accountExpected = jsonNodeExpected.tree
+            Client clientExpected = objectMapper.convertValue(jsonNodeExpected,Client.class);
+            Client clientActual = objectMapper.convertValue(jsonNodeActual,Client.class);
+            Assert.assertEquals(clientExpected,clientActual);
         }
     }
 

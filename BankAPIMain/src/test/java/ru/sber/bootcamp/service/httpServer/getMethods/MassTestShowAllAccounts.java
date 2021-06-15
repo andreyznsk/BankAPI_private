@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.sber.bootcamp.controller.ClientController;
+import ru.sber.bootcamp.modelDao.entity.Account;
 import ru.sber.bootcamp.modelDao.repository.*;
 import ru.sber.bootcamp.service.DataConnectionService;
 import ru.sber.bootcamp.service.H2ConnectionServiceImpl;
@@ -22,6 +23,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -88,9 +90,10 @@ public class MassTestShowAllAccounts {
         conn.setDoOutput(false);
         InputStreamReader isr = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonServerResponseActual = objectMapper.readTree(isr);
-        JsonNode jsonServerResponseExpected = objectMapper.readTree(serverResponse);
-        Assert.assertEquals(jsonServerResponseExpected,jsonServerResponseActual);
+        List<Account> accountListActual =  Arrays.asList(objectMapper.readValue(isr,Account[].class));
+        List<Account> accountListExpected =  Arrays.asList(objectMapper.readValue(serverResponse,Account[].class));
+
+        Assert.assertEquals(accountListExpected,accountListActual);
 
     }
 

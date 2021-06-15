@@ -33,9 +33,13 @@ public class HttpPostHandle {
                 String cardNumber = null;
                 Double amount = null;
                 int CVC = 0;
-                cardNumber = query.get("card_number").asText();
-                amount = query.get("amount").asDouble();
-                CVC = query.get("CVC_code").asInt();
+                try {
+                    cardNumber = query.get("card_number").asText();
+                    amount = query.get("amount").asDouble();
+                    CVC = query.get("CVC_code").asInt();
+                } catch (NullPointerException e) {
+                    throw new BankApiException("DataError");
+                }
                 response = controller.incrementBalanceByCardNumber(cardNumber, amount, CVC);
                 break;
             }

@@ -1,4 +1,4 @@
-package ru.sberbank.main.modelDao.entity;
+package ru.sberbank.main.modelDAO.entity;
 
 import lombok.Data;
 
@@ -27,5 +27,14 @@ public class Card {
     @Column(name = "cvc_code")
     private int CVC_code;
 
+    public Card(Long id, String accountNumber, String cardNumber, Date dateValidThru, int CVC_code) {
+        this.id = id;
+        this.accountNumber = accountNumber;
+        this.cardNumber = cardNumber;
+        this.dateValidThru = dateValidThru;
+        this.CVC_code = CVC_code;
+    }
 
+    public Card() {
+    }
 }

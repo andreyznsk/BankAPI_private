@@ -1,8 +1,8 @@
-package ru.sberbank.main.modelDto;
+package ru.sberbank.main.modelDTO;
 
 
 import org.springframework.stereotype.Component;
-import ru.sberbank.main.modelDao.entity.Account;
+import ru.sberbank.main.modelDAO.entity.Account;
 
 @Component
 public class BalanceDtoConverter {

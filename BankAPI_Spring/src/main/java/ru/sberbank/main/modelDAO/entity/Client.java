@@ -1,4 +1,4 @@
-package ru.sberbank.main.modelDao.entity;
+package ru.sberbank.main.modelDAO.entity;
 
 
 import lombok.Data;
@@ -31,4 +31,15 @@ public class Client implements Serializable {
    fetch = FetchType.EAGER)
     private Account account;
 
+    public Client(Long id, String accountId, String firstName, String lastname, Long phoneNumber, Account account) {
+        this.id = id;
+        this.accountId = accountId;
+        this.firstName = firstName;
+        this.lastname = lastname;
+        this.phoneNumber = phoneNumber;
+        this.account = account;
+    }
+
+    public Client() {
+    }
 }

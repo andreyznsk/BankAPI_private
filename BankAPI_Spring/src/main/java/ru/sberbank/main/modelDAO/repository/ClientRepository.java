@@ -1,9 +1,8 @@
-package ru.sberbank.main.modelDao.repository;
+package ru.sberbank.main.modelDAO.repository;
 
 
-import org.hibernate.secure.spi.JaccPermissionDeclarations;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.sberbank.main.modelDao.entity.Client;
+import ru.sberbank.main.modelDAO.entity.Client;
 
 public interface ClientRepository extends JpaRepository<Client,Long> {
 

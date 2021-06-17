@@ -1,10 +1,8 @@
-package ru.sberbank.main.modelDto;
+package ru.sberbank.main.modelDTO;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Data
 public class BalanceDto {

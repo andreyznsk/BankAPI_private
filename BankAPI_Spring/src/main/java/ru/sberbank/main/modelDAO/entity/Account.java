@@ -1,14 +1,12 @@
-package ru.sberbank.main.modelDao.entity;
+package ru.sberbank.main.modelDAO.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.springframework.web.bind.annotation.Mapping;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "account")
@@ -27,6 +25,7 @@ public class Account implements Serializable {
     private BigDecimal balance;
 
     @Column(name = "open_date")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date openDate;
 
     @OneToOne(cascade = CascadeType.ALL,
@@ -35,4 +34,15 @@ public class Account implements Serializable {
             referencedColumnName = "account_number",
             insertable = false, updatable = false)
     private Client client;
+
+    public Account(Long id, String accountNumber, BigDecimal balance, Date openDate, Client client) {
+        this.id = id;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.openDate = openDate;
+        this.client = client;
+    }
+
+    public Account() {
+    }
 }

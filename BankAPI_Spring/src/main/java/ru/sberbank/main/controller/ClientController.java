@@ -9,13 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.sberbank.main.exception.BankApiException;
-import ru.sberbank.main.modelDao.entity.Account;
-import ru.sberbank.main.modelDao.entity.Card;
-import ru.sberbank.main.modelDao.entity.Client;
-import ru.sberbank.main.modelDao.repository.AccountRepository;
-import ru.sberbank.main.modelDao.repository.CardRepository;
-import ru.sberbank.main.modelDao.repository.ClientRepository;
-import ru.sberbank.main.modelDto.*;
+import ru.sberbank.main.modelDAO.entity.Account;
+import ru.sberbank.main.modelDAO.entity.Card;
+import ru.sberbank.main.modelDAO.entity.Client;
+import ru.sberbank.main.modelDAO.repository.AccountRepository;
+import ru.sberbank.main.modelDAO.repository.CardRepository;
+import ru.sberbank.main.modelDAO.repository.ClientRepository;
+import ru.sberbank.main.modelDTO.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -42,7 +42,7 @@ public class ClientController {
     @GetMapping(value = "/show_all",
             produces = {"application/json; charset=UTF-8"}
     )
-    public List<Account> getAllAccounts() throws JsonProcessingException {
+    public List<Account> getAllAccounts() {
       return accountRepository.findAll();
     }
 

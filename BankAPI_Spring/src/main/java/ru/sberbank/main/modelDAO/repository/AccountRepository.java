@@ -1,9 +1,8 @@
-package ru.sberbank.main.modelDao.repository;
+package ru.sberbank.main.modelDAO.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import ru.sberbank.main.modelDao.entity.Account;
+import ru.sberbank.main.modelDAO.entity.Account;
 
 import java.util.List;
 

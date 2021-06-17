@@ -1,4 +1,4 @@
-package ru.sberbank.main.modelDto;
+package ru.sberbank.main.modelDTO;
 
 import lombok.Data;
 

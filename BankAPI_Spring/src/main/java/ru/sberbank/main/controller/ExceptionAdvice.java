@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.sberbank.main.modelDto.ServerResponseDTO;
+import ru.sberbank.main.modelDTO.ServerResponseDTO;
 
 @ControllerAdvice
 

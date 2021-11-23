@@ -1,9 +1,28 @@
 BANK API v 1.0<br>
+<h2>Frameworks</h2>
+<h3>Module: BankAPI_Spring</h3>
+<p>
+ - SpringBoot 2.4.5
+<br> - Spring Data JPA
+<br> - Lombok
+<br> - Database H2
+<br> - FlyWayDb
+<br> - JUnit 5
+</p> 
+<h3>Module: BankAPIMain</h3>
+<p>
+- DataSource: Hikari CP
+<br> - JavaHttp Server
+<br> - JSON - Jackson
+<br> - DataBase: H2
+<br> - Junit 4
+<br> - Cache
+</p>
 Input data  GET<br>
 Input data POST - JSON<br>
 Output data - JSON<br>
-run: sh .startServer.sh
-Доступные адреса:
+<p>run: sh .startServer.sh
+<h2>Endpoints:</h2>
 <h3>GET:</h3>
 1. http://localhost:8000/bank_api/get_all_cards  - получить список всех карт
 2. http://localhost:8000/bank_api/show_all_accounts - получить список всех счетов

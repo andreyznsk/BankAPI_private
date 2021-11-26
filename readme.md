@@ -39,3 +39,4 @@ run: sh .startuser.sh
 Доступные адреса:
 1. http://localhost:9000/client_api/balance_inc - форма для отправки баланса
 2. http://localhost:9000/client_api/add_card - выпустить новую карту по счету
+</br>+ Tests

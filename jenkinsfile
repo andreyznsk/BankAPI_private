@@ -42,6 +42,10 @@ node('linux') {
                     executeStage('Build Distrib', branch, stageResult) {
                         // Переходим на выбранную ветку
                         sh "pwd"
+                        sh "ls -la"
+                        sh "cd .."
+                        sh "ls -la"
+
                         sh "'${mvnHome}/bin/mvn' --version"
                         sh "'${mvnHome}/bin/mvn' clean install"
                         archiveArtifacts 'BankApi.zip'

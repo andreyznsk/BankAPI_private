@@ -4,6 +4,6 @@
 /UserService1/target/
 /BankAPIMain/target/
 /.sberstack/
-
+*.class
 #### Files #####
 *.iml

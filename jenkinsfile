@@ -20,7 +20,7 @@ node('linux') {
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
                 mvnHome = tool '3.5.0'
                     // Находим NEXUS_VERSION
-                    String versionPom = sh script: '${mvnHome}/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+                    String versionPom = sh script: "'${mvnHome}/bin/mvn' help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true
                     String releaseVer = versionPom.replaceAll('-SNAPSHOT', '')
                     NEXUS_VERSION = releaseVer
                     println("versionPom: ${versionPom}, NEXUS_VERSION: ${NEXUS_VERSION}")

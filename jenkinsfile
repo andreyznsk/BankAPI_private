@@ -43,7 +43,7 @@ node('linux') {
                         // Переходим на выбранную ветку
                         sh "pwd"
                         sh "'${mvnHome}/bin/mvn' --version"
-                        sh "'${mvnHome}/bin/mvn clean install"
+                        sh "'${mvnHome}/bin/mvn' clean install"
                         archiveArtifacts 'BankApi.zip'
                     }
 

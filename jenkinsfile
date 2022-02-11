@@ -16,7 +16,7 @@ String releaseVersion
 
 node('linux') {
 
-                 cleanWs() // Очистка рабочего пространства
+                 //cleanWs() // Очистка рабочего пространства
 
                              /* executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
                                  scmVars = checkout(

@@ -17,10 +17,6 @@ String releaseVersion
 node('linux') {
 
     cleanWs() // Очистка рабочего пространства
-
-    wrap([$class: 'TimestamperBuildWrapper']) {
-        wrap([$class: 'AnsiColorBuildWrapper']) {
-
             withMaven(jdk: jdkName, maven: mavenVertsion) {
 
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
@@ -49,8 +45,6 @@ node('linux') {
                                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                                         "-Dpackaging=zip -Dfile=${kkaDistribFile.path} -Durl=https:nexus:8081 -Dclassifier=distrib"
                     }
-            }
-        }
     }
 }
 

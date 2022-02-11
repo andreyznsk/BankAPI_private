@@ -26,6 +26,7 @@ node('linux') {
                                           extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
                                           gitTool                          : 'Default',
                                           submoduleCfg                     : [],
+                                         ]
                                  )
                              }
 

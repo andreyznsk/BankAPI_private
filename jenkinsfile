@@ -18,7 +18,7 @@ node('linux') {
 
                  cleanWs() // Очистка рабочего пространства
 
-                             executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
+                             /* executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
                                  scmVars = checkout(
                                          [$class                           : 'GitSCM',
                                           branches                         : [[name: "${GitBranch}"]],
@@ -28,7 +28,7 @@ node('linux') {
                                           submoduleCfg                     : [],
                                          ]
                                  )
-                             }
+                             } */
 
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
                 mvnHome = tool '3.5.0'

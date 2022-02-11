@@ -4,7 +4,7 @@ def commitHash
 def OSS_FLAG_STATUS
 
 // Настройки для оберток maven
-mavenVertsion = 'Maven 3.5.0'
+def mvnHome
 
 String NEXUS_VERSION
 String NEXUS_ARTIFACT = 'CI00355268_KKA'
@@ -17,10 +17,8 @@ String releaseVersion
 node('linux') {
 
                  cleanWs() // Очистка рабочего пространства
-                tools{
-                maven mavenVertsion;
-                }
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
+                mvnHome = tool '3.5.0'
                     // Находим NEXUS_VERSION
                     def pomModel = readMavenPom()
                     String versionPom = pomModel.getVersion()
@@ -32,8 +30,8 @@ node('linux') {
                     executeStage('Build Distrib', branch, stageResult) {
                         // Переходим на выбранную ветку
                         sh "git status"
-                        sh "mvn -version"
-                        sh "mvn clean install"
+                        sh "'${mvnHome}/bin/mvn' --version"
+                        sh "'${mvnHome}/bin/mvn clean install"
                         archiveArtifacts 'BankApi.zip'
                     }
 

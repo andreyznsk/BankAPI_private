@@ -18,7 +18,7 @@ node('linux') {
 
                  cleanWs() // Очистка рабочего пространства
 
-                             executeStage('Checkout in Linux', branch, stageResult, recipients) { // Чекаут
+                             executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
                                  scmVars = checkout(
                                          [$class                           : 'GitSCM',
                                           branches                         : [[name: "${GitBranch}"]],

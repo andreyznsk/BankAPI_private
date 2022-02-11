@@ -16,9 +16,10 @@ String releaseVersion
 
 node('linux') {
 
-    cleanWs() // Очистка рабочего пространства
-            withMaven(maven: mavenVertsion) {
-
+                 cleanWs() // Очистка рабочего пространства
+                tools{
+                maven mavenVertsion;
+                }
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
                     // Находим NEXUS_VERSION
                     def pomModel = readMavenPom()
@@ -45,7 +46,7 @@ node('linux') {
                                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                                         "-Dpackaging=zip -Dfile=${kkaDistribFile.path} -Durl=https:nexus:8081 -Dclassifier=distrib"
                     }
-    }
+
 }
 
 def executeStage(stageName, branch, stageResult, Closure task) {

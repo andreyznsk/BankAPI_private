@@ -17,7 +17,7 @@ String releaseVersion
 node('linux') {
 
     cleanWs() // Очистка рабочего пространства
-            withMaven(jdk: jdkName, maven: mavenVertsion) {
+            withMaven(maven: mavenVertsion) {
 
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
                     // Находим NEXUS_VERSION

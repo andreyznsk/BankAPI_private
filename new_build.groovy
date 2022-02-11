@@ -159,12 +159,12 @@ node('clearAgent') {
                             def libs = ['../tools/groovy-all-2.4.12.jar', '../tools/ant-1.10.1.jar', '../tools/ant-launcher-1.10.1.jar']
                             sh "java -cp ${libs.join(':')} groovy.ui.GroovyMain build_all2.groovy ${mss ?: ''}"
                         }
-                        archiveArtifacts 'infrastructure/kka-deploy/build/kka-*.zip'
+                        archiveArtifacts 'infrastructure/kka-deploy/jenkinsfile/kka-*.zip'
                     }
 
                     executeStage('Nexus Upload', branch, stageResult, recipients) {
                         // Загрузка билда в нексус
-                        def kkaDistribFile = findFiles(glob: 'infrastructure/kka-deploy/build/kka-*.zip')[0]
+                        def kkaDistribFile = findFiles(glob: 'infrastructure/kka-deploy/jenkinsfile/kka-*.zip')[0]
                         println("kkaDistribFile name: ${kkaDistribFile.name}, path: ${kkaDistribFile.path}, " +
                                 "directory: ${kkaDistribFile.directory}, length: ${kkaDistribFile.length}")
                         withMaven(jdk: jdkName, maven: 'Maven 3.5.4', mavenSettingsConfig: 'KKA-repo') {

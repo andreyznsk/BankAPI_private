@@ -42,7 +42,7 @@ node('ubuntu') {
                     executeStage('Build Distrib', branch, stageResult) {
                         // Переходим на выбранную ветку
                         sh "mvn --version"
-                        sh "mvn' clean install"
+                        sh "mvn clean install"
                         archiveArtifacts 'BankApi.zip'
                     }
 

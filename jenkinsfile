@@ -47,7 +47,7 @@ node('ubuntu') {
                         sh "ls -la"
                         sh "whoami"
                         sh "'${mvnHome}/bin/mvn' --version"
-                        sh "'${mvnHome}/bin/mvn' clean install"
+                        sh "mvn clean install"
                         archiveArtifacts 'BankApi.zip'
                     }
 

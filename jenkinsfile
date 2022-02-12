@@ -14,7 +14,7 @@ String branch = GitBranch
 echo "GitBranch: ${GitBranch}, branch: ${branch}"
 String releaseVersion
 
-node('linux') {
+node('ubuntu') {
 
                  //cleanWs() // Очистка рабочего пространства
 

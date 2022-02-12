@@ -31,9 +31,9 @@ node('ubuntu') {
                              } */
 
                 executeStage('Determine NEXUS_VERSION', branch, stageResult) {
-                mvnHome = tool '3.5.0'
+                //mvnHome = tool '3.5.0'
                     // Находим NEXUS_VERSION
-                    String versionPom = sh script: "'${mvnHome}/bin/mvn' help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true
+                    String versionPom = sh script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true
                     String releaseVer = versionPom.replaceAll('-SNAPSHOT', '')
                     NEXUS_VERSION = releaseVer
                     println("versionPom: ${versionPom}, NEXUS_VERSION: ${NEXUS_VERSION}")
@@ -41,13 +41,8 @@ node('ubuntu') {
 
                     executeStage('Build Distrib', branch, stageResult) {
                         // Переходим на выбранную ветку
-                        sh "pwd"
-                        sh "ls -la"
-                        sh "cd .."
-                        sh "ls -la"
-                        sh "whoami"
-                        sh "'${mvnHome}/bin/mvn' --version"
-                        sh "'${mvnHome}/bin/mvn' clean install"
+                        sh "mvn --version"
+                        sh "mvn' clean install"
                         archiveArtifacts 'BankApi.zip'
                     }
 

@@ -8,7 +8,7 @@ def mvnHome
 
 String NEXUS_VERSION
 String NEXUS_ARTIFACT
-String project_git_url = 'ssh://git@github.com:andreyznsk/BankAPI_private.git'
+String project_git_url = 'git@github.com:andreyznsk/BankAPI_private.git'
 String JenkinsCredentialsId = 'ubnt'
 String jdkName = 'JDK1.8'
 

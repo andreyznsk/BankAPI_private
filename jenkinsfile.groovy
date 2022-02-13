@@ -24,9 +24,12 @@ node('ubuntu') {
         scmVars = checkout(
                 [$class       : 'GitSCM',
                  branches                         : [[name: "${GitBranch}"]],
-                 source       : project_git_url,
-                 clean        : true,
-                 credentialsId: JenkinsCredentialsId
+                 browser                          : [$class: 'GitWeb', repoUrl: 'https://github.com/andreyznsk/BankAPI_private.git'],
+                 doGenerateSubmoduleConfigurations: false,
+                 extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
+                 gitTool                          : 'Default',
+                 submoduleCfg                     : [],
+                 userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url]]
                 ])
     }
 

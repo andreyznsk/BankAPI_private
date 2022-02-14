@@ -50,7 +50,7 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        archiveArtifacts 'BankAPIMain/database/database/*.sql'
+        archiveArtifacts 'BankAPIMain/database/*.sql'
         archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 

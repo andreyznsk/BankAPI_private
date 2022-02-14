@@ -4,7 +4,7 @@ WORKDIR /workspace/BankApi/BankAPIMain
 RUN mkdir /app
 
 COPY /BankAPIMain/target/BankAPI.jar /app/BankAPI.jar
-COPY /BankAPIMain/database/data.sql /app/database/*.sql
+COPY /BankAPIMain/database/*.sql /app/database/
 WORKDIR /app
 CMD "java" "-jar" "BankAPI.jar"
 

@@ -7,18 +7,18 @@ def OSS_FLAG_STATUS
 def mvnHome
 
 String NEXUS_VERSION
-String NEXUS_ARTIFACT
 String project_git_url = 'git@github.com:andreyznsk/BankAPI_private.git'
 String JenkinsCredentialsId = 'ubnt'
-String jdkName = 'JDK1.8'
 
 String branch = GitBranch
 echo "GitBranch: ${GitBranch}, branch: ${branch}"
-String releaseVersion
 
 node('ubuntu') {
 
-    cleanWs() // Очистка рабочего пространства
+
+    executeStage('Clean WS', branch, stageResult) {
+        cleanWs() // Очистка рабочего пространства
+    }
 
     executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
         scmVars = checkout(
@@ -50,7 +50,8 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        archiveArtifacts 'BankAPIMain/database/*.sql'
+        sh "zip -r datebase.zip database/*.sql"
+        archiveArtifacts 'BankAPIMain/database.zip'
         archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 

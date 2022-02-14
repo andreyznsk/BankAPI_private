@@ -50,12 +50,13 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        //archiveArtifacts 'BankAPIMain/target/classes/database/*.sql'
-        //archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
+        archiveArtifacts 'BankAPIMain/database/database/*.sql'
+        archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 
     executeStage('Docker build', branch, stageResult) {
         // Загрузка билда в нексус
+        echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
         sh 'docker build . -t bankapi'
         /*println("kkaDistribFile name: ${kkaDistribFile.name}, path: ${kkaDistribFile.path}, " +
                 "directory: ${kkaDistribFile.directory}, length: ${kkaDistribFile.length}")

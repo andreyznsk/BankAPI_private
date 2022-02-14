@@ -50,7 +50,7 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        sh "zip -r database.zip . -i database/*.sql"
+        sh "zip -r database.zip . -i BankAPIMain/database/*.sql"
         archiveArtifacts 'BankAPIMain/database.zip'
         archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }

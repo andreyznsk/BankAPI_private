@@ -56,7 +56,7 @@ node('ubuntu') {
 
     executeStage('Docker build', branch, stageResult) {
         // Загрузка билда в нексус
-        sh 'docker build'
+        sh 'docker build . -t bankapi'
         /*println("kkaDistribFile name: ${kkaDistribFile.name}, path: ${kkaDistribFile.path}, " +
                 "directory: ${kkaDistribFile.directory}, length: ${kkaDistribFile.length}")
         echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"

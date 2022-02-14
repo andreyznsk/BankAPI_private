@@ -41,7 +41,7 @@ public class StartApp {
 
         System.out.println("BankAPI start successful!!");
         //Console Handler
-        Scanner scanner = new Scanner(System.in);
+     /*   Scanner scanner = new Scanner(System.in);
         String command;
        do{
             command = scanner.next();
@@ -54,7 +54,7 @@ public class StartApp {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
+*/
 
     }
 }

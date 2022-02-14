@@ -1,6 +1,10 @@
 FROM adoptopenjdk/openjdk11:alpine-slim
 WORKDIR /workspace/BankApi/BankAPIMain
 
-COPY /BankAPIMain/target/BankApi.jar /
-COPY /BankAPIMain/target/classes/database/data.sql /classes/database/data.sql
+RUN mkdir /app
+
+COPY /BankAPIMain/target/BankAPI.jar /app/BankAPI.jar
+COPY /BankAPIMain/database/data.sql /app/database/data.sql
+WORKDIR /app
+CMD "java" "-jar" "BankAPI.jar"
 

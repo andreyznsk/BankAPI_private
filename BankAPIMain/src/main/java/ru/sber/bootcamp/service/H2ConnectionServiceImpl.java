@@ -95,14 +95,16 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     private void h2DbBaseInit() throws SQLException {
         //Загрузка БД из файла
-        InputStream fileFromResourceAsStream = getFileFromResourceAsStream("database/data.sql");
+        File databaseScript = new File("database/data.sql");
         StringBuilder stringBuilder = new StringBuilder();
-        Scanner myReader = new Scanner(fileFromResourceAsStream);
-        System.out.println(myReader.hasNextLine());
-        while (myReader.hasNextLine()) {
-            stringBuilder.append(myReader.nextLine());
-        }
-        myReader.close();
+       try(Scanner myReader = new Scanner(databaseScript)) {
+           System.out.println(myReader.hasNextLine());
+           while (myReader.hasNextLine()) {
+               stringBuilder.append(myReader.nextLine());
+           }
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
         try(Connection connection = DataSource.getConnection();
             Statement stmt = connection.createStatement()) {
             stmt.execute(stringBuilder.toString());
@@ -215,19 +217,5 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
         return h2ConnectionCardMethods.isCardExist(cartNumber);
     }
 
-    private InputStream getFileFromResourceAsStream(String fileName) {
-
-        // The class loader that loaded the class
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
-        // the stream holding the file content
-        if (inputStream == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
-        } else {
-            return inputStream;
-        }
-
-    }
 }
 

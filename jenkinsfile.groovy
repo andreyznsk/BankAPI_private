@@ -54,14 +54,14 @@ node('ubuntu') {
         archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 
-    executeStage('Nexus Upload', branch, stageResult) {
+    executeStage('Docker build', branch, stageResult) {
         // Загрузка билда в нексус
-        def kkaDistribFile = findFiles(glob: 'BankApi.zip')[0]
-        println("kkaDistribFile name: ${kkaDistribFile.name}, path: ${kkaDistribFile.path}, " +
+        sh 'docker build -t BankApiContainer'
+        /*println("kkaDistribFile name: ${kkaDistribFile.name}, path: ${kkaDistribFile.path}, " +
                 "directory: ${kkaDistribFile.directory}, length: ${kkaDistribFile.length}")
         echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
         sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                "-Dpackaging=zip -Dfile=${kkaDistribFile.path} -Durl=https:nexus:8081 -Dclassifier=distrib"
+                "-Dpackaging=zip -Dfile=${kkaDistribFile.path} -Durl=https:nexus:8081 -Dclassifier=distrib"*/
     }
 
 }

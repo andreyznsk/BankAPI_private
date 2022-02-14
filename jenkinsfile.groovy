@@ -50,8 +50,8 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        archiveArtifacts 'BankAPIMain/target/classes/database/*.sql'
-        archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
+        //archiveArtifacts 'BankAPIMain/target/classes/database/*.sql'
+        //archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 
     executeStage('Docker build', branch, stageResult) {

@@ -1,9 +1,7 @@
 #### Folders ####
-/.idea/
-/target/
-/UserService1/target/
-/BankAPIMain/target/
-/.sberstack/
-*.class
+**/.idea/
+**/target/**
+**/.sberstack/**
 #### Files #####
+*.class
 *.iml

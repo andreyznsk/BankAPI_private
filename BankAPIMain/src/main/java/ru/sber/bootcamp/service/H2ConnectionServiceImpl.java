@@ -11,6 +11,7 @@ import ru.sber.bootcamp.service.h2ConnectionImplMethods.H2ConnectionClientMethod
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -94,19 +95,14 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
      */
     private void h2DbBaseInit() throws SQLException {
         //Загрузка БД из файла
-        File databaseScript = new File("data.sql");
+        InputStream fileFromResourceAsStream = getFileFromResourceAsStream("database/data.sql");
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            Scanner myReader = new Scanner(databaseScript);
-            System.out.println(myReader.hasNextLine());
-            while (myReader.hasNextLine()) {
-                stringBuilder.append(myReader.nextLine());
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        Scanner myReader = new Scanner(fileFromResourceAsStream);
+        System.out.println(myReader.hasNextLine());
+        while (myReader.hasNextLine()) {
+            stringBuilder.append(myReader.nextLine());
         }
+        myReader.close();
         try(Connection connection = DataSource.getConnection();
             Statement stmt = connection.createStatement()) {
             stmt.execute(stringBuilder.toString());
@@ -217,6 +213,21 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     @Override
     public boolean isCardExist(String cartNumber) {
         return h2ConnectionCardMethods.isCardExist(cartNumber);
+    }
+
+    private InputStream getFileFromResourceAsStream(String fileName) {
+
+        // The class loader that loaded the class
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+        // the stream holding the file content
+        if (inputStream == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+            return inputStream;
+        }
+
     }
 }
 

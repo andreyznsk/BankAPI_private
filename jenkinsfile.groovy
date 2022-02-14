@@ -50,7 +50,8 @@ node('ubuntu') {
         sh "whoami"
         sh "'${mvnHome}/bin/mvn' --version"
         sh "'${mvnHome}/bin/mvn' clean install"
-        archiveArtifacts 'BankAPIMain/target'
+        archiveArtifacts 'BankAPIMain/target/classes/database/*.sql'
+        archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 
     executeStage('Nexus Upload', branch, stageResult) {

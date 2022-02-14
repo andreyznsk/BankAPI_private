@@ -13,24 +13,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class H2ConnectionServiceImpl implements DataConnectionService {
 
     private final boolean enableTcpServer;
     private final boolean enableAutoCommit;
     private Server server;
-
+    private final String dir = "database";
     private H2ConnectionCardMethods h2ConnectionCardMethods;
     H2ConnectionAccountMethods h2ConnectionAccountMethods;
     private H2ConnectionClientMethods h2ConnectionClientMethods;
 
     /**
      * Инициализвция БД
-     *
      */
     public H2ConnectionServiceImpl(boolean enableTCP) {
         this.enableTcpServer = enableTCP;
@@ -38,18 +39,18 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
 
-
     /**
      * Служебный метод старта соединения с БД для старта использовать
-     *  public void start()
+     * public void start()
+     *
      * @throws SQLException может выкинуть исключение в слочае проблем подключения
      */
     private void connect() throws SQLException {
 
-            System.out.println("Server autoCommit mode: " + enableAutoCommit);
-            this.h2ConnectionCardMethods = new H2ConnectionCardMethods();
-            this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods();
-            this.h2ConnectionClientMethods = new H2ConnectionClientMethods(h2ConnectionAccountMethods);
+        System.out.println("Server autoCommit mode: " + enableAutoCommit);
+        this.h2ConnectionCardMethods = new H2ConnectionCardMethods();
+        this.h2ConnectionAccountMethods = new H2ConnectionAccountMethods();
+        this.h2ConnectionClientMethods = new H2ConnectionClientMethods(h2ConnectionAccountMethods);
         System.out.println("Server TCP/IP mode: " + enableTcpServer);
         if (enableTcpServer) {
             server = Server.createTcpServer().start();
@@ -60,7 +61,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Служебный метод остановки поключения к БД. Для вызова использовать
-     *  public void stop()
+     * public void stop()
      */
     private void disconnect() {
         try {
@@ -91,23 +92,38 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Подготовка всех предустановленных запросов
+     *
      * @throws SQLException - может выбросить исключение при недоступности БД, а так же при ошибках поделючения
      */
     private void h2DbBaseInit() throws SQLException {
         //Загрузка БД из файла
-        File databaseScript = new File("database/data.sql");
-        StringBuilder stringBuilder = new StringBuilder();
-       try(Scanner myReader = new Scanner(databaseScript)) {
-           System.out.println(myReader.hasNextLine());
-           while (myReader.hasNextLine()) {
-               stringBuilder.append(myReader.nextLine());
-           }
-       } catch (FileNotFoundException e) {
-           e.printStackTrace();
-       }
-        try(Connection connection = DataSource.getConnection();
-            Statement stmt = connection.createStatement()) {
-            stmt.execute(stringBuilder.toString());
+        File directory = new File(dir);
+        if (!directory.isDirectory()) {
+            System.out.println("{} is not directory!");
+        }
+
+        List<String> pathsToApply = Arrays.asList(directory.list());
+        pathsToApply.sort(String::compareTo);
+
+        for (String sqlFile: pathsToApply) {
+            File sqlScript = new File(dir, sqlFile);
+            System.out.println("Applying patch: " + sqlScript.getName());
+            StringBuilder stringBuilder = new StringBuilder();
+            try (Scanner myReader = new Scanner(sqlScript)) {
+                System.out.println(myReader.hasNextLine());
+                while (myReader.hasNextLine()) {
+                    stringBuilder.append(myReader.nextLine());
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                throw new RuntimeException("files not found");
+            }
+            try (Connection connection = DataSource.getConnection();
+                 Statement stmt = connection.createStatement()) {
+                System.out.println("SQL script:\n" + stringBuilder);
+                stmt.execute(stringBuilder.toString());
+
+            }
         }
 
     }
@@ -116,7 +132,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     public void stop() {
         System.out.println("Auth service has been stopped");
 
-        if (server!=null) {
+        if (server != null) {
             server.stop();
         }
         disconnect();
@@ -125,6 +141,7 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Вывод всех счетов всех пользователей
+     *
      * @return Список счетов пользователей
      */
     @Override
@@ -134,17 +151,19 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
 
     /**
      * Получить объект счет по номеру счета
+     *
      * @param accountNumber - номер счета
      * @return - объект счет
      */
     @Override
     public Account getAccountByAccountNumber(String accountNumber) {
-      return h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber);
+        return h2ConnectionAccountMethods.getAccountByAccountNumber(accountNumber);
 
     }
 
     /**
      * Получить объект счет по номеру карты. Данный зпрос выпонлняется с использованием card JOIN clients
+     *
      * @param cardNumber
      * @return
      */
@@ -159,14 +178,16 @@ public class H2ConnectionServiceImpl implements DataConnectionService {
     }
 
     //================Client methods=========================
+
     /**
      * Метод полчения клиента по номеру счета
+     *
      * @param accountNumber - номер счета клиента
      * @return - возвращате объект клиент со всем его картами, а так же с информацией по его счету
      */
     @Override
     public Client getClientByAccountNumber(String accountNumber) throws BankApiException {
-      return h2ConnectionClientMethods.getClientByAccountNumber(accountNumber);
+        return h2ConnectionClientMethods.getClientByAccountNumber(accountNumber);
     }
 
     //==================Card Methods==========================

@@ -10,10 +10,14 @@ import ru.sber.bootcamp.service.httpServer.HttpServerStarter;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class StartApp {
 
+    public static Logger LOG = Logger.getLogger(StartApp.class.getName());
+
     public static void main(String[] args) {
+        LOG.info("Server starting ...");
         boolean tcpServer = false;
         if (args.length != 0) {
             System.out.println("System arg is: " + args[0]);

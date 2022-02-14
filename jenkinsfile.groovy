@@ -71,6 +71,7 @@ def executeStage(stageName, branch, stageResult, Closure task) {
         stage(stageName, task)
     } catch (e) {
         echo "${e.getMessage()}"
+        cleanWs()
         throw e
     }
 }

@@ -29,6 +29,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <scm>
+        <developerConnection>
+            scm:git:git@github.com:andreyznsk/BankAPI_private.git
+        </developerConnection>
+    </scm>
+
     <build>
         <pluginManagement>
             <plugins>

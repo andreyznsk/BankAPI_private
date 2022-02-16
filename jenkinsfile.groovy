@@ -62,7 +62,7 @@ node('ubuntu') {
                     echo "next build number: ${nextVersion}"
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
-                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
+                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -q"
                     //sh "mvn -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -DargLine=-DdbUserSuffix=BLD release:perform --batch-mode -q"
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"

@@ -12,7 +12,7 @@
     <groupId>ru.sber.bootcamp</groupId>
     <artifactId>BankAPI</artifactId>
     <packaging>pom</packaging>
-    <version>2.019-SNAPSHOT</version>
+    <version>2.021-SNAPSHOT</version>
 
 
     <modules>

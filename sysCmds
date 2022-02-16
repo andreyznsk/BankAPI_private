@@ -1,0 +1,2 @@
+mvn deploy:deploy-file -DgeneratePom=true -DartifactId=BankAPI_0001 -Dversion=2.015 -Dpackaging=zip -Dfile=BankAPIMain/bankAPI.zip -Durl=http://localhost:8081/repository/maven-releases/ -DgroupId=TEST -Dusername=admin -Drepo.password=admin -Dclassifier=distrib -q --batch-mode
+curl -u admin:admin http://localhost:8081/repository/maven-releases/test/pom.xml --request PUT --data @pom.xml

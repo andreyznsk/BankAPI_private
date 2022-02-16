@@ -29,6 +29,7 @@
 
     <scm>
         <connection>scm:git:git@github.com:andreyznsk/BankAPI_private.git</connection>
+        <url>https://github.com/andreyznsk/BankAPI_private.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -58,4 +59,10 @@
         </pluginManagement>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>TEST</id>
+            <url>http://localhost:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>

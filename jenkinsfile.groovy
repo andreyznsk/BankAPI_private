@@ -31,6 +31,9 @@ node('ubuntu') {
                  submoduleCfg                     : [],
                  userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]
                 ])
+
+        echo "scmVars: ${scmVars}"
+        echo "GitBranch: ${GitBranch}, branch: ${branch}"
     }
 
     executeStage('Determine NEXUS_VERSION', branch, stageResult) {
@@ -45,7 +48,7 @@ node('ubuntu') {
 
     executeStage('Build Distrib', branch, stageResult) {
         sh "'${mvnHome}/bin/mvn' --version"
-        String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('.')[1]) + 1)
+        String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
         echo "next build number: ${nextVersion}"
         sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=kka-${NEXUS_VERSION} -e"
         dir('BankAPIMain/') {
@@ -75,7 +78,7 @@ node('ubuntu') {
 //     }
 
 }
-echo "GitBranch: ${GitBranch}, branch: ${branch}"
+
 
 
 def executeStage(stageName, branch, stageResult, Closure task) {

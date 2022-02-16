@@ -11,7 +11,7 @@ String NEXUS_ARTIFACT = 'BankAPI_0001'
 String project_git_url_ssh = 'git@github.com:andreyznsk/BankAPI_private.git'
 String project_git_url_https = 'https://github.com/andreyznsk/BankAPI_private.git'
 String JenkinsCredentialsId = 'ubnt'
-String nexusReleasesURL = 'http://localhost:8081/repository/maven-public/'
+String nexusReleasesURL = 'http://localhost:8081/repository/maven-releases/'
 String nexusRepoId = 'maven-releases'
 
 String branch = GitBranch.split('/')[-1]
@@ -76,7 +76,7 @@ node('ubuntu') {
             echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
             echo "-Drepo.username=${nexusUser}"
             sh "'${mvnHome}/bin/mvn' deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                    " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
+                    " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=maven-public" +
                     " -Drepo.username=${nexusUser} -Drepo.password=${nexusPwd} -Dclassifier=distrib -e"
         }
     }

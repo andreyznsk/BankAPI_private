@@ -75,7 +75,7 @@ node('ubuntu') {
             echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
             echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
             echo "-Drepo.username=${nexusUser} -Drepo.password=${nexusPwd}"
-            sh "'${mvnHome}/bin/mvn' deploy:deploy-file -DgroupId=Nexus_PROD -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
+            sh "'${mvnHome}/bin/mvn' deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                     " -Dpackaging=zip -Dfile=${bankAipFile.path} -DrepositoryId=${nexusRepoId} -Durl=${nexusReleasesURL}" +
                     " -Drepo.username=${nexusUser} -Drepo.password=${nexusPwd} -Dclassifier=distrib"
         }

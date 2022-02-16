@@ -63,7 +63,7 @@ node('ubuntu') {
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
-                    sh "mvn -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -DargLine=-DdbUserSuffix=BLD release:perform --batch-mode -q"
+                    //sh "mvn -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -DargLine=-DdbUserSuffix=BLD release:perform --batch-mode -q"
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
@@ -80,9 +80,9 @@ node('ubuntu') {
                 def bankAipFile = findFiles(glob: 'BankAPIMain/bankAPI.zip')[0]
                 echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
-               /* sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
+                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=maven-public" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -q"*/
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=TEST -q"
 
             }
         }

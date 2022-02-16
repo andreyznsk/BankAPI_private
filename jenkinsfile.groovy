@@ -11,6 +11,8 @@ String NEXUS_ARTIFACT = 'BankAPI_0001'
 String project_git_url_ssh = 'git@github.com:andreyznsk/BankAPI_private.git'
 String project_git_url_https = 'https://github.com/andreyznsk/BankAPI_private.git'
 String JenkinsCredentialsId = 'ubnt'
+String nexusReleasesURL = 'http://localhost:8081/repository/maven-releases/'
+String nexusRepoId = 'maven-releases'
 
 String branch = GitBranch.split('/')[-1]
 node('ubuntu') {
@@ -54,7 +56,7 @@ node('ubuntu') {
             sh "'${mvnHome}/bin/mvn' --version"
             String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
             echo "next build number: ${nextVersion}"
-            sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
+            sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
             dir('BankAPIMain/') {
                 sh "zip -r database.zip . -i database/*.sql"
                 sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
@@ -71,7 +73,7 @@ node('ubuntu') {
             echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
             echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
             sh "'${mvnHome}/bin/mvn' deploy:deploy-file -DgroupId=Nexus_PROD -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                    "-Dpackaging=zip -Dfile=${bankAipFile.path} -DrepositoryId=sbrf-repo-releases -Durl=http://localhost:8081/" +
+                    "-Dpackaging=zip -Dfile=${bankAipFile.path} -DrepositoryId=${nexusRepoId} -Durl=${nexusReleasesURL}" +
                     "-Drepo.username=${nexusUser} -Drepo.password=${nexusPwd} -Dclassifier=distrib"
         }
     }

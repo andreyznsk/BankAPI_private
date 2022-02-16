@@ -52,22 +52,25 @@ node('ubuntu') {
         }
 
         executeStage('Build Distrib', branch, stageResult) {
-            sshagent([JenkinsCredentialsId]) {
+            withCredentials([usernamePassword(credentialsId: "admin", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
+                sshagent([JenkinsCredentialsId]) {
 
-                sh 'git config --global user.email "you@example.com"'
-                sh 'git config --global user.name "jenkins"'
-                sh "mvn --version"
-                String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
-                echo "next build number: ${nextVersion}"
-                sh "mvn release:clean release:prepare " +
-                        " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
-                        " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
-                dir('BankAPIMain/') {
-                    sh "zip -r database.zip . -i database/*.sql"
-                    sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
+                    sh 'git config --global user.email "you@example.com"'
+                    sh 'git config --global user.name "jenkins"'
+                    sh "mvn --version"
+                    String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
+                    echo "next build number: ${nextVersion}"
+                    sh "mvn release:clean release:prepare " +
+                            " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
+                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
+                    sh "mvn -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -DargLine=-DdbUserSuffix=BLD release:perform --batch-mode -q"
+                    dir('BankAPIMain/') {
+                        sh "zip -r database.zip . -i database/*.sql"
+                        sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
+                    }
+                    archiveArtifacts 'BankAPIMain/database.zip'
+                    archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
                 }
-                archiveArtifacts 'BankAPIMain/database.zip'
-                archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
             }
         }
 
@@ -77,10 +80,10 @@ node('ubuntu') {
                 def bankAipFile = findFiles(glob: 'BankAPIMain/bankAPI.zip')[0]
                 echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
-                echo "-Drepo.username=${nexusUser}"
-                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
+               /* sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=maven-public" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -q"
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -q"*/
+
             }
         }
 

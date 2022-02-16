@@ -12,7 +12,7 @@
     <groupId>ru.sber.bootcamp</groupId>
     <artifactId>BankAPI</artifactId>
     <packaging>pom</packaging>
-    <version>2.019-SNAPSHOT</version>
+    <version>2.019</version>
 
 
     <modules>
@@ -30,7 +30,7 @@
     <scm>
         <connection>scm:git:git@github.com:andreyznsk/BankAPI_private.git</connection>
         <url>https://github.com/andreyznsk/BankAPI_private.git</url>
-        <tag>HEAD</tag>
+        <tag>BankApi-2.019</tag>
     </scm>
 
     <build>

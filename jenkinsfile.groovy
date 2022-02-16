@@ -43,7 +43,8 @@ node('ubuntu') {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
             //mvnHome = tool '3.5.0'
             // Находим NEXUS_VERSION
-            String versionPom = readMavenPom()
+            def pomModel = readMavenPom()
+            String versionPom = pomModel.getVersion()
             echo "versionPom: ${versionPom}"
             String releaseVersion = versionPom.replaceAll('-SNAPSHOT', '')
             NEXUS_VERSION = releaseVersion

@@ -57,8 +57,8 @@ node('ubuntu') {
             sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
             dir('BankAPIMain/') {
                 sh "zip -r database.zip . -i database/*.sql"
+                sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
             }
-            sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
             archiveArtifacts 'BankAPIMain/database.zip'
             archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
         }

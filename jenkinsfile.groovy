@@ -56,7 +56,7 @@ node('ubuntu') {
             sh "'${mvnHome}/bin/mvn' --version"
             String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
             echo "next build number: ${nextVersion}"
-            sh "'${mvnHome}/bin/mvn' release:clean release:prepare -Darguments=\"-U\"" +
+            sh "'${mvnHome}/bin/mvn' release:clean release:prepare " +
                     "--batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                     "-DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
             dir('BankAPIMain/') {

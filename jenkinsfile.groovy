@@ -68,9 +68,9 @@ node('ubuntu') {
         }
     }
 
-    executeStage('upload to nexus', branch, stageResult) {
+    executeStage('upload to NEXUS', branch, stageResult) {
         // Загрузка билда в нексус
-        withCredentials([usernamePassword(credentialsId: "nexusUser", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
+        withCredentials([usernamePassword(credentialsId: "jenkins", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
             def bankAipFile = findFiles(glob: 'BankAPIMain/bankAPI.zip')[0]
             echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
             echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"

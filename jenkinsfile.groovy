@@ -74,7 +74,7 @@ node('ubuntu') {
             def bankAipFile = findFiles(glob: 'BankAPIMain/bankAPI.zip')[0]
             echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
             echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
-            echo "-Drepo.username=${nexusUser} -Drepo.password=${nexusPwd}"
+            echo "-Drepo.username=${nexusUser}"
             sh "'${mvnHome}/bin/mvn' deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                     " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL}" +
                     " -Drepo.username=${nexusUser} -Drepo.password=${nexusPwd} -Dclassifier=distrib -e"

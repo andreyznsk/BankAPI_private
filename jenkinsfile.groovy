@@ -47,6 +47,7 @@ node('ubuntu') {
     }
 
     executeStage('Build Distrib', branch, stageResult) {
+        sh "git config user.name jenkins"
         sh "'${mvnHome}/bin/mvn' --version"
         String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
         echo "next build number: ${nextVersion}"

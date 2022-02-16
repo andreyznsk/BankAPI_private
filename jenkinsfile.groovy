@@ -47,17 +47,21 @@ node('ubuntu') {
     }
 
     executeStage('Build Distrib', branch, stageResult) {
-        sh "git config user.name jenkins"
-        sh "'${mvnHome}/bin/mvn' --version"
-        String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
-        echo "next build number: ${nextVersion}"
-        sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
-        dir('BankAPIMain/') {
-            sh "zip -r database.zip . -i database/*.sql"
+        sshagent([JenkinsCredentialsId]) {
+
+            sh 'git config --global user.email "you@example.com"'
+            sh 'git config --global user.name "jenkins"'
+            sh "'${mvnHome}/bin/mvn' --version"
+            String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
+            echo "next build number: ${nextVersion}"
+            sh "'${mvnHome}/bin/mvn' release:clean release:prepare -DdevelopmentVersion=${nextVersion} -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -e"
+            dir('BankAPIMain/') {
+                sh "zip -r database.zip . -i database/*.sql"
+            }
+            sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
+            archiveArtifacts 'BankAPIMain/database.zip'
+            archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
         }
-        sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
-        archiveArtifacts 'BankAPIMain/database.zip'
-        archiveArtifacts 'BankAPIMain/target/BankAPI.jar'
     }
 
     executeStage('upload to nexus', branch, stageResult) {

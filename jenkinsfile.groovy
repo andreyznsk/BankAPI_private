@@ -43,7 +43,7 @@ node('ubuntu') {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
             //mvnHome = tool '3.5.0'
             // Находим NEXUS_VERSION
-            String versionPom = sh script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true
+            String versionPom = readMavenPom()
             echo "versionPom: ${versionPom}"
             String releaseVersion = versionPom.replaceAll('-SNAPSHOT', '')
             NEXUS_VERSION = releaseVersion
@@ -79,7 +79,7 @@ node('ubuntu') {
                 echo "-Drepo.username=${nexusUser}"
                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=maven-public" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -e"
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -q"
             }
         }
 

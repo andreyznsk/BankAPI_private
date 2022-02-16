@@ -12,7 +12,7 @@ String project_git_url_ssh = 'git@github.com:andreyznsk/BankAPI_private.git'
 String project_git_url_https = 'https://github.com/andreyznsk/BankAPI_private.git'
 String JenkinsCredentialsId = 'ubnt'
 String nexusReleasesURL = 'http://localhost:8081/repository/release_artifactory/'
-String nexusRepoId = 'maven-releases'
+String nexus_artifactory = 'nexus_artifactory'
 String mavenVersion = '3.5.0'
 String configXml = 'MySettings'
 
@@ -84,7 +84,7 @@ node('ubuntu') {
                 sh "git status"
                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NWXUS_PROD" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=TEST -q"
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -q"
 
             }
         }

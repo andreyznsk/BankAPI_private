@@ -80,6 +80,8 @@ node('ubuntu') {
                 def bankAipFile = findFiles(glob: 'BankAPIMain/bankAPI.zip')[0]
                 echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
+                sh "git checkout BankApi-${NEXUS_VERSION}"
+                sh "git status"
                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=maven-public" +
                         " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=TEST -q"

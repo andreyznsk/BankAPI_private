@@ -39,7 +39,9 @@ node('ubuntu') {
         echo "scmVars: ${scmVars}"
         echo "GitBranch: ${GitBranch}, branch: ${branch}"
     }
-    withMaven(maven: mavenVersion, mavenSettingsConfig: configXml) {
+    withMaven(maven: mavenVersion, mavenSettingsConfig: configXml,
+            options: [artifactsPublisher(fingerprintFilesDisabled: true, archiveFilesDisabled: true)]
+    ) {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
             //mvnHome = tool '3.5.0'
             // Находим NEXUS_VERSION

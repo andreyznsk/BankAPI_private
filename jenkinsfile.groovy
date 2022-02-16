@@ -40,7 +40,7 @@ node('ubuntu') {
         echo "GitBranch: ${GitBranch}, branch: ${branch}"
     }
     withMaven(maven: mavenVersion, mavenSettingsConfig: configXml,
-            options: [artifactsPublisher(fingerprintFilesDisabled: true, archiveFilesDisabled: true)]
+            options: [artifactsPublisher(disabled: true)]
     ) {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
             //mvnHome = tool '3.5.0'

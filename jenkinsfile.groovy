@@ -54,18 +54,20 @@ node('ubuntu') {
         }
 
         executeStage('Build Distrib', branch, stageResult) {
-            withCredentials([usernamePassword(credentialsId: "admin", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
+            withCredentials([file(credentialsId: mavenSettingsSecurity, variable: 'MavenSettingsSecurityFile')]) {
                 sshagent([JenkinsCredentialsId]) {
-
+                    String fileContent = readFile encoding: 'UTF-8', file: "${MavenSettingsSecurityFile}"
+                    String mss = pwd() + '/security/mvn_ss.xml'
+                    echo "security path: ${mss}"
+                    writeFile file: mss, text: fileContent
                     sh 'git config --global user.email "you@example.com"'
                     sh 'git config --global user.name "jenkins"'
-                    sh "mvn --version"
                     String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
                     echo "next build number: ${nextVersion}"
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
-                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -q"
-                    //sh "mvn -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -DargLine=-DdbUserSuffix=BLD release:perform --batch-mode -q"
+                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} --batch-mode -q"
+                    sh "mvn -Dsettings.security=${mss} release:perform --batch-mode -e -U"
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
@@ -85,7 +87,7 @@ node('ubuntu') {
                 sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NWXUS_PROD" +
+                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
                         " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -q"
 
             }

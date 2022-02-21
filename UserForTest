@@ -1,0 +1,17 @@
+NEXUS:
+admin/admin
+user/user
+jenkins/jenkins
+
+Jenkins
+admin
+admin
+
+Portainer:
+admin
+adminadmin
+
+SSH git:
+ubnt
+project_git_url_ssh = 'git@github.com:andreyznsk/BankAPI_private.git'
+project_git_url_https = 'https://github.com/andreyznsk/BankAPI_private.git'

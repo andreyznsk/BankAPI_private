@@ -63,8 +63,7 @@
 
     <distributionManagement>
         <repository>
-            <id>TEST</id>
-            <url>http://localhost:8081/repository/maven-releases/</url>
+            <id>repo-releases</id>
         </repository>
     </distributionManagement>
 </project>

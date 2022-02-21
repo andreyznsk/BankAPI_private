@@ -8,15 +8,9 @@ import java.io.*;
 
 class Http_ROOT_Handler implements HttpHandler {
 
-       private Http_GET_handler handleGET = new Http_GET_handler();
-       private Http_POST_handler handlePOST = new Http_POST_handler();
+       private final Http_GET_handler handleGET = new Http_GET_handler();
+       private final Http_POST_handler handlePOST = new Http_POST_handler();
 
-
-
-    /**
-     * Обработчик входящих соединений
-     * @param t - запрос HTTP
-     */
     @Override
     public void handle(HttpExchange t) {
         if (t.getRequestMethod().equals("GET")) {

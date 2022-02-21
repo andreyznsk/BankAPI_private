@@ -67,7 +67,7 @@ node('ubuntu') {
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} --batch-mode -q"
-                    sh "mvn -Dsettings.security=${mss} release:perform --batch-mode -e -U"
+                    sh "mvn -Dsettings.security=${mss} -Darguments=\"-U -DskipTests -DargLine=-DdbUserSuffix=BLD -Dsettings.security=${mss}\" release:perform --batch-mode -e"
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"

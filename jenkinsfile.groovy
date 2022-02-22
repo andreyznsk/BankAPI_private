@@ -43,7 +43,6 @@ node('ubuntu') {
             options: [artifactsPublisher(disabled: true)]
     ) {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
-            //mvnHome = tool '3.5.0'
             // Находим NEXUS_VERSION
             def pomModel = readMavenPom()
             String versionPom = pomModel.getVersion()
@@ -58,7 +57,7 @@ node('ubuntu') {
                 sshagent([JenkinsCredentialsId]) {
                     String fileContent = readFile encoding: 'UTF-8', file: "${MavenSettingsSecurityFile}"
                     String mss = pwd() + '/security/mvn_ss.xml'
-                    echo "security path: ${mss}"
+                    echo 'security path: ${mss}'
                     writeFile file: mss, text: fileContent
                     sh 'git config --global user.email "you@example.com"'
                     sh 'git config --global user.name "jenkins"'
@@ -66,8 +65,8 @@ node('ubuntu') {
                     echo "next build number: ${nextVersion}"
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
-                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} --batch-mode -q"
-                    sh "mvn -Dsettings.security=${mss} -Darguments=\"-U -DskipTests -Dsettings.security=${mss}\" release:perform --batch-mode -e"
+                            " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -B -e"
+                    sh 'mvn -Dsettings.security=${mss} release:perform -B -e'
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
@@ -86,9 +85,9 @@ node('ubuntu') {
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
                 sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
-                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -q"
+                sh 'mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}' +
+                        ' -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD' +
+                        ' -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e'
 
             }
         }

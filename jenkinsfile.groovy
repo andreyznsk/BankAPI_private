@@ -55,9 +55,9 @@ node('ubuntu') {
         executeStage('Build Distrib', branch, stageResult) {
             withCredentials([file(credentialsId: 'mavenSettingsSecurity', variable: 'MavenSettingsSecurityFile')]) {
                 sshagent([JenkinsCredentialsId]) {
-                    String fileContent = readFile encoding: 'UTF-8', file: "${MavenSettingsSecurityFile}"
+                    String fileContent = readFile encoding: 'UTF-8', file: '${MavenSettingsSecurityFile}'
                     String mss = pwd() + '/security/mvn_ss.xml'
-                    echo 'security path: ${mss}'
+                    echo "security path: ${mss}"
                     writeFile file: mss, text: fileContent
                     sh 'git config --global user.email "you@example.com"'
                     sh 'git config --global user.name "jenkins"'
@@ -66,7 +66,7 @@ node('ubuntu') {
                     sh "mvn release:clean release:prepare " +
                             " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -B -e"
-                    sh 'mvn -Dsettings.security=${mss} release:perform -B -e'
+                    sh 'mvn release:perform -Darguments=\\"-Dsettings.security=${mss}\\" -B -e'
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"

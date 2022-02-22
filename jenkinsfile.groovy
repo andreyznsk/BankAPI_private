@@ -55,7 +55,7 @@ node('ubuntu') {
         executeStage('Build Distrib', branch, stageResult) {
             withCredentials([file(credentialsId: 'mavenSettingsSecurity', variable: 'MavenSettingsSecurityFile')]) {
                 sshagent([JenkinsCredentialsId]) {
-                    String fileContent = readFile encoding: 'UTF-8', file: '${MavenSettingsSecurityFile}'
+                    String fileContent = readFile encoding: 'UTF-8', file: "${MavenSettingsSecurityFile}"
                     String mss = pwd() + '/security/mvn_ss.xml'
                     echo "security path: ${mss}"
                     writeFile file: mss, text: fileContent

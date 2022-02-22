@@ -3,7 +3,7 @@
     <parent>
         <artifactId>BankAPI</artifactId>
         <groupId>ru.api.bankapi</groupId>
-        <version>4.001-SNAPSHOT</version>
+        <version>4.001</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

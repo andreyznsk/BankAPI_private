@@ -85,10 +85,9 @@ node('ubuntu') {
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
                 sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
-                sh 'mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}' +
-                        ' -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD' +
-                        ' -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e'
-
+                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
+                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e"
             }
         }
 

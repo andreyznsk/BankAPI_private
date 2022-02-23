@@ -25,23 +25,20 @@ node('ubuntu') {
     }
 
     executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
-        scmVars = checkout(
-                [$class                           : 'GitSCM',
-                 branches                         : [[name: "${GitBranch}"]],
-                 browser                          : [$class: 'GitWeb', repoUrl: project_git_url_https],
-                 doGenerateSubmoduleConfigurations: false,
-                 extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
-                 gitTool                          : 'Default',
-                 submoduleCfg                     : [],
-                 userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]
-                ])
+        scmVars = checkout([$class                           : 'GitSCM',
+                            branches                         : [[name: "${GitBranch}"]],
+                            browser                          : [$class: 'GitWeb', repoUrl: project_git_url_https],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
+                            gitTool                          : 'Default',
+                            submoduleCfg                     : [],
+                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]])
 
         echo "scmVars: ${scmVars}"
         echo "GitBranch: ${GitBranch}, branch: ${branch}"
     }
     withMaven(maven: mavenVersion, mavenSettingsConfig: configXml,
-            options: [artifactsPublisher(disabled: true)]
-    ) {
+            options: [artifactsPublisher(disabled: true)]) {
         executeStage('Determine NEXUS_VERSION', branch, stageResult) {
             // Находим NEXUS_VERSION
             def pomModel = readMavenPom()
@@ -64,7 +61,7 @@ node('ubuntu') {
                     String nextVersion = String.format('%03d', Integer.parseInt(NEXUS_VERSION.split('\\.')[1]) + 1)
                     echo "next build number: ${nextVersion}"
                     sh "mvn release:clean release:prepare " +
-                            " --batch-mode -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
+                            " -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -B -e"
                     sh "mvn release:perform -Darguments=-Dsettings.security=${mss} -B -e"
                     dir('BankAPIMain/') {
@@ -85,9 +82,7 @@ node('ubuntu') {
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
                 sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
-                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
-                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
-                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e"
+                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" + " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" + " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e"
             }
         }
 
@@ -105,7 +100,6 @@ def executeStage(stageName, branch, stageResult, Closure task) {
         stage(stageName, task)
     } catch (e) {
         echo "${e.getMessage()}"
-        cleanWs()
         throw e
     }
 }

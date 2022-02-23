@@ -63,7 +63,7 @@ node('ubuntu') {
                     sh "mvn release:clean release:prepare " +
                             " -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -B -e"
-                    sh "mvn release:perform -Darguments=-Dsettings.security=${mss} -B -e"
+                    sh "mvn release:perform -Darguments=\"-Dsettings.security=${mss} -DargLine=-DdbUserSuffix=BLD\" -B -e"
                     dir('BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
@@ -82,7 +82,9 @@ node('ubuntu') {
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
                 sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
-                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" + " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" + " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e"
+                sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
+                        " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +
+                        " -Drepo.usr=${nexusUser} -Drepo.pwd=${nexusPwd} -Dclassifier=distrib -DrepositoryId=${nexus_artifactory} -e"
             }
         }
 

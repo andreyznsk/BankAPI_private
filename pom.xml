@@ -13,13 +13,10 @@
     <artifactId>BankAPI</artifactId>
     <packaging>pom</packaging>
     <version>4.005-SNAPSHOT</version>
-
-
     <modules>
-        <module>UserService1</module>
-        <module>BankAPIMain</module>
-        <module>BankAPI_Spring</module>
+        <module>Service</module>
     </modules>
+
 
     <properties>
         <java.version>11</java.version>

@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>UserService1</artifactId>
-    <version>4.005-SNAPSHOT</version>
+    <version>5.001-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>

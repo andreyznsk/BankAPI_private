@@ -4,7 +4,7 @@
 
     <artifactId>Service</artifactId>
     <packaging>pom</packaging>
-    <version>4.005-SNAPSHOT</version>
+    <version>5.001-SNAPSHOT</version>
 
     <parent>
         <artifactId>BankAPI</artifactId>

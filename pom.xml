@@ -12,7 +12,7 @@
     <groupId>ru.api.bankapi</groupId>
     <artifactId>BankAPI</artifactId>
     <packaging>pom</packaging>
-    <version>4.005-SNAPSHOT</version>
+    <version>5.001-SNAPSHOT</version>
     <modules>
         <module>Service</module>
     </modules>

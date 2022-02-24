@@ -47,6 +47,7 @@ node('ubuntu') {
             String releaseVersion = versionPom.replaceAll('-SNAPSHOT', '')
             NEXUS_VERSION = releaseVersion
             echo "NEXUS_VERSION: ${NEXUS_VERSION}"
+            currentBuild.description = "#${BUILD_NUMBER}, version: ${NEXUS_VERSION}"
         }
 
         executeStage('Build Distrib', branch, stageResult) {

@@ -68,8 +68,7 @@ node('ubuntu') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
                     }
-                    archiveArtifacts 'Service/BankAPIMain/database.zip'
-                    archiveArtifacts 'Service/BankAPIMain/target/BankAPI.jar'
+                    archiveArtifacts 'Service/BankAPIMain/bankAPI.zip'
                 }
             }
         }
@@ -77,6 +76,7 @@ node('ubuntu') {
         executeStage('upload to NEXUS', branch, stageResult) {
             // Загрузка билда в нексус
             withCredentials([usernamePassword(credentialsId: "admin", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
+                echo 'sh pwd'
                 def bankAipFile = findFiles(glob: 'Service/BankAPIMain/bankAPI.zip')[0]
                 echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
                 echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"

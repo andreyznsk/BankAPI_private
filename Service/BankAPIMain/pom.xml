@@ -3,19 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>Service</artifactId>
-        <groupId>ru.api.bankapi</groupId>
-        <version>4.005-SNAPSHOT</version>
+        <groupId>ru.api.bankapi.service</groupId>
+        <artifactId>Service-parent</artifactId>
+        <version>5.001-SNAPSHOT</version>
     </parent>
 
     <artifactId>BankAPIMain</artifactId>
-    <version>5.001-SNAPSHOT</version>
     <packaging>jar</packaging>
-
-    <properties>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-    </properties>
 
     <dependencies>
         <dependency>

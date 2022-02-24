@@ -4,20 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>Service</artifactId>
-        <groupId>ru.api.bankapi</groupId>
-        <version>4.005-SNAPSHOT</version>
+        <artifactId>Service-parent</artifactId>
+        <groupId>ru.api.bankapi.service</groupId>
+        <version>5.001-SNAPSHOT</version>
     </parent>
 
     <artifactId>BankAPI_Spring</artifactId>
-    <version>5.001-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <java.version>11</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
     <dependencies>
         <dependency>

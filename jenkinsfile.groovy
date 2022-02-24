@@ -64,12 +64,12 @@ node('ubuntu') {
                             " -DautoVersionSubmodules=true -DdevelopmentVersion=${nextVersion} " +
                             " -DreleaseVersion=${NEXUS_VERSION} -Dtag=BankApi-${NEXUS_VERSION} -B -e"
                     sh "mvn release:perform -Darguments=\"-Dsettings.security=${mss} -DargLine=-DdbUserSuffix=BLD\" -B -e"
-                    dir('service/BankAPIMain/') {
+                    dir('Service/BankAPIMain/') {
                         sh "zip -r database.zip . -i database/*.sql"
                         sh "zip -r bankAPI.zip database.zip target/BankAPI.jar"
                     }
-                    archiveArtifacts 'service/BankAPIMain/database.zip'
-                    archiveArtifacts 'service/BankAPIMain/target/BankAPI.jar'
+                    archiveArtifacts 'Service/BankAPIMain/database.zip'
+                    archiveArtifacts 'Service/BankAPIMain/target/BankAPI.jar'
                 }
             }
         }

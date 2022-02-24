@@ -5,7 +5,7 @@
     <parent>
         <artifactId>BankAPI</artifactId>
         <groupId>ru.api.bankapi</groupId>
-        <version>5.002-SNAPSHOT</version>
+        <version>5.003-SNAPSHOT</version>
     </parent>
 
     <artifactId>Service-parent</artifactId>

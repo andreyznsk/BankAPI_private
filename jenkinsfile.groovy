@@ -76,11 +76,11 @@ node('ubuntu') {
         executeStage('upload to NEXUS', branch, stageResult) {
             // Загрузка билда в нексус
             withCredentials([usernamePassword(credentialsId: "admin", usernameVariable: "nexusUser", passwordVariable: "nexusPwd")]) {
-                echo 'sh pwd'
+                echo sh "pwd"
                 def bankAipFile = findFiles(glob: 'Service/BankAPIMain/bankAPI.zip')[0]
                 echo "Deploy NEXUS_VERSION: ${NEXUS_VERSION}"
-                echo "bankAipFile {name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
-                sh "git checkout BankApi-${NEXUS_VERSION}"
+                echo "bankAipFile name: ${bankAipFile.name}, path: ${bankAipFile.path}, dir: ${bankAipFile.directory}"
+                //sh "git checkout BankApi-${NEXUS_VERSION}"
                 sh "git status"
                 sh "mvn deploy:deploy-file -DgeneratePom=true -DartifactId=${NEXUS_ARTIFACT} -Dversion=${NEXUS_VERSION}" +
                         " -Dpackaging=zip -Dfile=${bankAipFile.path} -Durl=${nexusReleasesURL} -DgroupId=NEXUS_PROD" +

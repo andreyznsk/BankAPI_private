@@ -23,7 +23,11 @@ if(GitBranch == null) {
     echo "GitBranch is null"
     GitBranch = env.GIT_BRANCH
     echo env.GIT_LOCALBRANCH
-    echo env
+    System.getenv().entrySet().forEach(
+            {
+                println('ENV: ' + it.key + ' - ' + it.value)
+            }
+    )
     echo "git pr: ${GitBranch}"
 }
 

@@ -28,7 +28,7 @@
     </properties>
 
     <scm>
-        <connection>ssh://git@bitbucket:7999/bai/bankapi.git</connection>
+        <connection>scm:git:ssh://git@bitbucket:7999/bai/bankapi.git</connection>
         <url>http://bitbucket:7990/scm/bai/bankapi.git</url>
         <tag>HEAD</tag>
     </scm>

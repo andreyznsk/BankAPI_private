@@ -26,7 +26,7 @@ if(GitBranch == null) {
 //    echo "Git br: ${env.GIT_LOCALBRANCH}"
 //    echo "git pr: ${GitBranch}"
    println(scm)
-    println(scm.branches)
+    println(scm.branch)
     println(scm.branches[0])
     println(scm.branches[1])
 

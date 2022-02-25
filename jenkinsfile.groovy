@@ -27,7 +27,7 @@ node('ubuntu') {
     executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
         scmVars = checkout([$class                           : 'GitSCM',
                             branches                         : [[name: "${GitBranch}"]],
-                            browser                          : [$class: 'GitWeb', repoUrl: project_git_url_https],
+                            browser                          : [$class: 'BitbucketWeb', repoUrl: project_git_url_https],
                             doGenerateSubmoduleConfigurations: false,
                             extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
                             gitTool                          : 'Default',

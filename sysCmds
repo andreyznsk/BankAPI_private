@@ -2,3 +2,12 @@ mvn deploy:deploy-file -DgeneratePom=true -DartifactId=BankAPI_0001 -Dversion=2.
 curl -u admin:admin http://localhost:8081/repository/maven-releases/test/pom.xml --request PUT --data @pom.xml
 
 mvn -Drepo.usr=admin -Drepo.pwd=admin -DargLine=-DdbUserSuffix=BLD release:perform
+
+sudo docker run --name pgdocker -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin -e POSTGRES_DB=admin -d -p 5432:5432 -v /home/and/docker/postgres:/var/lib/postgresql/data postgres
+
+
+CREATE ROLE bitbucketuser WITH LOGIN PASSWORD 'admin' VALID UNTIL 'infinity';
+REATE DATABASE bitbucket WITH ENCODING='UTF8' OWNER=bitbucketuser CONNECTION LIMIT=-1;
+
+git remote add bucked ssh://git@bitbucket:7999/bai/bankapi.git
+git push -u bucked HEAD:master

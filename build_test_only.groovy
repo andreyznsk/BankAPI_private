@@ -54,7 +54,7 @@ node('ubuntu') {
 
     withMaven(maven: mavenVersion, mavenSettingsConfig: configXml,
             options: [artifactsPublisher(disabled: true)]) {
-        executeStage('Unit_test', branch, stageResult) {
+        executeStage('Unit_test', stageResult) {
             // Находим NEXUS_VERSION
             def pomModel = readMavenPom()
             String versionPom = pomModel.getVersion()
@@ -67,7 +67,7 @@ node('ubuntu') {
 }
 
 
-def executeStage(stageName, branch, stageResult, Closure task) {
+def executeStage(stageName, stageResult, Closure task) {
     try {
         stage(stageName, task)
     } catch (e) {

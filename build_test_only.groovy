@@ -21,6 +21,7 @@ echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
     GitBranch = env.GIT_BRANCH
+    echo ${env}
     echo "git pr: ${GitBranch}"
 }
 

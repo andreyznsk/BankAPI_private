@@ -56,10 +56,10 @@ node('ubuntu') {
             options: [artifactsPublisher(disabled: true)]) {
         executeStage('Unit_test', stageResult) {
             // Находим NEXUS_VERSION
-            def pomModel = readMavenPom()
-            String versionPom = pomModel.getVersion()
-            echo "versionPom: ${versionPom}"
-            currentBuild.description = "version: ${versionPom}"
+//            def pomModel = readMavenPom()
+//            String versionPom = pomModel.getVersion()
+//            echo "versionPom: ${versionPom}"
+//            currentBuild.description = "version: ${versionPom}"
             sh "mvn clean test -U -e"
         }
 

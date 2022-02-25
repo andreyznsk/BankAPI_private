@@ -15,6 +15,7 @@ String nexusReleasesURL = 'http://localhost:8081/repository/release_artifactory/
 String nexus_artifactory = 'nexus_artifactory'
 String mavenVersion = '3.5.0'
 String configXml = 'MySettings'
+def GitBranch
 
 echo "TEST - 1 - 2 - 3"
 

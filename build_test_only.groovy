@@ -18,6 +18,10 @@ String configXml = 'MySettings'
 
 echo "TEST - 1 - 2 - 3"
 
+if(GitBranch == null) {
+    GitBranch = env.GIT_BRANCH
+}
+
 String branch = GitBranch.split('/')[-1]
 echo "git pr: ${GitBranch}"
 node('ubuntu') {

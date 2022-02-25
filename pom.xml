@@ -12,7 +12,7 @@
     <groupId>ru.api.bankapi</groupId>
     <artifactId>BankAPI</artifactId>
     <packaging>pom</packaging>
-    <version>5.009-SNAPSHOT</version>
+    <version>5.009</version>
     <modules>
         <module>Service</module>
     </modules>
@@ -30,7 +30,7 @@
     <scm>
         <connection>scm:git:ssh://git@bitbucket:7999/bai/bankapi.git</connection>
         <url>http://bitbucket:7990/scm/bai/bankapi.git</url>
-        <tag>HEAD</tag>
+        <tag>BankApi-5.009</tag>
     </scm>
 
     <build>

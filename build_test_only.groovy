@@ -16,7 +16,8 @@ String nexus_artifactory = 'nexus_artifactory'
 String mavenVersion = '3.5.0'
 String configXml = 'MySettings'
 
-String branch = GitBranch.split('/')[-1]
+String branch = GitPullRequest.split('/')[-1]
+echo "git pr: ${GitPullRequest}"
 node('ubuntu') {
 
 

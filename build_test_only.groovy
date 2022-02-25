@@ -20,8 +20,10 @@ def GitBranch
 echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
+    echo "GitBranch is null"
     GitBranch = env.GIT_BRANCH
-    echo ${env}
+    echo env.GIT_LOCALBRANCH
+    echo env
     echo "git pr: ${GitBranch}"
 }
 

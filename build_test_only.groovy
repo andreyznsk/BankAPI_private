@@ -34,7 +34,7 @@ if(GitBranch == null) {
 node('ubuntu') {
 
 
-    executeStage('Clean WS', branch, stageResult) {
+    executeStage('Clean WS', stageResult) {
         cleanWs() // Очистка рабочего пространства
     }
 

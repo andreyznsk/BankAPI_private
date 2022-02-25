@@ -16,3 +16,5 @@ git push -u bucked HEAD:master
 token: 1141d1692a11d96e7ab9f5d346f0f868f6
 
 WebHook: http://jenkins0:8080/bitbucket-hook/
+
+test

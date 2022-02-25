@@ -25,7 +25,9 @@ if(GitBranch == null) {
 //    echo "Git br:" + env.GIT_BRANCH
 //    echo "Git br: ${env.GIT_LOCALBRANCH}"
 //    echo "git pr: ${GitBranch}"
-    echo scm.branches
+    scm.branches.forEach({
+        println(it)
+    })
 }
 
 String branch = GitBranch.split('/')[-1]

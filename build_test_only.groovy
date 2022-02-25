@@ -18,8 +18,8 @@ String configXml = 'MySettings'
 
 echo "TEST - 1 - 2"
 
-String branch = GitPullRequest.split('/')[-1]
-echo "git pr: ${GitPullRequest}"
+String branch = GitBranch.split('/')[-1]
+echo "git pr: ${GitBranch}"
 node('ubuntu') {
 
 

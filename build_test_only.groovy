@@ -16,7 +16,7 @@ String nexus_artifactory = 'nexus_artifactory'
 String mavenVersion = '3.5.0'
 String configXml = 'MySettings'
 
-echo "TEST - 1 - 2"
+echo "TEST - 1 - 2 - 3"
 
 String branch = GitBranch.split('/')[-1]
 echo "git pr: ${GitBranch}"

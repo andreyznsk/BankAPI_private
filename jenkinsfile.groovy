@@ -32,7 +32,7 @@ node('ubuntu') {
                             extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
                             gitTool                          : 'Default',
                             submoduleCfg                     : [],
-                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]])
+                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_https]]])
 
         echo "scmVars: ${scmVars}"
         echo "GitBranch: ${GitBranch}, branch: ${branch}"

@@ -8,7 +8,7 @@ def mvnHome
 
 String NEXUS_VERSION
 String NEXUS_ARTIFACT = 'BankAPI_0001'
-String project_git_url_ssh = 'git@localhost:7999/bai/bankapi.git'
+String project_git_url_ssh = 'ssh://git@bitbucket:7999/bai/bankapi.git'
 String project_git_url_https = 'http://bitbucket:7990/scm/bai/bankapi.git'
 String JenkinsCredentialsId = 'ubnt'
 String nexusReleasesURL = 'http://localhost:8081/repository/release_artifactory/'
@@ -32,7 +32,7 @@ node('ubuntu') {
                             extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
                             gitTool                          : 'Default',
                             submoduleCfg                     : [],
-                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_https]]])
+                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]])
 
         echo "scmVars: ${scmVars}"
         echo "GitBranch: ${GitBranch}, branch: ${branch}"

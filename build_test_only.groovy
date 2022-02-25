@@ -26,7 +26,10 @@ if(GitBranch == null) {
 //    echo "Git br: ${env.GIT_LOCALBRANCH}"
 //    echo "git pr: ${GitBranch}"
    println(scm)
-    println(scm.getBranches())
+    List<BanchSpec> branches = scm.getBranches()
+    branches.forEach({
+        println(it.getName())
+    })
     println(scm.branches[0])
     println(scm.branches[1])
 

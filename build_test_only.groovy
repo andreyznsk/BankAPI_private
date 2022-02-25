@@ -21,8 +21,8 @@ echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
     echo "GitBranch is null"
-    GitBranch = ${GIT_BRANCH}
-    echo ${GIT_LOCALBRANCH}
+    GitBranch = "${GIT_BRANCH}"
+    echo "GIT_LOCALBRANCH: ${GIT_LOCALBRANCH}"
     echo "git pr: ${GitBranch}"
 }
 

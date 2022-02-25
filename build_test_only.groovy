@@ -8,8 +8,8 @@ def mvnHome
 
 String NEXUS_VERSION
 String NEXUS_ARTIFACT = 'BankAPI_0001'
-String project_git_url_ssh = 'git@github.com:andreyznsk/BankAPI_private.git'
-String project_git_url_https = 'https://github.com/andreyznsk/BankAPI_private.git'
+String project_git_url_ssh = 'ssh://git@bitbucket:7999/bai/bankapi.git'
+String project_git_url_https = 'http://bitbucket:7990/scm/bai/bankapi.git'
 String JenkinsCredentialsId = 'ubnt'
 String nexusReleasesURL = 'http://localhost:8081/repository/release_artifactory/'
 String nexus_artifactory = 'nexus_artifactory'

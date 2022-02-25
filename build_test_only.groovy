@@ -17,14 +17,13 @@ String mavenVersion = '3.5.0'
 String configXml = 'MySettings'
 def GitBranch
 
-echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
-    echo "Git br:" + BITBUCKET_SOURCE_BRANCH
+    GitBranch = 'origin/'+ BITBUCKET_SOURCE_BRANCH
 }
-//
-//String branch = GitBranch.split('/')[-1]
-//echo "git pr: ${GitBranch}"
+
+String branch = GitBranch.split('/')[-1]
+echo "git pr: ${GitBranch}"
 node('ubuntu') {
 
 
@@ -32,28 +31,28 @@ node('ubuntu') {
         cleanWs() // Очистка рабочего пространства
     }
 
-//    executeStage('Checkout in Linux', branch, stageResult) { // Чекаут
-//        scmVars = checkout([$class                           : 'GitSCM',
-//                            branches                         : [[name: "${GitBranch}"]],
-//                            browser                          : [$class: 'GitWeb', repoUrl: project_git_url_https],
-//                            doGenerateSubmoduleConfigurations: false,
-//                            extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
-//                            gitTool                          : 'Default',
-//                            submoduleCfg                     : [],
-//                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]])
-//
-//        echo "scmVars: ${scmVars}"
-//        echo "GitBranch: ${GitBranch}, branch: ${branch}"
-//    }
+    executeStage('Checkout in Linux', stageResult) { // Чекаут
+        scmVars = checkout([$class                           : 'GitSCM',
+                            branches                         : [[name: "${GitBranch}"]],
+                            browser                          : [$class: 'GitWeb', repoUrl: project_git_url_https],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions                       : [[$class: 'CleanCheckout'], [$class: 'LocalBranch', localBranch: branch]],
+                            gitTool                          : 'Default',
+                            submoduleCfg                     : [],
+                            userRemoteConfigs                : [[credentialsId: JenkinsCredentialsId, url: project_git_url_ssh]]])
+
+        echo "scmVars: ${scmVars}"
+        echo "GitBranch: ${GitBranch}, branch: ${branch}"
+    }
 
     withMaven(maven: mavenVersion, mavenSettingsConfig: configXml,
             options: [artifactsPublisher(disabled: true)]) {
         executeStage('Unit_test', stageResult) {
             // Находим NEXUS_VERSION
-//            def pomModel = readMavenPom()
-//            String versionPom = pomModel.getVersion()
-//            echo "versionPom: ${versionPom}"
-//            currentBuild.description = "version: ${versionPom}"
+            def pomModel = readMavenPom()
+            String versionPom = pomModel.getVersion()
+            echo "versionPom: ${versionPom}"
+            currentBuild.description = "version: ${versionPom}"
             sh "mvn clean test -U -e"
         }
 

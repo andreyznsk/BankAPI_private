@@ -28,8 +28,8 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:andreyznsk/BankAPI_private.git</connection>
-        <url>https://github.com/andreyznsk/BankAPI_private.git</url>
+        <connection>ssh://git@bitbucket:7999/bai/bankapi.git</connection>
+        <url>http://bitbucket:7990/scm/bai/bankapi.git</url>
         <tag>HEAD</tag>
     </scm>
 

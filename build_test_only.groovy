@@ -21,6 +21,7 @@ echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
     GitBranch = env.GIT_BRANCH
+    echo "git pr: ${GitBranch}"
 }
 
 String branch = GitBranch.split('/')[-1]

@@ -20,7 +20,7 @@ def GitBranch
 echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
-    echo "Git br:" + GIT_LOCAL_BRANCH
+    echo "Git br:" + BITBUCKET_SOURCE_BRANCH
 }
 //
 //String branch = GitBranch.split('/')[-1]

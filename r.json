@@ -1,0 +1,188 @@
+{
+  "eventKey": "pr:comment:added",
+  "date": "2022-02-25T11:51:38+0000",
+  "actor": {
+    "name": "user",
+    "emailAddress": "user@u.com",
+    "id": 53,
+    "displayName": "user",
+    "active": true,
+    "slug": "user",
+    "type": "NORMAL",
+    "links": {
+      "self": [
+        {
+          "href": "http://bitbucket:7990/users/user"
+        }
+      ]
+    }
+  },
+  "pullRequest": {
+    "id": 7,
+    "version": 0,
+    "title": "Rev zzz 1111 zad",
+    "description": "* ZZZ-1111\r\n* ZZZ-1112\r\n* ZZZ-1113\r\n* ZZZ-1113\r\n* ZZZ-1113\r\n* ZZZ-1113\r\n* ZZZ-1113\r\n* ZZZ-1113 - git br",
+    "state": "OPEN",
+    "open": true,
+    "closed": false,
+    "createdDate": 1645789022811,
+    "updatedDate": 1645789022811,
+    "fromRef": {
+      "id": "refs/heads/rev_zzz-1111_zad",
+      "displayId": "rev_zzz-1111_zad",
+      "latestCommit": "628f738317baa820f15632f9a5287bba1f882e27",
+      "type": "BRANCH",
+      "repository": {
+        "slug": "bankapi",
+        "id": 1,
+        "name": "Bankapi",
+        "hierarchyId": "cc2e0d3aa96fda0fafa6",
+        "scmId": "git",
+        "state": "AVAILABLE",
+        "statusMessage": "Available",
+        "forkable": true,
+        "project": {
+          "key": "BAI",
+          "id": 1,
+          "name": "BankApi",
+          "public": false,
+          "type": "NORMAL",
+          "links": {
+            "self": [
+              {
+                "href": "http://bitbucket:7990/projects/BAI"
+              }
+            ]
+          }
+        },
+        "public": false,
+        "links": {
+          "clone": [
+            {
+              "href": "http://bitbucket:7990/scm/bai/bankapi.git",
+              "name": "http"
+            },
+            {
+              "href": "ssh://git@bitbucket:7999/bai/bankapi.git",
+              "name": "ssh"
+            }
+          ],
+          "self": [
+            {
+              "href": "http://bitbucket:7990/projects/BAI/repos/bankapi/browse"
+            }
+          ]
+        }
+      }
+    },
+    "toRef": {
+      "id": "refs/heads/release-1.5",
+      "displayId": "release-1.5",
+      "latestCommit": "97f1bb0a710481e3889cbe3ee702aff6acf9f162",
+      "type": "BRANCH",
+      "repository": {
+        "slug": "bankapi",
+        "id": 1,
+        "name": "Bankapi",
+        "hierarchyId": "cc2e0d3aa96fda0fafa6",
+        "scmId": "git",
+        "state": "AVAILABLE",
+        "statusMessage": "Available",
+        "forkable": true,
+        "project": {
+          "key": "BAI",
+          "id": 1,
+          "name": "BankApi",
+          "public": false,
+          "type": "NORMAL",
+          "links": {
+            "self": [
+              {
+                "href": "http://bitbucket:7990/projects/BAI"
+              }
+            ]
+          }
+        },
+        "public": false,
+        "links": {
+          "clone": [
+            {
+              "href": "http://bitbucket:7990/scm/bai/bankapi.git",
+              "name": "http"
+            },
+            {
+              "href": "ssh://git@bitbucket:7999/bai/bankapi.git",
+              "name": "ssh"
+            }
+          ],
+          "self": [
+            {
+              "href": "http://bitbucket:7990/projects/BAI/repos/bankapi/browse"
+            }
+          ]
+        }
+      }
+    },
+    "locked": false,
+    "author": {
+      "user": {
+        "name": "user",
+        "emailAddress": "user@u.com",
+        "id": 53,
+        "displayName": "user",
+        "active": true,
+        "slug": "user",
+        "type": "NORMAL",
+        "links": {
+          "self": [
+            {
+              "href": "http://bitbucket:7990/users/user"
+            }
+          ]
+        }
+      },
+      "role": "AUTHOR",
+      "approved": false,
+      "status": "UNAPPROVED"
+    },
+    "reviewers": [],
+    "participants": [],
+    "links": {
+      "self": [
+        {
+          "href": "http://bitbucket:7990/projects/BAI/repos/bankapi/pull-requests/7"
+        }
+      ]
+    }
+  },
+  "comment": {
+    "properties": {
+      "repositoryId": 1
+    },
+    "id": 29,
+    "version": 0,
+    "text": "sdf",
+    "author": {
+      "name": "user",
+      "emailAddress": "user@u.com",
+      "id": 53,
+      "displayName": "user",
+      "active": true,
+      "slug": "user",
+      "type": "NORMAL",
+      "links": {
+        "self": [
+          {
+            "href": "http://bitbucket:7990/users/user"
+          }
+        ]
+      }
+    },
+    "createdDate": 1645789898756,
+    "updatedDate": 1645789898756,
+    "comments": [],
+    "tasks": [],
+    "severity": "NORMAL",
+    "state": "OPEN"
+  }
+}

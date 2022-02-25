@@ -20,13 +20,8 @@ def GitBranch
 echo "TEST - 1 - 2 - 3"
 
 if(GitBranch == null) {
-//    echo "GitBranch is null"
-//    echo "Git br: ${env.GIT_BRANCH}"
-//    echo "Git br:" + env.GIT_BRANCH
-//    echo "Git br: ${env.GIT_LOCALBRANCH}"
-//    echo "git pr: ${GitBranch}"
-
-
+    echo "Git br: ${env.GIT_BRANCH}"
+    echo "Git br:" + env.GIT_BRANCH
 }
 //
 //String branch = GitBranch.split('/')[-1]

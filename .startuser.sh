@@ -1,1 +1,1 @@
-java -jar UserService1/target/UserAPI.jar
+java -jar Service/UserService1/target/UserAPI.jar

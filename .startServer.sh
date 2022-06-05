@@ -1,1 +1,1 @@
-java -jar BankAPIMain/target/BankAPI.jar
+java -jar Service/BankAPIMain/target/BankAPI.jar
